@@ -1,0 +1,149 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <memory.h>
+#include <unistd.h>
+#include "apkapi.h"
+
+void main6667(void)
+{
+	char *testKeyId = "210235C2UF3755083141";
+	unsigned char testData[128] = { 0 };
+	memset(testData, 0, strlen(testData));
+	strcpy(testData, "this is test data! zhe shi ce shi shu ju.1234567890.");
+
+	int rv = 0;
+	char pBlob[256] = { 0 };
+	char pEnvelopedKeyBlob[1024] = { 0 };
+	int		pubMatrixLen = 66560 + 256;//65 * 1024
+	int		skeyMatrixLen = 1024 * 32 + 256;
+	BYTE*	pkmbuf = (BYTE*)malloc(pubMatrixLen);
+	BYTE*	skmbuf = (BYTE*)malloc(skeyMatrixLen);
+	FILE	*fp = NULL;
+
+	//rv = IW_InitDevice(testKeyId, "./svkd/");
+	//printf("IW_InitDevice rv is %d\n", rv);
+
+	rv = IW_OpenDevice(testKeyId, "/home/xuyang/workspace/gm_demo/svkd/");
+	printf("打开软盾设备(rv = 0：成功) rv = %d\n\n", rv);
+	//printf("IW_OpenDevice rv is %d\n", rv);
+
+	//rv = IW_GenKeyRequest(testKeyId, pBlob);
+	//printf("IW_GenKeyRequest rv is %d\npBlob is %s", rv, pBlob);
+
+	//fp = fopen("../iwall.smt.pkm", "rb");
+	fp = fopen("/home/xuyang/workspace/gm_demo/iwall/iwall.test.pkm", "rb");
+	if (fp == NULL)
+	{
+		printf("pkm_open_err!\n");
+		return;
+	}
+	//fread(pkmbuf, 1024 * 65 + 256, 1, fp);
+	fread(pkmbuf + 256, 1024 * 65, 1, fp);
+	if (fp) {
+		fclose(fp);
+		fp = NULL;
+	}
+
+	//fp = fopen("../iwall.smt.skm", "rb");
+	fp = fopen("/home/xuyang/workspace/gm_demo/iwall/iwall.test.skm", "rb");
+	if (fp == NULL)
+	{
+		printf("skm_open_err!\n");
+		return;
+	}
+	//fread(skmbuf, 1024 * 32 + 256, 1, fp);
+	fread(skmbuf + 256, 1024 * 32, 1, fp);
+	if (fp) {
+		fclose(fp);
+		fp = NULL;
+	}
+
+	//rv = IW_ResponseKeyRequest(skmbuf, skeyMatrixLen, pkmbuf, pubMatrixLen, testKeyId, pBlob, pEnvelopedKeyBlob);
+	//printf("IW_ResponseKeyRequest rv is %d\npEnvelopedKeyBlob is %s\n", rv, pEnvelopedKeyBlob);
+
+	char seServerKey[256] = { 0 };
+	//rv = IW_WriteKeycard(pEnvelopedKeyBlob,seServerKey);
+	//rv = IW_WriteKeycard(pEnvelopedKeyBlob, NULL);
+	//printf("IW_WriteKeycard rv is %d\n seServerKey is:%s\n", rv, seServerKey);
+
+
+	char pPublic[512] = { 0 };
+	rv = CPK_Get_IPK(testKeyId, pkmbuf, pubMatrixLen, pPublic);
+	//printf("\nCPK_Get_IPK rv = %d\npPublic is: %s", rv, pPublic);
+	printf("计算公钥(rv = 0：成功) rv = %d\n标识(%s)的公钥：%s\n\n", rv, testKeyId, pPublic);
+
+	char pSignature[256] = { 0 };
+	rv = IW_SignData(testData, strlen(testData), pSignature);
+	//printf("IW_SignData rv is %d\n", rv);
+
+	char pSignaturefinal[512] = { 0 };
+	rv = IW_ServerSignData(pSignature, pSignaturefinal);
+	//printf("IW_ServerSignData rv is %d\n", rv);
+	printf("数字签名(rv = 0：成功) rv = %d\n被签名数据：%s\n签名值：%s\n", rv, testData, pSignaturefinal);
+
+	rv = IW_VerifyData(pkmbuf, pubMatrixLen, testData, strlen(testData), pSignaturefinal, testKeyId);
+	//printf("\nSM2VerifySignData rv = %d\n", rv);
+	printf("验证签名(rv = 0：成功) rv = %d\n\n", rv);
+
+	rv = WriteToken(1, "12243432432423");
+	//printf("\nWriteToken rv = %d\n", rv);
+
+	char token[64] = { 0 };
+	rv = ReadToken(1, token);
+	//printf("\nReadToken rv = %d\ntoken is %s\n", rv,token);
+
+	char cipher[1024] = { 0 };
+	rv = IW_SM2_EncryptData(pPublic, testData, strlen(testData), cipher);
+	printf("SM2 加密(rv = 0：成功) rv = %d\n待加密的数据：%s\n加密后的密文：%s\n", rv, testData, cipher);
+	//printf("\nIW_SM2_EncryptData rv = %d\n,%s", rv, cipher);
+
+	int	 pdataLen = 512;
+	char pdata[512] = { 0 };
+	//memset(cipher, 0, strlen(cipher));
+	//strcpy(cipher, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8RFjYRDtchtW5+I97DaEhXIudtzPYggSy5RjuwrOSjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAy8lAsr4ca8WWAx0xRwBLZsP8Dy3hZPOxCDpS712AsqriAQlg/IK8N/cYiXn8ITI9mJNOdTheDfta+pInsHO3LTIAAAADWdh0BePQQCezWL50T+cJGDxwEgXdpB/+nmPTjZKj8XMukoW3kIowGbGHQFmyYiYItwA=pkdfCryjH+mBWbd4C19NAXXOTlBxYIbTZ0uUSzw=");
+	rv = IW_SM2_DecryptData(cipher, strlen(cipher), pdata, &pdataLen);
+	printf("SM2 解密(rv = 0：成功) rv = %d\n待解密的数据：%s\n解密后的明文：%s\n\n", rv, cipher, pdata);
+	//printf("\nIW_SM2_DecryptData rv = %d, plain = %s\n", rv, pdata);
+
+	BYTE skey[128] = { 0 };
+	memset(cipher, 0, 1024);
+	rv = IW_SM2_MakeEnv(pkmbuf, pubMatrixLen, testKeyId, testData, strlen(testData), cipher);
+	printf("制作数字信封(rv = 0：成功) rv = %d\n信封中的数据：%s\n数字信封：%s\n", rv, testData, cipher);
+	//printf("\nIW_SM2_MakeEnv rv = %d,%s\n", rv, cipher);
+
+	int skeyLen = 128;
+	memset(skey, 0, 128);
+	//memset(cipher, 0, strlen(cipher));
+	//strcpy(cipher, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8RFjYRDtchtW5+I97DaEhXIudtzPYggSy5RjuwrOSjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAy8lAsr4ca8WWAx0xRwBLZsP8Dy3hZPOxCDpS712AsqriAQlg/IK8N/cYiXn8ITI9mJNOdTheDfta+pInsHO3LTIAAAADWdh0BePQQCezWL50T+cJGDxwEgXdpB/+nmPTjZKj8XMukoW3kIowGbGHQFmyYiYItwA=pkdfCryjH+mBWbd4C19NAXXOTlBxYIbTZ0uUSzw=");
+	rv = IW_SM2_OpenEnv(cipher, skey, &skeyLen);
+	printf("打开数字信封(rv = 0：成功) rv = %d\n数字信封：%s\n信封中的数据：%s\n\n", rv, cipher, skey);
+	//printf("\nIW_SM2_OpenEnv rv = %d, plain(ex) = %s\n", rv, skey);
+
+	int keyIdLen = 128;
+	char keyId[128] = { 0 };
+	rv = IW_ReadKeyID(keyId, &keyIdLen);
+	printf("读取软盾设备的标识(rv = 0：成功) rv = %d\n软盾标识：%s\n", rv, keyId);
+	//printf("\nReadKeyID rv = %d keyId = %s\n", rv, keyId);
+
+	//CloseLogFile();
+	printf("测试完成\n");
+
+
+	if (pkmbuf)
+		free(pkmbuf);
+	if (skmbuf)
+		free(skmbuf);
+
+	//system("pause");
+}
+
+void main_crypt()
+{
+	int i = 0;
+	for (i; i < 1; i++)
+	{
+		main6667();
+	}
+	//system("pause");
+}
