@@ -42,7 +42,7 @@ ADD_LIST:
 }
 
 
-uint32_t validate_data(int8_t *buf, uint32_t len)
+uint32_t validate_data(int8_t *msg, uint32_t len)
 {
     msg_head_t head;
     
@@ -53,7 +53,7 @@ uint32_t validate_data(int8_t *buf, uint32_t len)
         return ERROR;
     }
 
-    memcpy(&head, buf, sizeof(head));
+    memcpy(&head, msg, sizeof(head));
 
     if (strncmp(head.magic, MAGIC_WORD, strlen(MAGIC_WORD)))
     {
@@ -74,7 +74,7 @@ uint32_t validate_data(int8_t *buf, uint32_t len)
 /*
     preserve TE device info in a list
 */
-uint32_t handle_login_req(int8_t *buf, uint32_t len)
+uint32_t handle_login_req(int8_t *msg, uint32_t len)
 {
     msg_head_t          head;
     login_data_t        data;
@@ -88,8 +88,8 @@ uint32_t handle_login_req(int8_t *buf, uint32_t len)
         return ERROR;
     }
 
-    memcpy(&head, buf, sizeof(head));
-    memcpy(&data, buf+sizeof(head), sizeof(data));
+    memcpy(&head, msg, sizeof(head));
+    memcpy(&data, msg+sizeof(head), sizeof(data));
 
     PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "rcv msgid:%#x, devid:%s", head.type, data.dev_id);
 
@@ -102,66 +102,127 @@ uint32_t handle_login_req(int8_t *buf, uint32_t len)
 
 
 
-uint32_t handle_signiture_req(int8_t *buf, uint32_t len)
+uint32_t handle_signiture_req(int8_t *msg, uint32_t len)
 {
-    int32_t ret;
     msg_head_t          head;
-    signiture_data_t         data;
+    signiture_data_t         sign_data;
     dev_info_t          devinfo = {0};
     uint8_t devid[DEV_ID_LEN_MAX] = {0};
 
     // multi-pkg todo...
 
-    if (len != (sizeof(head) + sizeof(data)))
+    if (len != (sizeof(head) + sizeof(sign_data)))
     {
         PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "len != (sizeof(msg_head) + sizeof(data))");
         return ERROR;
     }
 
-    memcpy(&head, buf, sizeof(head));
-    memcpy(&data, buf+sizeof(head), sizeof(data));
+    memcpy(&head, msg, sizeof(head));
+    memcpy(&sign_data, msg+sizeof(head), sizeof(sign_data));
 
 
     get_dev_id(devid);
     get_devinfo_by_devid(devid, &devinfo);
 
-    char pSignaturefinal[512] = { 0 };
-    //ret = IW_ServerSignData(pSignature, pSignaturefinal);
-    //printf("IW_ServerSignData rv is %d\n", rv);
-    //printf("数字签名(rv = 0：成功) rv = %d\n被签名数据：%s\n签名值：%s\n", rv, testData, pSignaturefinal);
 
+    // need decrypt ????
+    //ret = IW_SM2_DecryptData(cipher, strlen(cipher), pdata, &pdataLen);
+
+    // save data
+    memcpy(&devinfo.sign_data, &sign_data, sizeof(signiture_data_t));
     
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "dev %s sign data:%s", devid, sign_data.data);
+
+    return OK;
+}
+
+
+uint32_t negotiate_crypt_type(int8_t *msg, uint32_t len)
+{
+    msg_head_t          head;
+    encrypt_data_t         crypt_data;
+    dev_info_t          devinfo = {0};
+    uint8_t devid[DEV_ID_LEN_MAX] = {0};
+
+    // multi-pkg todo...
+
+    if (len != (sizeof(head) + sizeof(crypt_data)))
+    {
+        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "len != (sizeof(msg_head) + sizeof(data))");
+        return ERROR;
+    }
+
+    memcpy(&head, msg, sizeof(head));
+    memcpy(&crypt_data, msg+sizeof(head), sizeof(crypt_data));
+
+
+    get_dev_id(devid);
+    get_devinfo_by_devid(devid, &devinfo);
+
+
+    // need decrypt ????
+    //ret = IW_SM2_DecryptData(cipher, strlen(cipher), pdata, &pdataLen);
+
+    // save data
+    memcpy(&devinfo.crypt_type, &crypt_data, sizeof(encrypt_data_t));
     
-
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "rcv msgid:%#x", head.type);
-
-
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "dev %s affirmed crypt type:%#x", devid, crypt_data.algorithm);
 
     return OK;
 }
 
 
 
-uint32_t parse_data(int8_t *buf, uint32_t len)
+uint32_t rcv_usr_data(int8_t *msg, uint32_t len)
+{
+    msg_head_t          head;
+    dev_info_t          devinfo = {0};
+    uint8_t devid[DEV_ID_LEN_MAX] = {0};
+
+    // multi-pkg todo...
+
+    memcpy(&head, msg, sizeof(head));
+
+    get_dev_id(devid);
+    get_devinfo_by_devid(devid, &devinfo);
+
+
+    // need decrypt ????
+    //ret = IW_SM2_DecryptData(cipher, strlen(cipher), pdata, &pdataLen);
+
+    // usr data
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "rcv dev %s usr data", devid);
+    dbg_print_msg_head(&head);
+
+    return OK;
+}
+
+
+
+
+/**
+*   deal TE request data
+*/
+uint32_t parse_data(int8_t *msg, uint32_t len)
 {
     msg_head_t head;
 
-    memcpy(&head, buf, sizeof(head));
+    memcpy(&head, msg, sizeof(head));
     PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "svr rcv msgid %#x", head.type);
 
     switch (head.type)
     {
         case MSG_TYPE_LOGIN:
-            handle_login_req(buf, len);
+            handle_login_req(msg, len);
             break;
 
         
         case MSG_TYPE_SIGNITURE:
-            handle_signiture_req(buf, len);
+            handle_signiture_req(msg, len);
             break;
             
         case MSG_TYPE_ENCRYPT_INFO:
-
+            negotiate_crypt_type(msg, len);
             break;
             
         case MSG_TYPE_USR_DATA:
@@ -172,8 +233,11 @@ uint32_t parse_data(int8_t *buf, uint32_t len)
     }
 
 
-    // need adapt, use decrypte data_len
+    // need adapt, use original data_len
     calc_total_len(head.data_len);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "receive data total len:%ld, need:%ld", 
+                         get_total_len(), head.total_length);
+        
     if (get_total_len() >= head.total_length)
     {
         return FINISH;
@@ -221,6 +285,106 @@ uint32_t handle_login_ack(int8_t **data, uint32_t *len)
 }
 
 
+uint32_t handle_sign_ack(int8_t **data, uint32_t *len)
+{
+    int32_t ret;
+    int8_t      *buf;
+    uint32_t    data_len;
+    msg_head_t *head;
+    signiture_data_t *sign_data;
+    dev_info_t          devinfo = {0};
+    uint8_t devid[DEV_ID_LEN_MAX] = {0};
+    uint8_t sign_val[SIGN_DATA_LEN_MAX] = {0};
+
+    data_len = sizeof(msg_head_t) + sizeof(signiture_data_t);
+
+    buf = malloc(data_len);
+    if (buf == NULL)
+    {
+        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "malloc failed");
+        return ERROR;
+    }
+
+    memset(buf, 0, data_len);
+
+    *len = data_len;
+    *data = buf;
+
+    head = (msg_head_t*)buf;
+    head->type = MSG_TYPE_SIGNITURE;
+    head->data_len = sizeof(signiture_data_t);
+    head->total_length = head->data_len;
+    head->total_package = 1;
+    strncpy(head->magic, MAGIC_WORD, MAGIC_WORD_LEN_MAX);
+
+    get_dev_id(devid);
+    get_devinfo_by_devid(devid, &devinfo);
+
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "original data:%s", devinfo.sign_data.data);
+    ret = IW_ServerSignData(devinfo.sign_data.data, sign_val);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "devid:%s, sign ret:%#x", devid, ret);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "sign data:%s", sign_val);
+
+    sign_data = (signiture_data_t*)((msg_head_t*)buf +1);
+
+    // need encrypt whole sign data 'sign_val', then asign to 'sign_data' ?
+    
+    memcpy(sign_data->data, sign_val, strlen(sign_val));
+
+    return OK;
+    
+}
+
+
+uint32_t affirm_crypt_type(int8_t **data, uint32_t *len)
+{
+    int32_t ret;
+    int8_t      *buf;
+    uint32_t    data_len;
+    msg_head_t *head;
+    encrypt_data_t *crypt_data;
+    dev_info_t          devinfo = {0};
+    uint8_t devid[DEV_ID_LEN_MAX] = {0};
+
+    data_len = sizeof(msg_head_t) + sizeof(encrypt_data_t);
+
+    buf = malloc(data_len);
+    if (buf == NULL)
+    {
+        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "malloc failed");
+        return ERROR;
+    }
+
+    memset(buf, 0, data_len);
+
+    *len = data_len;
+    *data = buf;
+
+    head = (msg_head_t*)buf;
+    head->type = MSG_TYPE_SIGNITURE;
+    head->data_len = sizeof(encrypt_data_t);
+    head->total_length = head->data_len;
+    head->total_package = 1;
+    strncpy(head->magic, MAGIC_WORD, MAGIC_WORD_LEN_MAX);
+
+    get_dev_id(devid);
+    get_devinfo_by_devid(devid, &devinfo);
+
+    crypt_data = (encrypt_data_t*)((msg_head_t*)buf +1);
+    
+    // need encrypt whole data 'devinfo.crypt_type', then asign to 'crypt_data' ?
+    memcpy(crypt_data, &devinfo.crypt_type, sizeof(encrypt_data_t));
+
+    return OK;
+    
+}
+
+
+
+/**
+*    response data to TE
+*/
+
 uint32_t prepare_interactive_data(uint32_t msg_type, int8_t **data, uint32_t *len)
 {
 
@@ -232,11 +396,11 @@ uint32_t prepare_interactive_data(uint32_t msg_type, int8_t **data, uint32_t *le
 
         
         case MSG_TYPE_SIGNITURE:
-
+            handle_sign_ack(data, len);
             break;
             
         case MSG_TYPE_ENCRYPT_INFO:
-
+            affirm_crypt_type(data, len);
             break;
             
         case MSG_TYPE_USR_DATA:

@@ -23,23 +23,24 @@ uint32_t init_sw_shield(int8_t *dev_id, int8_t *pkey)
 
     if (!dev_id ||!*dev_id || strlen(dev_id)>DEV_ID_LEN_MAX)
     {
-	    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "device id illegal.");
+        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "device id illegal.");
         return ERROR;
     }
-	ret = IW_InitDevice(dev_id, "svkd/");
+    ret = IW_InitDevice(dev_id, "svkd/");
 
     if (ret != OK)
-	    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "init sw-shield failed ret = %d", ret);
-    
-	PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "init sw-shield OK");
+        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "init sw-shield failed ret = %d", ret);
 
-	ret = IW_OpenDevice(dev_id, "svkd/");
+    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "init sw-shield OK");
+
+    /* open dev */
+    ret = IW_OpenDevice(dev_id, "svkd/");
     PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "open sw-shield ret = %#x", ret);
 
-    // gene temporary key-pair
-	ret = IW_GenKeyRequest(dev_id, tmp_key);
+    /* gene temporary key-pair */
+    ret = IW_GenKeyRequest(dev_id, tmp_key);
     PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "dev %s\'s pk is %s", dev_id, tmp_key);
-    
+
     strncpy(pkey, tmp_key, strlen(tmp_key));
 
     return OK;
@@ -48,16 +49,18 @@ uint32_t init_sw_shield(int8_t *dev_id, int8_t *pkey)
 
 /*
     save secret key that recv from sk-center
-    /data/libecm --------------/data/start_data.sh-----------------------need backup!
+    TE need execute /data/start_data.sh to generate data/libecm and ifport
+        /data/libecm
+        /data/start_data.sh
 */
 uint32_t persist_secret_key(int8_t *dev_id, int8_t *pkey)
 {
     int32_t ret;
-	int8_t  secret_key[SECRET_KEY_LEN_MAX] = { 0 };   // device sk
-	uint32_t key_len;
+    int8_t  secret_key[SECRET_KEY_LEN_MAX] = { 0 };   // device sk
+    uint32_t key_len;
     
-    // need open dev?
-	//ret = IW_OpenDevice(dev_id, "svkd/");
+    // need open dev ? all disappointed
+    //ret = IW_OpenDevice(dev_id, "svkd/");
     //PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "open sw-shield ret = %#x", ret);
     
     IW_Sendrequest(dev_id, pkey, secret_key);
@@ -66,6 +69,10 @@ uint32_t persist_secret_key(int8_t *dev_id, int8_t *pkey)
     if ( key_len < SECRET_KEY_LEN_MIN) 
     {
         PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "apply secret key failed, key len:%ld.", key_len);
+
+        if (strlen(secret_key) > 0)
+            PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "apply secret key failed, return:%s.", secret_key);
+        
         return ERROR;
     }
     
@@ -78,7 +85,64 @@ uint32_t persist_secret_key(int8_t *dev_id, int8_t *pkey)
 }
 
 
+/**
+ * WARNing: generate pk and apply sk must be combined
+ * 1 generate pk
+ * 2 apply sk and preserve
+*/
+void init_sw_shield_ex(int8_t *dev_id, int8_t *pkey)
+{
+    int32_t ret;
+    int8_t tmp_key[PUB_KEY_LEN_MAX] = {0};
+	int8_t  secret_key[SECRET_KEY_LEN_MAX] = { 0 };   // device sk
+	uint32_t key_len;
+    
 
+    if (!dev_id ||!*dev_id || strlen(dev_id)>DEV_ID_LEN_MAX)
+    {
+	    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "device id illegal.");
+        return;
+    }
+    
+    /* step1: gene temporary key-pair */
+	ret = IW_InitDevice(dev_id, "svkd/");
+
+    if (ret != OK)
+	    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "init sw-shield failed ret = %d", ret);
+    
+	PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "init sw-shield OK");
+
+	ret = IW_OpenDevice(dev_id, "svkd/");
+    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "open sw-shield ret = %#x", ret);
+
+    /* step2: gene temporary key-pair */
+	ret = IW_GenKeyRequest(dev_id, tmp_key);
+    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "dev %s\'s pk is %s", dev_id, tmp_key);
+    
+    strncpy(pkey, tmp_key, strlen(tmp_key));
+
+    /* step3: apply secret key */
+    IW_Sendrequest(dev_id, pkey, secret_key);
+    key_len = strlen(secret_key);
+    
+    if ( key_len < SECRET_KEY_LEN_MIN) 
+    {
+        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "apply secret key failed, key len:%ld.", key_len);
+
+        if (strlen(secret_key) > 0)
+            PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "apply secret key failed, return:%s.", secret_key);
+            
+        return;
+    }
+    
+    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "apply secret key OK, value:%s", secret_key);
+
+    ret = IW_WriteKeycard(secret_key, NULL);
+    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "import secret key to sw-shield OK.");
+
+    
+
+}
 
 void main6667(void)
 {

@@ -64,6 +64,8 @@ typedef struct tag_device_info
     uint32_t    dev_type;                           /* device type      */
     uint32_t    algorithm;                          /* data    encrypt algorithm, ref:encrpyt_alg_type_t         */
     int8_t      com_key[SECRET_KEY_LEN_MAX];            /* communication       secret   key */
+    signiture_data_t sign_data;                     /* device signiture data */
+    encrypt_data_t          crypt_type;              /* symmetric encryption algorithm */
     int8_t      pad[1024];
     
 }dev_info_t;
@@ -71,6 +73,8 @@ typedef struct tag_device_info
 /*typedef struct tag_svr_priv_data
 {
     task_id;
+    public_key;
+    pk_matrix    
 
 }svr_priv_data_t;*/
 
@@ -105,7 +109,9 @@ uint32_t print_sys_msg(const uint8_t *module, const uint8_t *fmt, ...);
 
 uint32_t getpid_by_name(const uint8_t* procname);
 
-void     print_cur_dir(void);
+void dbg_print_cur_dir(void);
+void dbg_print_msg_head(msg_head_t *head);
+
 
 #endif
 

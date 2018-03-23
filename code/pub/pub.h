@@ -49,6 +49,7 @@ typedef enum tag_encryp_alg_type
     ALG_TYPE_AES,
     ALG_TYPE_SM2,
     ALG_TYPE_SM4,
+    ALG_TYPE_BASE64,
 
     INVALID_ENCYPT_ALG_TYPE = -1,
 } encrpyt_alg_type_t;

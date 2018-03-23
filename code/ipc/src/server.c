@@ -127,14 +127,14 @@ uint32_t start_monitor(uint32_t svr_fd)
                 continue;
 
             
-            //transaction
+             /* transaction */
             if (parse_data(buf, len) == FINISH)
             {
                 prepare_interactive_data(((msg_head_t*)buf)->type, &ack_data, &ack_len);
                 send_to_client(client_fd, ack_data, ack_len);
 
 
-                // release resources
+                /* release resources */
                 close(client_fd);
                 free(ack_data);
                 break;

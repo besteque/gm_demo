@@ -17,5 +17,7 @@
 uint32_t init_sw_shield(int8_t *dev_id, int8_t *key);
 uint32_t persist_secret_key(int8_t *dev_id, int8_t *pkey);
 
+void init_sw_shield_ex(int8_t *dev_id, int8_t *pkey);
+
 
 

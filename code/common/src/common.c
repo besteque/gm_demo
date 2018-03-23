@@ -129,7 +129,7 @@ uint32_t getpid_by_name(const uint8_t* procname)
 
 #endif
 
-void print_cur_dir(void)
+void dbg_print_cur_dir(void)
 {
 
     uint8_t buf[FILE_PATH_NAME_LEN_MAX];   
@@ -155,4 +155,17 @@ void get_dev_id(uint8_t *id)
     strncpy(id, session_id, strlen(session_id));
 }
 
+
+void dbg_print_msg_head(msg_head_t *head)
+{
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "msg head(size:%ld) as follow:", sizeof(msg_head_t));
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t magic        :%s", head->magic);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t type         :%d", head->type);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t date_len     :%d", head->data_len);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t version      :%d", head->version);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t trans_id     :%d", head->trans_id);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t total_length :%ld", head->total_length);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t total_package:%d", head->total_package);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t index        :%d", head->index);
+}
 
