@@ -26,9 +26,12 @@
 #define PACKAGE_DATA_LEN_MAX                1024
 #define DEV_ID_LEN_MAX                      128
 #define SIGN_DATA_LEN_MAX                   512
-#define PUB_KEY_LEN_MAX                     256
-#define SECRET_KEY_LEN_MAX                  1024
-#define SECRET_KEY_LEN_MIN                  32
+#define PUB_KEY_LEN_MAX                     256         /* public secret key length max value */
+#define SECRET_KEY_LEN_MAX                  1024        /* private secret key length max value */
+#define SECRET_KEY_LEN_MIN                  32          /* private secret key length min value */
+
+#define PUB_KEY_MATRIX_LEN_MAX              66816       /* public key matrix len:1024*65(66560), add 256 as reserve */
+#define SECRET_KEY_MATRIX_LEN_MAX           33024       /* secret key matrix len:1024*32, add 256 as reserve */
 
 typedef enum tag_msg_type 
 {
@@ -48,6 +51,7 @@ typedef enum tag_encryp_alg_type
     ALG_TYPE_DES3,
     ALG_TYPE_AES,
     ALG_TYPE_SM2,
+    ALG_TYPE_SM3,
     ALG_TYPE_SM4,
     ALG_TYPE_BASE64,
 

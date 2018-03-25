@@ -13,6 +13,7 @@ TARGET = $(OUTPUT_DIR)/$(ARTIFACT)
 CC = gcc
 LD = $(CC)
 
+#FLAGS = -O2 -Wno-unused-result -fstack-protector #-Wall
 DEPS = -Wp,-MMD,$(@:%.o=%.d),-MT,$@
 
 INCLUDES += -I$(SRC_DIR)/pub
@@ -22,7 +23,7 @@ INCLUDES += -I$(SRC_DIR)/security/include
 INCLUDES += -I$(SRC_DIR)/ipc/include
 
 
-LIBS += -L$(LIB_DIR) -lc -lm -lgmapi -lgmurl
+LIBS += -L$(LIB_DIR) -lc -lm -lgmapi -lgmurl -lpthread 
 
 #Macro to expand files recursively: parameters $1 -  directory, $2 - extension, i.e. cpp
 rwildcard = $(wildcard $(addprefix $1/*.,$2)) $(foreach d,$(wildcard $1/*),$(call rwildcard,$d,$2))
@@ -39,13 +40,13 @@ OBJS = $(addprefix $(OUTPUT_DIR)/,$(addsuffix .o, $(basename $(SRCS))))
 
 #Linking rule
 $(TARGET):$(OBJS)
-	$(LD) -o $(TARGET) $(OBJS) $(LIBS)
+	$(LD) $(FLAGS) -o $(TARGET) $(OBJS) $(LIBS)
 	@echo DONE!
 
 #Compiling rule
 $(OUTPUT_DIR)/%.o:%.c
 	@mkdir -p $(dir $@)
-	@$(CC) -c $(DEPS) -o $@ $(INCLUDES) $(CCFLAGS) $<
+	@$(CC) $(FLAGS) -c $(DEPS) -o $@ $(INCLUDES) $(CCFLAGS) $<
 
 
 #Rules section for default compilation and linking

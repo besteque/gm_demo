@@ -6,7 +6,7 @@
  */
 
 #ifndef _SERVER_H_
-#define _SERVER_H
+#define _SERVER_H_
 
 #include <stdio.h>  
 #include <sys/types.h>  
@@ -14,6 +14,11 @@
 #include <netinet/in.h>  
 #include <arpa/inet.h>
 #include <stdint.h>
+#include <unistd.h>
+#include <errno.h>
+#include <pthread.h>
+
+
 
 #include "pub.h"
 #include "common.h"
@@ -24,6 +29,9 @@
 uint32_t init_monitor(int8_t *addr, uint32_t port) ;
 uint32_t start_monitor(uint32_t svr_fd);
 uint32_t close_monitor(uint32_t svr_fd);
+
+void* secure_comm_task(void *priv);
+
 
 
 #endif

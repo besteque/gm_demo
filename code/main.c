@@ -8,63 +8,71 @@
 
 #include "pub.h"
 #include "common.h"
+#include "crypt.h"
 #include "mgt.h"
 #include "server.h"
 
 
+
 /* WARNing:need semaphore to protect it in multi-thread env  */
-list_t      dev_list_head = {0};
+proc_spec_data_t *proc_data = NULL;
+//struct list_head      dev_list_head = {0};
 
 
-extern main_crypt();
+extern main_crypt(void);
 
 
+int init_proc_data(proc_spec_data_t *priv)
+{    
+    INIT_LIST_HEAD(&priv->dev_list_head);
 
-int main() 
+    //stub
+    strcpy(priv->devid, "xuyang_00n");
+
+    return OK;
+}
+
+
+int main(int argc, char *argv[])
 {
+    int32_t ret;
     uint32_t sock_fd;
     int8_t   tmp_pkey[PUB_KEY_LEN_MAX] = {0}; /* temporary key for comm with sk-centor */
 
-    //stub
-    int8_t svr_id[20] = "xuyang1024";
-    char ursid[512] = {0};
-    int     id_len;
+
+    /* 0 init proc private data */
+    proc_data = malloc(sizeof(proc_spec_data_t));
+    if (proc_data == NULL)
+    {
+        PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "main alloc mem failed");
+        return ERROR;
+    }
+    memset(proc_data, 0, sizeof(proc_spec_data_t));
 
     /* 1 init TE dev list  */
-    int_device_list(&dev_list_head);
+    init_proc_data(proc_data);
 
-#if 0 //DENY
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "init sw shield");
-    init_sw_shield(svr_id, tmp_pkey);    
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "%s's pk:%s", svr_id, tmp_pkey);
+    /* 2 get secret key from sk-center, gen pk and sk  */
+    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "init sw shield begin...");
+    ret = init_sw_shield(proc_data->devid, tmp_pkey);
+    if (ret != OK)
+        return -1;
+    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "init sw shield OK");
 
-    /* 2 get secret key from sk-center  */
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "get secret key from sk-center");
-    persist_secret_key(svr_id);
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "get secret key from sk-center OK");
-#else
-
-    /* 2 generate pk and apply sk */
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "get secret key from sk-center");
-    init_sw_shield_ex(svr_id, tmp_pkey);
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "get secret key from sk-center OK");
-#endif
+    /* 3 generate key matrix */
+    //gene_key_matrix(proc_data->pub_matrix, proc_data->skey_matrix);
     
-    /*IW_OpenDevice(svr_id, "svkd/");
-    IW_ReadKeyID(ursid, &id_len);
-    ursid[id_len] = '\0';
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "urdid:%s, len:%ld", ursid, id_len);*/
-
-    
-    /* 3 start service monitor */
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "start monitor...");    
+    /* 4 start service monitor */
     sock_fd = init_monitor(NULL, SVR_LISTEN_PORT_NUM);
-    start_monitor(sock_fd);
+    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "start monitor, svr_fd:%ld", sock_fd);
+
+    if (sock_fd > 0)
+        start_monitor(sock_fd);
 
     close_monitor(sock_fd);
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "shutdown monitor...");  
+    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "shutdown monitor, svr_fd:%ld", sock_fd);
 
-    /* 4 to be continued... */
+    /* 5 to be continued... */
 
     return 0;
 }
