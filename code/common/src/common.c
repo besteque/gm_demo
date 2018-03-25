@@ -16,9 +16,6 @@
 
 
 
-//stub
-extern task_priv_data_t task_data;
-
 
 
 static void pabort(const uint8_t *s)
@@ -167,8 +164,15 @@ void dbg_print_cur_dir(void)
 
 void get_dev_id(int8_t *id)
 {
+    uint32_t index;
+    proc_spec_data_t *priv;
+
     //strncpy(id, session_id, strlen(session_id));
-    strncpy(id, task_data.devid, strlen(task_data.devid));
+
+    get_proc_priv_data(&priv);
+    index = get_task_serialno();
+    
+    strncpy(id, priv->task_var[index]->devid, strlen(priv->task_var[index]->devid));
 }
 
 
@@ -180,7 +184,7 @@ uint32_t get_proc_priv_data(proc_spec_data_t **priv)
 {
     if (!proc_data)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "proc_data is null");
+        PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "proc_data is null");
         return ERROR;
     }
     
@@ -190,27 +194,35 @@ uint32_t get_proc_priv_data(proc_spec_data_t **priv)
 }
 
 
+//////////////////////////////////////////////////////
+// stub 
+// in thread context, it can get from task var. todo!
+uint32_t get_task_serialno(void)
+{
+    return 0;
+}
+
 
 void dbg_print_msg_head(msg_head_t *head)
 {
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "msg head(size:%ld) as follow:", sizeof(msg_head_t));
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t magic        :%s", head->magic);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t type         :%d", head->type);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t date_len     :%d", head->data_len);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t version      :%d", head->version);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t trans_id     :%d", head->trans_id);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t total_length :%ld", head->total_length);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t total_package:%d", head->total_package);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t index        :%d", head->index);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\n");
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "msg head(size:%ld) as follow:", sizeof(msg_head_t));
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t magic        :%s", head->magic);
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t type         :%d", head->type);
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t date_len     :%d", head->data_len);
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t version      :%d", head->version);
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t trans_id     :%d", head->trans_id);
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t total_length :%ld", head->total_length);
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t total_package:%d", head->total_package);
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t index        :%d", head->index);
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\n");
 }
 
 void dbg_print_devinfo(dev_info_t    *devinfo)
 {
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t id        :%s", devinfo->id);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t dev_type  :%ld", devinfo->dev_type);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\t algorithm :%ld", devinfo->algorithm);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "\n");
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t id        :%s", devinfo->id);
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t dev_type  :%ld", devinfo->dev_type);
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t algorithm :%ld", devinfo->algorithm);
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\n");
 
     // to be continued...  sign_data/crypt_type
 }
@@ -232,11 +244,11 @@ void dbg_print_dev_list(struct list_head *head)
 
     if (list_empty(head))
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "list is empty");
+        PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "list is empty");
         return;
     }
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "devinfo(size:%ld) as follow:", sizeof(dev_info_t));
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "devinfo(size:%ld) as follow:", sizeof(dev_info_t));
 
 #if 1   // both OK
     list_for_each_entry_safe(pos, n, head, point)
@@ -261,7 +273,7 @@ void dbg_print_dev_list(struct list_head *head)
 void dbg_print_char_in_buf(int8_t *buf, uint32_t len)
 {
     uint32_t i;
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "buf info as follow:");
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "buf info as follow:");
 
     for (i = 0; i < len; i++)
     {

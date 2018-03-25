@@ -9,11 +9,6 @@
 #include "mgt.h"
 
 
-//tmp
-//dev_info_t      devnode = {0};
-
-extern task_priv_data_t task_data;
-
 
 
 
@@ -25,9 +20,11 @@ int int_device_list(struct list_head *head)
 
 int list_add_device(dev_info_t *info, struct list_head *head)
 {
+    proc_spec_data_t *priv;
     struct list_head *pos;
     dev_info_t      *dev;
     dev_info_t      *node;
+    uint32_t index;
 
     
     if (list_empty(head))
@@ -47,8 +44,9 @@ int list_add_device(dev_info_t *info, struct list_head *head)
     }
 
 ADD_LIST:
-    //record_dev_id(info->id);
-    strncpy(task_data.devid, info->id, strlen(info->id));
+    get_proc_priv_data(&priv);
+    index = get_task_serialno();    
+    strncpy(priv->task_var[index]->devid, info->id, strlen(info->id));
 
     /*****************************************************************************
     * WARNing: new node must apply heap memeroy! stack will recycle after return
@@ -125,8 +123,6 @@ uint32_t handle_login_req(int8_t *msg, uint32_t len)
 
     // stub
     dbg_print_dev_list(&priv->dev_list_head);
-    
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "taskdata devid:%s", task_data.devid);
 
     return OK;
 }
@@ -242,8 +238,9 @@ uint32_t rcv_usr_data(int8_t *msg, uint32_t len)
 */
 uint32_t parse_data(int8_t *msg, uint32_t len)
 {
-    int32_t ret;
+    int32_t ret = OK, index;
     msg_head_t head;
+    proc_spec_data_t *priv;
 
     memcpy(&head, msg, sizeof(head));
     //PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "svr rcv msgid %#x", head.type);
@@ -266,6 +263,11 @@ uint32_t parse_data(int8_t *msg, uint32_t len)
             
         case MSG_TYPE_USR_DATA:
 
+            // todo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+            //msg null, do not free it
+            ret = ERROR; 
+
             break;
 
         default:break;
@@ -279,7 +281,9 @@ uint32_t parse_data(int8_t *msg, uint32_t len)
     }
 
     // need adapt, use original data_len
-    calc_total_len(&task_data, head.data_len);
+    get_proc_priv_data(&priv);
+    index = get_task_serialno();
+    calc_total_len(priv->task_var[index], head.data_len);
     PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "receive data total len:%ld, expect:%ld", 
                          get_total_len(), head.total_length);
         

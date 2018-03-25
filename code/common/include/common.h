@@ -29,17 +29,23 @@
 #define PRINT_MSG_LEN_MAX           1024    // need discuss!
 #define INVALID_SOCKET_FD           -1
 #define TCP_CONNECT_POOL            5
+#define ETH_IADDR_STR_LEN           16   //ip address, eg. 1.2.3.4
 
-#define INVALID_UINT32           -1
+#define INVALID_UINT32            -1
 
-#define PROC_THREAD_NUM_MAX         TCP_CONNECT_POOL /* max thread in proccess, imply socket connect number */
+#define MONITOR_THREAD_NUM_MAX         TCP_CONNECT_POOL /* max thread in proccess, imply socket connect number */
 
 #define IWALL_SVKD_REPO             "res/svkd/"
 #define SMT_PKM_FILE                "res/iwall/iwall.smt.pkm"
 #define SMT_SKM_FILE                "res/iwall/iwall.smt.skm"
 
+#define BOOL_TRUE               (uint8_t)1
+#define BOOL_FALSE              (uint8_t)0
+
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
+
+typedef void (*THREAD_ENTRY)(void *); //callback
 
 
 
@@ -54,6 +60,8 @@ typedef enum tag_msg_log_level
 typedef enum tag_module_def
 {
     INIT = 0,
+    DBG,
+    COMMON,
     IPC,
     MGT,
     SVR,
@@ -81,27 +89,42 @@ typedef struct tag_device_info
     
 }dev_info_t;
 
-typedef struct tag_svr_priv_data
-{
-    struct list_head dev_list_head;
-    int8_t devid[DEV_ID_LEN_MAX];               /* svr device id */
-    int32_t cli_sockfd[PROC_THREAD_NUM_MAX];         /* client socket fd */
-    int32_t task_id[PROC_THREAD_NUM_MAX];         /* max threads number in the proc */
-    uint8_t pub_matrix[PUB_KEY_MATRIX_LEN_MAX];     /* server is owner */
-    uint8_t skey_matrix[SECRET_KEY_MATRIX_LEN_MAX]; /* server is owner */
 
-}proc_spec_data_t;
+typedef struct tag_client_info
+{
+    int32_t cli_sockfd;         /* client socket fd */
+    int32_t task_id;
+    //int8_t  address[ETH_IADDR_STR_LEN];
+    uint32_t ip;
+    uint16_t port;
+    int8_t   pad[2];
+
+}client_info_t;
 
 /* for every connect, create a task, it can register multi-device */
 typedef struct tag_svr_task_data
 {
     int8_t      devid[DEV_ID_LEN_MAX];     /* TE device id */ /* use as unique index*/
     int32_t     cli_sockfd;
+    int32_t     task_id;            /* self id */
     uint32_t    total_rcv_data_len; /* rc data total len(without head) in every step, reset for each step over */
 
 }task_priv_data_t;
 
-//may be '__VA_ARGS__' or '##__VA_ARGS__' or '##args'
+typedef struct tag_svr_priv_data
+{
+    struct list_head dev_list_head;
+    int8_t devid[DEV_ID_LEN_MAX];               /* svr device id */
+    uint32_t client_num;    /* the number of clients */ 
+    client_info_t client_info[MONITOR_THREAD_NUM_MAX]; /* statistic data, taskid as clue */
+    task_priv_data_t *task_var[MONITOR_THREAD_NUM_MAX]; /* dynamic data:run-time info */
+    uint8_t pub_matrix[PUB_KEY_MATRIX_LEN_MAX];     /* server is owner */
+    uint8_t skey_matrix[SECRET_KEY_MATRIX_LEN_MAX]; /* server is owner */
+
+}proc_spec_data_t;
+
+
+//maybe '__VA_ARGS__' or '##__VA_ARGS__' or '##args'
 #define PRINT_SYS_MSG(level, module, fmt, ...)    \
     do{                                            \
         if (level == MSG_LOG_DBG) {                \
@@ -114,21 +137,14 @@ typedef struct tag_svr_task_data
 
 
 // external variable
-extern int8_t     session_id[];
 extern proc_spec_data_t *proc_data;
-
-
-typedef void* (*THREAD_ENTRY)(void *);
 
 
 
 uint32_t get_proc_priv_data(proc_spec_data_t **priv);
-
+uint32_t get_task_serialno(void);
 
 void get_dev_id(int8_t *id);
-void record_dev_id(int8_t *id);
-
-
 
 void     getcurtime(uint8_t *dtime, uint32_t len);
 uint32_t rel_slogf(const uint8_t *fmt, ...);

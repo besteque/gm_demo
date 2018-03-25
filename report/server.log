@@ -1,0 +1,2403 @@
+
+root@ubuntu:/home/xuyang/workspace/gm_demo# make clean
+root@ubuntu:/home/xuyang/workspace/gm_demo# make clean;make
+gcc  -o target/demo target//home/xuyang/workspace/gm_demo/code/main.o target//home/xuyang/workspace/gm_demo/code/common/src/common.o target//home/xuyang/workspace/gm_demo/code/ipc/src/server.o target//home/xuyang/workspace/gm_demo/code/manager/src/mgt.o target//home/xuyang/workspace/gm_demo/code/security/src/cJSON.o target//home/xuyang/workspace/gm_demo/code/security/src/crypt.o -L/home/xuyang/workspace/gm_demo/libs -lc -lm -lgmapi -lgmurl -lpthread 
+DONE!
+root@ubuntu:/home/xuyang/workspace/gm_demo# 
+root@ubuntu:/home/xuyang/workspace/gm_demo# 
+root@ubuntu:/home/xuyang/workspace/gm_demo# ./target/demo 
+[2018.3.25 22:38:28.197][INIT]init sw shield begin...
+[2018.3.25 22:38:28.197][CRYPT]IW_OpenDevice ret:17003. maybe usr not exist(code:17003)
+[2018.3.25 22:38:28.198][CRYPT]IW_InitDevice OK
+[2018.3.25 22:38:28.198][CRYPT]generate temporary key-pair begin
+[2018.3.25 22:38:28.200][CRYPT]generate temporary key-pair OK
+[2018.3.25 22:38:28.200][CRYPT]"xuyang_00o"'s pk is AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAhXWLBO469Q6zfRAJbKIQeJ7HEtH/iz32W9jGbHYSkQkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANvAXLvxhvOvOsJQlY5YCt4ADz6M9Cdh2z1gvxgZ5Xk8
+[2018.3.25 22:38:28.200][CRYPT]get secret key from sk-center
+[2018.3.25 22:38:29.171][CRYPT]apply secret key OK, value:AQAAAAEEAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv5Ha8zmsCu4FLvZ313EogQ1VEJ0FTamYRJBHYzDGq3wABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADYSDKfclT/z+yAvHHpRieZyRk2GP1BSanqtmDTsKlrXAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADiSWRCHsurQYbQEFRFMmU9IilC0ChlSzJC2iULUJ3XmgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA7dQEefJFLrOsvcUD33UWV5uFOl6SyQvTz4GWtqrTceIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABsdnxq765D/lhdakOrUYGZkvtjny7WnEGzQ/b0xh3oJHLxB7AIBbnSMmDbA6dDkBbcU8xOZWtBM8sotxV/a9qoQAAAAYglxfL6ucOiBHIRyFc472gA=
+[2018.3.25 22:38:29.177][CRYPT]import secret key to sw-shield OK.
+[2018.3.25 22:38:29.177][CRYPT]get secret key from sk-center OK
+[2018.3.25 22:38:29.177][CRYPT]gene_key_matrix begin
+[2018.3.25 22:38:29.177][CRYPT]gene_key_matrix OK
+[2018.3.25 22:38:29.177][INIT]init sw shield OK
+[2018.3.25 22:38:29.177][INIT]start monitor, svr_fd:3
+[2018.3.25 22:38:43.656][SVR]client 0xc07ba8c0 been connected.
+[2018.3.25 22:38:43.656][SVR]client 192.168.123.192 been connected.
+[2018.3.25 22:38:43.656][SVR]recv data len:312
+[2018.3.25 22:38:43.656][DBG]msg head(size:56) as follow:
+[2018.3.25 22:38:43.656][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:43.656][SVR]task_data->devid:
+[2018.3.25 22:38:43.656][SVR]task_data->task_id:-648640768
+[2018.3.25 22:38:43.656][DBG]    magic        :@DDET@
+[2018.3.25 22:38:43.656][DBG]    type         :1
+[2018.3.25 22:38:43.656][DBG]    date_len     :256
+[2018.3.25 22:38:43.656][DBG]    version      :0
+[2018.3.25 22:38:43.656][DBG]    trans_id     :0
+[2018.3.25 22:38:43.656][DBG]    total_length :256
+[2018.3.25 22:38:43.656][DBG]    total_package:1
+[2018.3.25 22:38:43.656][DBG]    index        :0
+
+[2018.3.25 22:38:43.656][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:43.656][MGT]rcv msgid:0x1, devid:xuyang_1804289383
+[2018.3.25 22:38:43.656][SVR]proc->task_var->devid:
+[2018.3.25 22:38:43.656][MGT]devlist empty, create it
+[2018.3.25 22:38:43.656][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:43.656][MGT]add node OK
+[2018.3.25 22:38:43.656][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:43.656][DBG]devinfo(size:3744) as follow:
+[2018.3.25 22:38:43.656][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:43.656][DBG]    id        :xuyang_1804289383
+[2018.3.25 22:38:43.656][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:43.656][DBG]    dev_type  :0
+[2018.3.25 22:38:43.656][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:43.656][DBG]    algorithm :0
+
+[2018.3.25 22:38:43.656][MGT]receive data total len:256, expect:256
+[2018.3.25 22:38:43.656][INIT]prepare_interactive_data failed, ret:37621784
+[2018.3.25 22:38:43.656][SVR]send_to_client OK
+[2018.3.25 22:38:43.656][DBG]buf info as follow:
+xuyang_00o
+
+
+
+[2018.3.25 22:38:43.657][SVR]recv data len:1080
+[2018.3.25 22:38:43.657][DBG]msg head(size:56) as follow:
+[2018.3.25 22:38:43.657][DBG]    magic        :@DDET@
+[2018.3.25 22:38:43.657][DBG]    type         :2
+[2018.3.25 22:38:43.657][DBG]    date_len     :1024
+[2018.3.25 22:38:43.657][DBG]    version      :0
+[2018.3.25 22:38:43.657][DBG]    trans_id     :0
+[2018.3.25 22:38:43.657][DBG]    total_length :1024
+[2018.3.25 22:38:43.657][DBG]    total_package:1
+[2018.3.25 22:38:43.657][DBG]    index        :0
+
+[2018.3.25 22:38:43.657][MGT]client xuyang_1804289383 sign data:rZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crX
+[2018.3.25 22:38:43.657][MGT]receive data total len:1024, expect:1024
+[2018.3.25 22:38:43.657][MGT]handle_sign_ack devid:xuyang_1804289383
+[2018.3.25 22:38:43.657][MGT]original data:rZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crX
+base64 error 2
+[2018.3.25 22:38:43.657][MGT]IW_ServerSignData failed, code -639305840
+[2018.3.25 22:38:43.657][INIT]prepare_interactive_data failed, ret:1
+[2018.3.25 22:38:43.657][SVR]send_to_client OK
+[2018.3.25 22:38:43.657][DBG]buf info as follow:
+
+
+
+
+[2018.3.25 22:38:43.657][SVR]recv data len:1596
+[2018.3.25 22:38:43.657][DBG]msg head(size:56) as follow:
+[2018.3.25 22:38:43.657][DBG]    magic        :@DDET@
+[2018.3.25 22:38:43.657][DBG]    type         :3
+[2018.3.25 22:38:43.657][DBG]    date_len     :1540
+[2018.3.25 22:38:43.657][DBG]    version      :0
+[2018.3.25 22:38:43.657][DBG]    trans_id     :0
+[2018.3.25 22:38:43.657][DBG]    total_length :1540
+[2018.3.25 22:38:43.657][DBG]    total_package:1
+[2018.3.25 22:38:43.657][DBG]    index        :0
+
+[2018.3.25 22:38:43.657][MGT]dev xuyang_1804289383 affirmed crypt type:0
+[2018.3.25 22:38:43.657][MGT]receive data total len:1540, expect:1540
+[2018.3.25 22:38:43.657][SVR]send_to_client OK
+[2018.3.25 22:38:43.657][DBG]buf info as follow:
+
+
+
+d
+[2018.3.25 22:38:43.657][SVR]recv data len:156
+[2018.3.25 22:38:43.657][DBG]msg head(size:56) as follow:
+[2018.3.25 22:38:43.657][DBG]    magic        :@DDET@
+[2018.3.25 22:38:43.657][DBG]    type         :4
+[2018.3.25 22:38:43.657][DBG]    date_len     :56
+[2018.3.25 22:38:43.657][DBG]    version      :0
+[2018.3.25 22:38:43.657][DBG]    trans_id     :0
+[2018.3.25 22:38:43.657][DBG]    total_length :56
+[2018.3.25 22:38:43.657][DBG]    total_package:1
+[2018.3.25 22:38:43.657][DBG]    index        :0
+
+[2018.3.25 22:38:43.657][MGT]parse_data failed, ret:1
+[2018.3.25 22:38:44.657][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:38:44.657][SVR]task_data->task_id:-648640768
+[2018.3.25 22:38:44.657][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:44.657][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:44.657][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:44.657][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:44.657][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:44.658][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:44.658][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:45.658][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:38:45.658][SVR]task_data->task_id:-648640768
+[2018.3.25 22:38:45.658][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:45.658][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:45.658][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:45.658][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:45.658][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:45.658][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:45.658][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:46.659][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:38:46.659][SVR]task_data->task_id:-648640768
+[2018.3.25 22:38:46.659][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:46.659][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:46.659][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:46.659][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:46.659][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:46.659][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:46.659][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:47.660][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:38:47.660][SVR]task_data->task_id:-648640768
+[2018.3.25 22:38:47.660][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:47.660][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:47.660][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:47.660][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:47.660][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:47.660][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:47.660][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:48.662][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:38:48.662][SVR]task_data->task_id:-648640768
+[2018.3.25 22:38:48.662][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:48.662][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:48.662][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:48.662][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:48.662][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:48.662][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:48.662][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:49.663][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:38:49.663][SVR]task_data->task_id:-648640768
+[2018.3.25 22:38:49.663][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:49.663][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:49.663][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:49.663][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:49.663][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:49.663][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:49.663][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:50.663][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:38:50.663][SVR]task_data->task_id:-648640768
+[2018.3.25 22:38:50.664][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:50.664][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:50.664][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:50.664][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:50.664][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:50.664][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:50.664][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:51.664][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:38:51.665][SVR]task_data->task_id:-648640768
+[2018.3.25 22:38:51.665][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:51.665][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:51.665][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:51.665][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:51.665][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:51.665][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:51.665][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:52.665][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:38:52.665][SVR]task_data->task_id:-648640768
+[2018.3.25 22:38:52.665][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:52.665][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:52.665][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:52.665][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:52.665][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:52.666][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:52.666][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:52.681][SVR]client 0xc07ba8c0 been connected.
+[2018.3.25 22:38:52.681][SVR]client 192.168.123.192 been connected.
+[2018.3.25 22:38:52.681][SVR]recv data len:312
+[2018.3.25 22:38:52.681][DBG]msg head(size:56) as follow:
+[2018.3.25 22:38:52.681][DBG]    magic        :@DDET@
+[2018.3.25 22:38:52.681][DBG]    type         :1
+[2018.3.25 22:38:52.681][DBG]    date_len     :256
+[2018.3.25 22:38:52.681][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:52.681][SVR]task_data->devid:
+[2018.3.25 22:38:52.681][SVR]task_data->task_id:-657033472
+[2018.3.25 22:38:52.681][DBG]    version      :0
+[2018.3.25 22:38:52.681][DBG]    trans_id     :0
+[2018.3.25 22:38:52.681][DBG]    total_length :256
+[2018.3.25 22:38:52.681][DBG]    total_package:1
+[2018.3.25 22:38:52.681][DBG]    index        :0
+
+[2018.3.25 22:38:52.681][MGT]rcv msgid:0x1, devid:xuyang_1804289383
+[2018.3.25 22:38:52.681][DBG]devinfo(size:3744) as follow:
+[2018.3.25 22:38:52.681][DBG]    id        :xuyang_1804289383
+[2018.3.25 22:38:52.681][DBG]    dev_type  :0
+[2018.3.25 22:38:52.681][DBG]    algorithm :0
+
+[2018.3.25 22:38:52.681][MGT]receive data total len:256, expect:256
+[2018.3.25 22:38:52.681][INIT]prepare_interactive_data failed, ret:37622072
+[2018.3.25 22:38:52.681][SVR]send_to_client OK
+[2018.3.25 22:38:52.681][DBG]buf info as follow:
+xuyang_00o
+
+
+
+[2018.3.25 22:38:52.681][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:52.681][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:52.681][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:52.681][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:52.681][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:52.681][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:52.681][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:52.681][SVR]recv data len:1080
+[2018.3.25 22:38:52.681][DBG]msg head(size:56) as follow:
+[2018.3.25 22:38:52.681][DBG]    magic        :@DDET@
+[2018.3.25 22:38:52.681][DBG]    type         :2
+[2018.3.25 22:38:52.681][DBG]    date_len     :1024
+[2018.3.25 22:38:52.681][DBG]    version      :0
+[2018.3.25 22:38:52.681][DBG]    trans_id     :0
+[2018.3.25 22:38:52.681][DBG]    total_length :1024
+[2018.3.25 22:38:52.681][DBG]    total_package:1
+[2018.3.25 22:38:52.681][DBG]    index        :0
+
+[2018.3.25 22:38:52.681][MGT]client xuyang_1804289383 sign data:rZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crX
+[2018.3.25 22:38:52.681][MGT]receive data total len:1280, expect:1024
+[2018.3.25 22:38:52.681][MGT]handle_sign_ack devid:xuyang_1804289383
+[2018.3.25 22:38:52.681][MGT]original data:rZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crX
+base64 error 2
+[2018.3.25 22:38:52.681][MGT]IW_ServerSignData failed, code -639305840
+[2018.3.25 22:38:52.681][INIT]prepare_interactive_data failed, ret:1
+[2018.3.25 22:38:52.681][SVR]send_to_client OK
+[2018.3.25 22:38:52.681][DBG]buf info as follow:
+
+
+
+
+[2018.3.25 22:38:52.681][SVR]recv data len:1596
+[2018.3.25 22:38:52.681][DBG]msg head(size:56) as follow:
+[2018.3.25 22:38:52.681][DBG]    magic        :@DDET@
+[2018.3.25 22:38:52.681][DBG]    type         :3
+[2018.3.25 22:38:52.681][DBG]    date_len     :1540
+[2018.3.25 22:38:52.681][DBG]    version      :0
+[2018.3.25 22:38:52.681][DBG]    trans_id     :0
+[2018.3.25 22:38:52.681][DBG]    total_length :1540
+[2018.3.25 22:38:52.681][DBG]    total_package:1
+[2018.3.25 22:38:52.681][DBG]    index        :0
+
+[2018.3.25 22:38:52.681][MGT]dev xuyang_1804289383 affirmed crypt type:0
+[2018.3.25 22:38:52.681][MGT]receive data total len:2820, expect:1540
+[2018.3.25 22:38:52.681][SVR]send_to_client OK
+[2018.3.25 22:38:52.681][DBG]buf info as follow:
+
+
+
+d
+[2018.3.25 22:38:52.681][SVR]recv data len:156
+[2018.3.25 22:38:52.681][DBG]msg head(size:56) as follow:
+[2018.3.25 22:38:52.681][DBG]    magic        :@DDET@
+[2018.3.25 22:38:52.681][DBG]    type         :4
+[2018.3.25 22:38:52.681][DBG]    date_len     :56
+[2018.3.25 22:38:52.681][DBG]    version      :0
+[2018.3.25 22:38:52.681][DBG]    trans_id     :0
+[2018.3.25 22:38:52.682][DBG]    total_length :56
+[2018.3.25 22:38:52.682][DBG]    total_package:1
+[2018.3.25 22:38:52.682][DBG]    index        :0
+
+[2018.3.25 22:38:52.682][MGT]parse_data failed, ret:1
+[2018.3.25 22:38:53.671][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:38:53.671][SVR]task_data->task_id:-648640768
+[2018.3.25 22:38:53.671][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:53.671][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:53.671][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:53.671][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:53.671][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:53.671][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:53.671][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:53.682][SVR]task_data->devid:
+[2018.3.25 22:38:53.682][SVR]task_data->task_id:-657033472
+[2018.3.25 22:38:53.682][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:53.682][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:53.682][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:53.682][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:53.682][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:53.682][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:53.682][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:54.672][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:38:54.672][SVR]task_data->task_id:-648640768
+[2018.3.25 22:38:54.672][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:54.672][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:54.672][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:54.672][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:54.672][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:54.672][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:54.672][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:54.683][SVR]task_data->devid:
+[2018.3.25 22:38:54.683][SVR]task_data->task_id:-657033472
+[2018.3.25 22:38:54.683][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:54.683][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:54.683][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:54.683][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:54.683][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:54.683][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:54.683][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:55.673][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:38:55.673][SVR]task_data->task_id:-648640768
+[2018.3.25 22:38:55.673][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:55.673][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:55.673][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:55.673][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:55.673][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:55.673][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:55.673][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:55.684][SVR]task_data->devid:
+[2018.3.25 22:38:55.684][SVR]task_data->task_id:-657033472
+[2018.3.25 22:38:55.684][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:55.684][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:55.684][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:55.684][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:55.684][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:55.684][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:55.684][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:56.674][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:38:56.674][SVR]task_data->task_id:-648640768
+[2018.3.25 22:38:56.674][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:56.674][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:56.674][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:56.674][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:56.674][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:56.674][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:56.674][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:56.685][SVR]task_data->devid:
+[2018.3.25 22:38:56.686][SVR]task_data->task_id:-657033472
+[2018.3.25 22:38:56.686][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:56.686][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:56.686][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:56.686][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:56.686][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:56.686][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:56.686][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:57.675][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:38:57.675][SVR]task_data->task_id:-648640768
+[2018.3.25 22:38:57.675][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:57.675][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:57.675][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:57.675][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:57.675][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:57.675][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:57.675][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:57.686][SVR]task_data->devid:
+[2018.3.25 22:38:57.686][SVR]task_data->task_id:-657033472
+[2018.3.25 22:38:57.686][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:57.686][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:57.686][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:57.686][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:57.686][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:57.686][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:57.686][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:58.676][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:38:58.676][SVR]task_data->task_id:-648640768
+[2018.3.25 22:38:58.676][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:58.676][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:58.676][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:58.676][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:58.676][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:58.676][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:58.676][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:58.687][SVR]task_data->devid:
+[2018.3.25 22:38:58.687][SVR]task_data->task_id:-657033472
+[2018.3.25 22:38:58.687][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:58.687][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:58.687][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:58.687][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:58.687][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:58.687][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:58.687][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:59.677][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:38:59.677][SVR]task_data->task_id:-648640768
+[2018.3.25 22:38:59.677][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:59.677][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:59.677][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:59.677][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:59.677][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:59.677][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:59.677][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:59.689][SVR]task_data->devid:
+[2018.3.25 22:38:59.689][SVR]task_data->task_id:-657033472
+[2018.3.25 22:38:59.689][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:59.689][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:59.689][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:59.689][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:59.689][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:59.689][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:59.689][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:59.901][SVR]client 0xc07ba8c0 been connected.
+[2018.3.25 22:38:59.902][SVR]client 192.168.123.192 been connected.
+[2018.3.25 22:38:59.902][SVR]recv data len:312
+[2018.3.25 22:38:59.902][DBG]msg head(size:56) as follow:
+[2018.3.25 22:38:59.902][DBG]    magic        :@DDET@
+[2018.3.25 22:38:59.902][DBG]    type         :1
+[2018.3.25 22:38:59.902][DBG]    date_len     :256
+[2018.3.25 22:38:59.902][DBG]    version      :0
+[2018.3.25 22:38:59.902][DBG]    trans_id     :0
+[2018.3.25 22:38:59.902][DBG]    total_length :256
+[2018.3.25 22:38:59.902][DBG]    total_package:1
+[2018.3.25 22:38:59.902][DBG]    index        :0
+
+[2018.3.25 22:38:59.902][MGT]rcv msgid:0x1, devid:xuyang_1804289383
+[2018.3.25 22:38:59.902][DBG]devinfo(size:3744) as follow:
+[2018.3.25 22:38:59.902][DBG]    id        :xuyang_1804289383
+[2018.3.25 22:38:59.902][DBG]    dev_type  :0
+[2018.3.25 22:38:59.902][DBG]    algorithm :0
+
+[2018.3.25 22:38:59.902][MGT]receive data total len:3076, expect:256
+[2018.3.25 22:38:59.902][INIT]prepare_interactive_data failed, ret:37622520
+[2018.3.25 22:38:59.902][SVR]send_to_client OK
+[2018.3.25 22:38:59.902][DBG]buf info as follow:
+xuyang_00o
+
+
+
+[2018.3.25 22:38:59.902][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:59.902][SVR]task_data->devid:
+[2018.3.25 22:38:59.902][SVR]task_data->task_id:-738199808
+[2018.3.25 22:38:59.902][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:38:59.902][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:38:59.902][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:38:59.902][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:38:59.902][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:38:59.902][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:38:59.902][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:38:59.902][SVR]recv data len:1080
+[2018.3.25 22:38:59.902][DBG]msg head(size:56) as follow:
+[2018.3.25 22:38:59.902][DBG]    magic        :@DDET@
+[2018.3.25 22:38:59.902][DBG]    type         :2
+[2018.3.25 22:38:59.902][DBG]    date_len     :1024
+[2018.3.25 22:38:59.902][DBG]    version      :0
+[2018.3.25 22:38:59.902][DBG]    trans_id     :0
+[2018.3.25 22:38:59.902][DBG]    total_length :1024
+[2018.3.25 22:38:59.902][DBG]    total_package:1
+[2018.3.25 22:38:59.902][DBG]    index        :0
+
+[2018.3.25 22:38:59.902][MGT]client xuyang_1804289383 sign data:rZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crX
+[2018.3.25 22:38:59.902][MGT]receive data total len:4100, expect:1024
+[2018.3.25 22:38:59.902][MGT]handle_sign_ack devid:xuyang_1804289383
+[2018.3.25 22:38:59.902][MGT]original data:rZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crX
+base64 error 2
+[2018.3.25 22:38:59.902][MGT]IW_ServerSignData failed, code -639305840
+[2018.3.25 22:38:59.902][INIT]prepare_interactive_data failed, ret:1
+[2018.3.25 22:38:59.902][SVR]send_to_client OK
+[2018.3.25 22:38:59.902][DBG]buf info as follow:
+
+
+
+
+[2018.3.25 22:38:59.902][SVR]recv data len:1596
+[2018.3.25 22:38:59.902][DBG]msg head(size:56) as follow:
+[2018.3.25 22:38:59.902][DBG]    magic        :@DDET@
+[2018.3.25 22:38:59.902][DBG]    type         :3
+[2018.3.25 22:38:59.902][DBG]    date_len     :1540
+[2018.3.25 22:38:59.902][DBG]    version      :0
+[2018.3.25 22:38:59.902][DBG]    trans_id     :0
+[2018.3.25 22:38:59.902][DBG]    total_length :1540
+[2018.3.25 22:38:59.902][DBG]    total_package:1
+[2018.3.25 22:38:59.902][DBG]    index        :0
+
+[2018.3.25 22:38:59.902][MGT]dev xuyang_1804289383 affirmed crypt type:0
+[2018.3.25 22:38:59.902][MGT]receive data total len:5640, expect:1540
+[2018.3.25 22:38:59.902][SVR]send_to_client OK
+[2018.3.25 22:38:59.902][DBG]buf info as follow:
+
+
+
+d
+[2018.3.25 22:38:59.903][SVR]recv data len:156
+[2018.3.25 22:38:59.903][DBG]msg head(size:56) as follow:
+[2018.3.25 22:38:59.903][DBG]    magic        :@DDET@
+[2018.3.25 22:38:59.903][DBG]    type         :4
+[2018.3.25 22:38:59.903][DBG]    date_len     :56
+[2018.3.25 22:38:59.903][DBG]    version      :0
+[2018.3.25 22:38:59.903][DBG]    trans_id     :0
+[2018.3.25 22:38:59.903][DBG]    total_length :56
+[2018.3.25 22:38:59.903][DBG]    total_package:1
+[2018.3.25 22:38:59.903][DBG]    index        :0
+
+[2018.3.25 22:38:59.903][MGT]parse_data failed, ret:1
+[2018.3.25 22:39:0.678][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:0.678][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:0.678][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:0.678][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:0.678][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:0.678][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:0.678][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:0.678][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:0.678][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:0.690][SVR]task_data->devid:
+[2018.3.25 22:39:0.690][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:0.690][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:0.690][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:0.690][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:0.690][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:0.690][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:0.690][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:0.690][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:0.902][SVR]task_data->devid:
+[2018.3.25 22:39:0.903][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:0.903][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:0.903][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:0.903][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:0.903][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:0.903][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:0.903][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:0.903][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:1.678][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:1.678][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:1.678][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:1.678][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:1.678][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:1.678][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:1.678][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:1.678][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:1.678][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:1.691][SVR]task_data->devid:
+[2018.3.25 22:39:1.691][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:1.691][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:1.691][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:1.691][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:1.691][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:1.691][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:1.691][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:1.691][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:1.903][SVR]task_data->devid:
+[2018.3.25 22:39:1.903][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:1.903][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:1.903][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:1.903][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:1.903][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:1.903][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:1.903][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:1.903][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:2.679][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:2.679][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:2.679][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:2.679][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:2.679][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:2.679][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:2.679][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:2.679][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:2.679][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:2.692][SVR]task_data->devid:
+[2018.3.25 22:39:2.692][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:2.692][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:2.692][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:2.692][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:2.692][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:2.692][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:2.692][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:2.692][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:2.904][SVR]task_data->devid:
+[2018.3.25 22:39:2.904][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:2.904][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:2.904][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:2.904][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:2.904][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:2.904][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:2.904][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:2.904][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:3.679][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:3.679][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:3.679][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:3.679][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:3.679][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:3.679][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:3.679][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:3.679][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:3.679][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:3.693][SVR]task_data->devid:
+[2018.3.25 22:39:3.693][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:3.693][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:3.693][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:3.693][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:3.694][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:3.694][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:3.694][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:3.694][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:3.905][SVR]task_data->devid:
+[2018.3.25 22:39:3.905][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:3.905][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:3.905][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:3.905][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:3.905][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:3.905][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:3.905][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:3.905][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:4.680][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:4.680][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:4.680][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:4.680][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:4.680][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:4.680][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:4.680][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:4.680][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:4.680][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:4.694][SVR]task_data->devid:
+[2018.3.25 22:39:4.694][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:4.694][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:4.694][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:4.694][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:4.694][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:4.694][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:4.694][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:4.694][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:4.906][SVR]task_data->devid:
+[2018.3.25 22:39:4.907][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:4.907][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:4.907][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:4.907][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:4.907][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:4.907][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:4.907][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:4.907][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:5.681][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:5.682][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:5.682][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:5.682][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:5.682][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:5.682][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:5.682][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:5.682][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:5.682][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:5.695][SVR]task_data->devid:
+[2018.3.25 22:39:5.695][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:5.695][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:5.695][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:5.695][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:5.695][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:5.695][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:5.695][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:5.695][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:5.907][SVR]task_data->devid:
+[2018.3.25 22:39:5.908][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:5.908][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:5.908][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:5.908][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:5.908][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:5.908][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:5.908][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:5.908][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:6.683][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:6.683][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:6.683][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:6.683][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:6.683][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:6.683][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:6.683][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:6.683][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:6.683][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:6.697][SVR]task_data->devid:
+[2018.3.25 22:39:6.697][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:6.697][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:6.697][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:6.697][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:6.697][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:6.697][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:6.697][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:6.697][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:6.908][SVR]task_data->devid:
+[2018.3.25 22:39:6.908][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:6.908][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:6.908][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:6.908][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:6.909][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:6.909][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:6.909][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:6.909][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:7.684][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:7.684][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:7.684][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:7.684][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:7.684][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:7.684][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:7.684][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:7.684][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:7.684][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:7.698][SVR]task_data->devid:
+[2018.3.25 22:39:7.698][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:7.698][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:7.698][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:7.698][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:7.698][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:7.698][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:7.698][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:7.698][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:7.909][SVR]task_data->devid:
+[2018.3.25 22:39:7.909][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:7.909][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:7.909][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:7.909][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:7.909][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:7.909][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:7.909][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:7.909][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:8.684][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:8.684][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:8.684][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:8.684][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:8.684][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:8.684][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:8.684][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:8.684][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:8.684][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:8.698][SVR]task_data->devid:
+[2018.3.25 22:39:8.698][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:8.698][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:8.698][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:8.698][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:8.698][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:8.698][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:8.698][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:8.698][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:8.910][SVR]task_data->devid:
+[2018.3.25 22:39:8.910][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:8.910][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:8.910][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:8.910][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:8.910][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:8.910][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:8.910][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:8.910][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:9.686][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:9.686][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:9.686][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:9.686][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:9.686][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:9.686][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:9.686][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:9.686][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:9.686][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:9.699][SVR]task_data->devid:
+[2018.3.25 22:39:9.699][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:9.699][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:9.699][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:9.699][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:9.699][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:9.699][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:9.699][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:9.699][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:9.910][SVR]task_data->devid:
+[2018.3.25 22:39:9.911][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:9.911][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:9.911][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:9.911][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:9.911][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:9.911][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:9.911][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:9.911][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:10.686][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:10.687][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:10.687][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:10.687][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:10.687][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:10.687][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:10.687][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:10.687][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:10.687][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:10.700][SVR]task_data->devid:
+[2018.3.25 22:39:10.700][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:10.700][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:10.700][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:10.700][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:10.700][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:10.700][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:10.700][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:10.700][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:10.912][SVR]task_data->devid:
+[2018.3.25 22:39:10.912][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:10.912][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:10.912][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:10.912][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:10.912][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:10.912][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:10.912][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:10.912][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:11.687][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:11.688][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:11.688][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:11.688][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:11.688][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:11.688][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:11.688][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:11.688][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:11.688][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:11.700][SVR]task_data->devid:
+[2018.3.25 22:39:11.700][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:11.700][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:11.700][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:11.701][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:11.701][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:11.701][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:11.701][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:11.701][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:11.913][SVR]task_data->devid:
+[2018.3.25 22:39:11.913][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:11.913][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:11.913][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:11.913][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:11.913][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:11.913][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:11.913][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:11.913][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:12.689][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:12.689][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:12.689][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:12.689][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:12.689][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:12.690][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:12.690][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:12.690][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:12.690][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:12.702][SVR]task_data->devid:
+[2018.3.25 22:39:12.702][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:12.702][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:12.702][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:12.702][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:12.703][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:12.703][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:12.703][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:12.703][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:12.914][SVR]task_data->devid:
+[2018.3.25 22:39:12.914][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:12.914][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:12.914][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:12.914][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:12.914][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:12.914][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:12.914][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:12.914][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:13.690][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:13.690][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:13.691][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:13.691][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:13.691][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:13.691][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:13.691][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:13.692][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:13.692][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:13.704][SVR]task_data->devid:
+[2018.3.25 22:39:13.705][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:13.705][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:13.705][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:13.705][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:13.706][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:13.707][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:13.707][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:13.707][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:13.915][SVR]task_data->devid:
+[2018.3.25 22:39:13.915][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:13.915][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:13.915][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:13.916][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:13.916][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:13.916][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:13.916][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:13.916][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:14.692][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:14.693][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:14.693][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:14.693][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:14.693][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:14.693][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:14.693][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:14.693][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:14.693][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:14.707][SVR]task_data->devid:
+[2018.3.25 22:39:14.707][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:14.707][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:14.707][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:14.707][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:14.707][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:14.707][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:14.707][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:14.708][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:14.917][SVR]task_data->devid:
+[2018.3.25 22:39:14.917][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:14.917][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:14.917][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:14.917][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:14.917][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:14.917][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:14.917][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:14.917][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:15.694][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:15.694][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:15.695][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:15.695][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:15.695][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:15.695][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:15.695][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:15.695][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:15.695][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:15.709][SVR]task_data->devid:
+[2018.3.25 22:39:15.709][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:15.709][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:15.709][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:15.709][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:15.709][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:15.709][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:15.709][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:15.709][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:15.918][SVR]task_data->devid:
+[2018.3.25 22:39:15.918][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:15.918][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:15.918][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:15.918][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:15.918][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:15.918][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:15.918][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:15.918][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:16.695][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:16.695][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:16.695][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:16.695][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:16.695][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:16.695][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:16.695][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:16.696][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:16.696][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:16.709][SVR]task_data->devid:
+[2018.3.25 22:39:16.709][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:16.709][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:16.709][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:16.709][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:16.709][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:16.709][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:16.709][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:16.709][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:16.919][SVR]task_data->devid:
+[2018.3.25 22:39:16.919][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:16.919][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:16.919][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:16.919][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:16.919][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:16.919][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:16.919][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:16.919][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:17.585][SVR]client 0xc07ba8c0 been connected.
+[2018.3.25 22:39:17.585][SVR]client 192.168.123.192 been connected.
+[2018.3.25 22:39:17.585][SVR]recv data len:312
+[2018.3.25 22:39:17.585][DBG]msg head(size:56) as follow:
+[2018.3.25 22:39:17.585][DBG]    magic        :@DDET@
+[2018.3.25 22:39:17.585][DBG]    type         :1
+[2018.3.25 22:39:17.585][DBG]    date_len     :256
+[2018.3.25 22:39:17.585][DBG]    version      :0
+[2018.3.25 22:39:17.585][DBG]    trans_id     :0
+[2018.3.25 22:39:17.585][DBG]    total_length :256
+[2018.3.25 22:39:17.586][DBG]    total_package:1
+[2018.3.25 22:39:17.586][DBG]    index        :0
+
+[2018.3.25 22:39:17.586][MGT]rcv msgid:0x1, devid:xuyang_1804289383
+[2018.3.25 22:39:17.586][DBG]devinfo(size:3744) as follow:
+[2018.3.25 22:39:17.586][DBG]    id        :xuyang_1804289383
+[2018.3.25 22:39:17.586][DBG]    dev_type  :0
+[2018.3.25 22:39:17.586][DBG]    algorithm :0
+
+[2018.3.25 22:39:17.586][MGT]receive data total len:5896, expect:256
+[2018.3.25 22:39:17.586][INIT]prepare_interactive_data failed, ret:37622968
+[2018.3.25 22:39:17.586][SVR]send_to_client OK
+[2018.3.25 22:39:17.586][DBG]buf info as follow:
+xuyang_00o
+
+
+
+[2018.3.25 22:39:17.586][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:17.586][SVR]task_data->devid:
+[2018.3.25 22:39:17.586][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:17.586][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:17.586][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:17.586][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:17.586][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:17.586][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:17.586][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:17.586][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:17.586][SVR]recv data len:1080
+[2018.3.25 22:39:17.586][DBG]msg head(size:56) as follow:
+[2018.3.25 22:39:17.586][DBG]    magic        :@DDET@
+[2018.3.25 22:39:17.586][DBG]    type         :2
+[2018.3.25 22:39:17.586][DBG]    date_len     :1024
+[2018.3.25 22:39:17.586][DBG]    version      :0
+[2018.3.25 22:39:17.586][DBG]    trans_id     :0
+[2018.3.25 22:39:17.586][DBG]    total_length :1024
+[2018.3.25 22:39:17.586][DBG]    total_package:1
+[2018.3.25 22:39:17.586][DBG]    index        :0
+
+[2018.3.25 22:39:17.587][MGT]client xuyang_1804289383 sign data:rZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crX
+[2018.3.25 22:39:17.587][MGT]receive data total len:6920, expect:1024
+[2018.3.25 22:39:17.587][MGT]handle_sign_ack devid:xuyang_1804289383
+[2018.3.25 22:39:17.587][MGT]original data:rZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crX
+base64 error 2
+[2018.3.25 22:39:17.587][MGT]IW_ServerSignData failed, code -639305840
+[2018.3.25 22:39:17.587][INIT]prepare_interactive_data failed, ret:1
+[2018.3.25 22:39:17.587][SVR]send_to_client OK
+[2018.3.25 22:39:17.587][DBG]buf info as follow:
+
+
+
+
+[2018.3.25 22:39:17.587][SVR]recv data len:1596
+[2018.3.25 22:39:17.587][DBG]msg head(size:56) as follow:
+[2018.3.25 22:39:17.587][DBG]    magic        :@DDET@
+[2018.3.25 22:39:17.587][DBG]    type         :3
+[2018.3.25 22:39:17.587][DBG]    date_len     :1540
+[2018.3.25 22:39:17.587][DBG]    version      :0
+[2018.3.25 22:39:17.587][DBG]    trans_id     :0
+[2018.3.25 22:39:17.587][DBG]    total_length :1540
+[2018.3.25 22:39:17.587][DBG]    total_package:1
+[2018.3.25 22:39:17.587][DBG]    index        :0
+
+[2018.3.25 22:39:17.587][MGT]dev xuyang_1804289383 affirmed crypt type:0
+[2018.3.25 22:39:17.587][MGT]receive data total len:8460, expect:1540
+[2018.3.25 22:39:17.587][SVR]send_to_client OK
+[2018.3.25 22:39:17.587][DBG]buf info as follow:
+
+
+
+d
+[2018.3.25 22:39:17.587][SVR]recv data len:156
+[2018.3.25 22:39:17.587][DBG]msg head(size:56) as follow:
+[2018.3.25 22:39:17.587][DBG]    magic        :@DDET@
+[2018.3.25 22:39:17.587][DBG]    type         :4
+[2018.3.25 22:39:17.587][DBG]    date_len     :56
+[2018.3.25 22:39:17.587][DBG]    version      :0
+[2018.3.25 22:39:17.587][DBG]    trans_id     :0
+[2018.3.25 22:39:17.587][DBG]    total_length :56
+[2018.3.25 22:39:17.587][DBG]    total_package:1
+[2018.3.25 22:39:17.587][DBG]    index        :0
+
+[2018.3.25 22:39:17.587][MGT]parse_data failed, ret:1
+[2018.3.25 22:39:17.697][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:17.697][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:17.700][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:17.700][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:17.700][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:17.700][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:17.700][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:17.700][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:17.700][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:17.710][SVR]task_data->devid:
+[2018.3.25 22:39:17.710][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:17.710][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:17.710][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:17.710][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:17.710][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:17.710][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:17.710][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:17.710][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:17.920][SVR]task_data->devid:
+[2018.3.25 22:39:17.920][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:17.920][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:17.920][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:17.920][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:17.920][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:17.920][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:17.920][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:17.921][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:18.587][SVR]task_data->devid:
+[2018.3.25 22:39:18.587][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:18.587][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:18.587][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:18.587][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:18.588][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:18.588][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:18.588][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:18.588][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:18.701][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:18.702][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:18.705][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:18.706][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:18.706][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:18.706][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:18.706][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:18.706][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:18.706][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:18.711][SVR]task_data->devid:
+[2018.3.25 22:39:18.714][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:18.714][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:18.714][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:18.714][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:18.714][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:18.714][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:18.714][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:18.714][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:18.921][SVR]task_data->devid:
+[2018.3.25 22:39:18.921][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:18.921][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:18.921][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:18.921][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:18.921][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:18.921][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:18.921][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:18.921][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:19.589][SVR]task_data->devid:
+[2018.3.25 22:39:19.589][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:19.589][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:19.589][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:19.590][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:19.590][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:19.590][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:19.590][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:19.590][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:19.708][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:19.708][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:19.708][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:19.708][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:19.708][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:19.708][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:19.708][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:19.708][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:19.708][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:19.715][SVR]task_data->devid:
+[2018.3.25 22:39:19.715][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:19.715][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:19.715][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:19.715][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:19.715][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:19.715][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:19.715][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:19.715][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:19.922][SVR]task_data->devid:
+[2018.3.25 22:39:19.922][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:19.922][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:19.922][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:19.922][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:19.922][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:19.922][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:19.922][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:19.922][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:20.591][SVR]task_data->devid:
+[2018.3.25 22:39:20.591][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:20.591][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:20.591][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:20.591][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:20.591][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:20.591][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:20.591][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:20.591][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:20.708][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:20.708][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:20.708][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:20.708][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:20.708][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:20.708][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:20.708][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:20.708][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:20.708][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:20.715][SVR]task_data->devid:
+[2018.3.25 22:39:20.715][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:20.715][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:20.715][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:20.715][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:20.715][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:20.715][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:20.715][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:20.715][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:20.923][SVR]task_data->devid:
+[2018.3.25 22:39:20.923][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:20.923][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:20.923][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:20.923][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:20.923][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:20.923][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:20.923][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:20.923][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:21.592][SVR]task_data->devid:
+[2018.3.25 22:39:21.592][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:21.592][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:21.592][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:21.592][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:21.592][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:21.592][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:21.592][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:21.592][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:21.709][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:21.709][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:21.709][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:21.709][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:21.709][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:21.709][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:21.709][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:21.709][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:21.709][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:21.717][SVR]task_data->devid:
+[2018.3.25 22:39:21.717][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:21.717][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:21.717][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:21.717][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:21.717][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:21.717][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:21.717][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:21.717][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:21.924][SVR]task_data->devid:
+[2018.3.25 22:39:21.924][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:21.924][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:21.924][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:21.924][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:21.924][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:21.924][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:21.924][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:21.924][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:22.594][SVR]task_data->devid:
+[2018.3.25 22:39:22.594][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:22.594][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:22.594][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:22.594][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:22.594][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:22.594][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:22.594][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:22.594][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:22.710][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:22.710][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:22.710][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:22.710][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:22.710][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:22.710][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:22.710][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:22.710][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:22.710][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:22.718][SVR]task_data->devid:
+[2018.3.25 22:39:22.718][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:22.718][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:22.718][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:22.718][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:22.718][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:22.718][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:22.718][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:22.718][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:22.925][SVR]task_data->devid:
+[2018.3.25 22:39:22.925][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:22.925][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:22.925][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:22.925][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:22.925][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:22.925][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:22.925][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:22.926][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:23.594][SVR]task_data->devid:
+[2018.3.25 22:39:23.594][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:23.594][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:23.594][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:23.595][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:23.595][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:23.595][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:23.595][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:23.595][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:23.710][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:23.710][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:23.710][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:23.710][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:23.710][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:23.710][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:23.710][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:23.710][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:23.710][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:23.719][SVR]task_data->devid:
+[2018.3.25 22:39:23.719][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:23.719][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:23.719][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:23.719][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:23.719][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:23.719][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:23.719][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:23.719][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:23.926][SVR]task_data->devid:
+[2018.3.25 22:39:23.926][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:23.926][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:23.926][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:23.926][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:23.926][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:23.926][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:23.926][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:23.926][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:24.595][SVR]task_data->devid:
+[2018.3.25 22:39:24.595][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:24.595][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:24.595][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:24.595][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:24.595][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:24.595][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:24.595][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:24.595][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:24.711][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:24.711][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:24.711][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:24.711][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:24.711][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:24.711][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:24.711][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:24.711][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:24.711][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:24.720][SVR]task_data->devid:
+[2018.3.25 22:39:24.720][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:24.720][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:24.720][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:24.720][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:24.720][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:24.720][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:24.720][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:24.720][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:24.928][SVR]task_data->devid:
+[2018.3.25 22:39:24.928][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:24.928][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:24.928][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:24.928][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:24.928][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:24.928][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:24.928][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:24.928][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:25.595][SVR]task_data->devid:
+[2018.3.25 22:39:25.595][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:25.595][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:25.595][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:25.595][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:25.595][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:25.595][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:25.595][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:25.595][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:25.711][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:25.711][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:25.711][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:25.711][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:25.711][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:25.711][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:25.711][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:25.711][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:25.711][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:25.720][SVR]task_data->devid:
+[2018.3.25 22:39:25.720][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:25.720][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:25.720][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:25.720][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:25.720][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:25.720][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:25.720][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:25.721][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:25.929][SVR]task_data->devid:
+[2018.3.25 22:39:25.929][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:25.929][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:25.929][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:25.929][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:25.929][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:25.929][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:25.929][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:25.929][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:26.596][SVR]task_data->devid:
+[2018.3.25 22:39:26.596][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:26.596][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:26.596][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:26.596][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:26.596][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:26.596][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:26.596][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:26.596][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:26.712][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:26.712][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:26.712][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:26.712][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:26.712][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:26.712][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:26.712][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:26.712][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:26.712][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:26.721][SVR]task_data->devid:
+[2018.3.25 22:39:26.721][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:26.721][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:26.721][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:26.721][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:26.721][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:26.721][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:26.721][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:26.721][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:26.873][SVR]client 0xc07ba8c0 been connected.
+[2018.3.25 22:39:26.873][SVR]client 192.168.123.192 been connected.
+[2018.3.25 22:39:26.873][SVR]recv data len:312
+[2018.3.25 22:39:26.873][DBG]msg head(size:56) as follow:
+[2018.3.25 22:39:26.873][DBG]    magic        :@DDET@
+[2018.3.25 22:39:26.873][DBG]    type         :1
+[2018.3.25 22:39:26.873][DBG]    date_len     :256
+[2018.3.25 22:39:26.873][DBG]    version      :0
+[2018.3.25 22:39:26.873][DBG]    trans_id     :0
+[2018.3.25 22:39:26.873][DBG]    total_length :256
+[2018.3.25 22:39:26.873][DBG]    total_package:1
+[2018.3.25 22:39:26.873][DBG]    index        :0
+
+[2018.3.25 22:39:26.873][MGT]rcv msgid:0x1, devid:xuyang_1804289383
+[2018.3.25 22:39:26.873][DBG]devinfo(size:3744) as follow:
+[2018.3.25 22:39:26.873][DBG]    id        :xuyang_1804289383
+[2018.3.25 22:39:26.873][DBG]    dev_type  :0
+[2018.3.25 22:39:26.873][DBG]    algorithm :0
+
+[2018.3.25 22:39:26.873][MGT]receive data total len:8716, expect:256
+[2018.3.25 22:39:26.873][INIT]prepare_interactive_data failed, ret:37623416
+[2018.3.25 22:39:26.873][SVR]send_to_client OK
+[2018.3.25 22:39:26.873][DBG]buf info as follow:
+xuyang_00o
+
+
+
+[2018.3.25 22:39:26.873][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:26.873][SVR]task_data->devid:
+[2018.3.25 22:39:26.873][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:26.873][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:26.873][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:26.873][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:26.873][SVR]recv data len:1080
+[2018.3.25 22:39:26.873][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:26.873][DBG]msg head(size:56) as follow:
+[2018.3.25 22:39:26.874][DBG]    magic        :@DDET@
+[2018.3.25 22:39:26.874][DBG]    type         :2
+[2018.3.25 22:39:26.874][DBG]    date_len     :1024
+[2018.3.25 22:39:26.874][DBG]    version      :0
+[2018.3.25 22:39:26.874][DBG]    trans_id     :0
+[2018.3.25 22:39:26.874][DBG]    total_length :1024
+[2018.3.25 22:39:26.874][DBG]    total_package:1
+[2018.3.25 22:39:26.874][DBG]    index        :0
+
+[2018.3.25 22:39:26.874][MGT]client xuyang_1804289383 sign data:rZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crX
+[2018.3.25 22:39:26.874][MGT]receive data total len:9740, expect:1024
+[2018.3.25 22:39:26.874][MGT]handle_sign_ack devid:xuyang_1804289383
+[2018.3.25 22:39:26.874][MGT]original data:rZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crXrZjSXHcOFIsjN1x0sVG6a6crX
+base64 error 2
+[2018.3.25 22:39:26.874][MGT]IW_ServerSignData failed, code -639305840
+[2018.3.25 22:39:26.874][INIT]prepare_interactive_data failed, ret:1
+[2018.3.25 22:39:26.874][SVR]send_to_client OK
+[2018.3.25 22:39:26.874][DBG]buf info as follow:
+
+
+
+
+[2018.3.25 22:39:26.874][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:26.874][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:26.874][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:26.874][SVR]recv data len:1596
+[2018.3.25 22:39:26.874][DBG]msg head(size:56) as follow:
+[2018.3.25 22:39:26.874][DBG]    magic        :@DDET@
+[2018.3.25 22:39:26.874][DBG]    type         :3
+[2018.3.25 22:39:26.874][DBG]    date_len     :1540
+[2018.3.25 22:39:26.874][DBG]    version      :0
+[2018.3.25 22:39:26.874][DBG]    trans_id     :0
+[2018.3.25 22:39:26.874][DBG]    total_length :1540
+[2018.3.25 22:39:26.874][DBG]    total_package:1
+[2018.3.25 22:39:26.874][DBG]    index        :0
+
+[2018.3.25 22:39:26.874][MGT]dev xuyang_1804289383 affirmed crypt type:0
+[2018.3.25 22:39:26.874][MGT]receive data total len:11280, expect:1540
+[2018.3.25 22:39:26.874][SVR]send_to_client OK
+[2018.3.25 22:39:26.874][DBG]buf info as follow:
+
+
+
+d
+[2018.3.25 22:39:26.875][SVR]recv data len:156
+[2018.3.25 22:39:26.875][DBG]msg head(size:56) as follow:
+[2018.3.25 22:39:26.875][DBG]    magic        :@DDET@
+[2018.3.25 22:39:26.875][DBG]    type         :4
+[2018.3.25 22:39:26.875][DBG]    date_len     :56
+[2018.3.25 22:39:26.875][DBG]    version      :0
+[2018.3.25 22:39:26.875][DBG]    trans_id     :0
+[2018.3.25 22:39:26.875][DBG]    total_length :56
+[2018.3.25 22:39:26.875][DBG]    total_package:1
+[2018.3.25 22:39:26.875][DBG]    index        :0
+
+[2018.3.25 22:39:26.875][MGT]parse_data failed, ret:1
+[2018.3.25 22:39:26.929][SVR]task_data->devid:
+[2018.3.25 22:39:26.929][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:26.929][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:26.929][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:26.929][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:26.929][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:26.929][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:26.929][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:26.929][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:27.597][SVR]task_data->devid:
+[2018.3.25 22:39:27.598][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:27.598][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:27.598][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:27.598][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:27.598][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:27.598][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:27.598][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:27.598][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:27.712][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:27.713][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:27.713][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:27.713][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:27.713][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:27.713][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:27.713][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:27.713][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:27.713][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:27.722][SVR]task_data->devid:
+[2018.3.25 22:39:27.722][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:27.722][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:27.722][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:27.722][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:27.722][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:27.722][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:27.722][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:27.722][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:27.874][SVR]task_data->devid:
+[2018.3.25 22:39:27.874][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:27.874][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:27.874][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:27.874][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:27.874][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:27.874][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:27.874][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:27.874][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:27.930][SVR]task_data->devid:
+[2018.3.25 22:39:27.930][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:27.930][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:27.930][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:27.930][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:27.930][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:27.930][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:27.930][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:27.930][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:28.599][SVR]task_data->devid:
+[2018.3.25 22:39:28.599][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:28.599][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:28.599][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:28.599][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:28.599][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:28.599][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:28.599][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:28.599][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:28.713][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:28.713][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:28.713][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:28.713][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:28.713][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:28.714][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:28.714][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:28.714][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:28.714][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:28.723][SVR]task_data->devid:
+[2018.3.25 22:39:28.723][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:28.723][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:28.723][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:28.723][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:28.723][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:28.723][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:28.723][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:28.723][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:28.875][SVR]task_data->devid:
+[2018.3.25 22:39:28.876][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:28.876][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:28.876][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:28.876][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:28.876][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:28.876][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:28.876][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:28.876][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:28.930][SVR]task_data->devid:
+[2018.3.25 22:39:28.930][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:28.930][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:28.930][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:28.930][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:28.930][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:28.930][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:28.930][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:28.930][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:29.600][SVR]task_data->devid:
+[2018.3.25 22:39:29.600][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:29.600][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:29.600][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:29.600][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:29.600][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:29.600][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:29.600][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:29.600][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:29.714][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:29.714][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:29.714][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:29.714][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:29.714][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:29.714][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:29.714][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:29.714][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:29.714][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:29.724][SVR]task_data->devid:
+[2018.3.25 22:39:29.724][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:29.724][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:29.724][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:29.724][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:29.724][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:29.724][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:29.724][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:29.724][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:29.880][SVR]task_data->devid:
+[2018.3.25 22:39:29.880][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:29.880][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:29.880][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:29.880][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:29.880][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:29.880][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:29.880][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:29.880][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:29.931][SVR]task_data->devid:
+[2018.3.25 22:39:29.931][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:29.931][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:29.931][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:29.931][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:29.931][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:29.931][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:29.931][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:29.931][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:30.601][SVR]task_data->devid:
+[2018.3.25 22:39:30.601][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:30.601][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:30.601][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:30.601][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:30.601][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:30.601][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:30.601][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:30.601][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:30.714][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:30.714][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:30.714][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:30.714][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:30.714][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:30.714][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:30.714][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:30.714][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:30.714][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:30.725][SVR]task_data->devid:
+[2018.3.25 22:39:30.725][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:30.725][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:30.725][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:30.725][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:30.725][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:30.725][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:30.725][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:30.725][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:30.881][SVR]task_data->devid:
+[2018.3.25 22:39:30.881][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:30.881][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:30.881][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:30.881][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:30.881][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:30.881][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:30.881][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:30.881][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:30.932][SVR]task_data->devid:
+[2018.3.25 22:39:30.932][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:30.932][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:30.932][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:30.932][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:30.932][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:30.932][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:30.932][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:30.932][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:31.603][SVR]task_data->devid:
+[2018.3.25 22:39:31.603][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:31.603][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:31.603][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:31.603][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:31.603][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:31.603][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:31.603][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:31.603][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:31.715][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:31.715][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:31.715][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:31.715][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:31.715][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:31.715][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:31.715][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:31.715][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:31.715][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:31.726][SVR]task_data->devid:
+[2018.3.25 22:39:31.726][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:31.726][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:31.726][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:31.726][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:31.726][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:31.726][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:31.726][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:31.726][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:31.882][SVR]task_data->devid:
+[2018.3.25 22:39:31.882][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:31.882][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:31.882][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:31.882][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:31.882][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:31.882][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:31.882][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:31.882][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:31.933][SVR]task_data->devid:
+[2018.3.25 22:39:31.933][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:31.933][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:31.933][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:31.933][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:31.933][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:31.933][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:31.933][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:31.933][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:32.604][SVR]task_data->devid:
+[2018.3.25 22:39:32.604][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:32.604][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:32.604][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:32.604][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:32.604][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:32.604][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:32.604][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:32.604][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:32.715][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:32.715][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:32.715][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:32.715][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:32.715][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:32.715][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:32.715][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:32.715][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:32.715][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:32.727][SVR]task_data->devid:
+[2018.3.25 22:39:32.727][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:32.727][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:32.727][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:32.727][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:32.727][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:32.727][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:32.727][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:32.727][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:32.882][SVR]task_data->devid:
+[2018.3.25 22:39:32.882][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:32.882][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:32.882][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:32.882][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:32.882][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:32.882][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:32.882][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:32.882][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:32.934][SVR]task_data->devid:
+[2018.3.25 22:39:32.934][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:32.934][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:32.934][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:32.934][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:32.934][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:32.934][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:32.934][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:32.934][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:33.605][SVR]task_data->devid:
+[2018.3.25 22:39:33.605][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:33.605][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:33.605][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:33.605][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:33.605][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:33.605][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:33.605][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:33.605][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:33.715][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:33.715][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:33.715][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:33.715][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:33.715][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:33.715][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:33.715][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:33.715][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:33.715][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:33.728][SVR]task_data->devid:
+[2018.3.25 22:39:33.728][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:33.728][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:33.728][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:33.728][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:33.728][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:33.728][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:33.728][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:33.728][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:33.883][SVR]task_data->devid:
+[2018.3.25 22:39:33.883][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:33.883][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:33.883][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:33.883][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:33.883][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:33.883][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:33.883][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:33.883][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:33.934][SVR]task_data->devid:
+[2018.3.25 22:39:33.934][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:33.934][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:33.934][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:33.934][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:33.934][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:33.934][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:33.934][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:33.934][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:34.605][SVR]task_data->devid:
+[2018.3.25 22:39:34.606][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:34.606][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:34.606][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:34.606][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:34.606][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:34.606][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:34.606][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:34.606][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:34.716][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:34.716][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:34.716][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:34.716][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:34.716][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:34.716][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:34.716][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:34.716][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:34.716][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:34.728][SVR]task_data->devid:
+[2018.3.25 22:39:34.728][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:34.728][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:34.728][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:34.728][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:34.728][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:34.728][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:34.728][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:34.728][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:34.884][SVR]task_data->devid:
+[2018.3.25 22:39:34.884][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:34.884][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:34.884][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:34.884][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:34.884][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:34.884][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:34.884][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:34.884][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:34.935][SVR]task_data->devid:
+[2018.3.25 22:39:34.935][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:34.935][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:34.935][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:34.935][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:34.936][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:34.936][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:34.936][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:34.936][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:35.607][SVR]task_data->devid:
+[2018.3.25 22:39:35.607][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:35.607][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:35.607][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:35.607][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:35.607][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:35.607][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:35.607][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:35.607][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:35.717][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:35.717][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:35.717][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:35.717][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:35.717][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:35.717][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:35.717][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:35.717][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:35.717][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:35.728][SVR]task_data->devid:
+[2018.3.25 22:39:35.728][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:35.728][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:35.728][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:35.728][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:35.728][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:35.728][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:35.728][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:35.728][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:35.884][SVR]task_data->devid:
+[2018.3.25 22:39:35.884][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:35.884][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:35.884][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:35.884][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:35.884][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:35.884][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:35.884][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:35.884][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:35.936][SVR]task_data->devid:
+[2018.3.25 22:39:35.936][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:35.936][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:35.936][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:35.936][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:35.936][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:35.936][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:35.936][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:35.936][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:36.607][SVR]task_data->devid:
+[2018.3.25 22:39:36.607][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:36.607][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:36.607][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:36.607][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:36.608][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:36.608][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:36.608][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:36.608][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:36.717][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:36.717][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:36.717][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:36.717][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:36.717][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:36.717][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:36.717][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:36.717][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:36.717][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:36.729][SVR]task_data->devid:
+[2018.3.25 22:39:36.729][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:36.729][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:36.729][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:36.729][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:36.729][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:36.729][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:36.729][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:36.729][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:36.885][SVR]task_data->devid:
+[2018.3.25 22:39:36.885][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:36.885][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:36.885][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:36.885][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:36.885][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:36.885][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:36.885][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:36.885][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:36.937][SVR]task_data->devid:
+[2018.3.25 22:39:36.937][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:36.937][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:36.937][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:36.937][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:36.937][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:36.937][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:36.937][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:36.937][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:37.608][SVR]task_data->devid:
+[2018.3.25 22:39:37.608][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:37.608][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:37.608][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:37.608][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:37.608][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:37.608][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:37.608][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:37.608][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:37.718][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:37.718][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:37.718][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:37.718][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:37.718][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:37.718][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:37.718][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:37.718][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:37.718][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:37.730][SVR]task_data->devid:
+[2018.3.25 22:39:37.730][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:37.730][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:37.730][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:37.730][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:37.730][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:37.730][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:37.730][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:37.730][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:37.886][SVR]task_data->devid:
+[2018.3.25 22:39:37.886][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:37.886][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:37.886][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:37.886][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:37.886][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:37.886][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:37.886][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:37.886][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:37.937][SVR]task_data->devid:
+[2018.3.25 22:39:37.937][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:37.937][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:37.937][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:37.937][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:37.937][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:37.937][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:37.937][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:37.937][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:38.610][SVR]task_data->devid:
+[2018.3.25 22:39:38.610][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:38.610][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:38.610][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:38.610][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:38.610][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:38.610][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:38.610][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:38.610][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:38.719][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:38.719][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:38.719][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:38.719][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:38.719][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:38.719][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:38.719][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:38.720][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:38.720][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:38.730][SVR]task_data->devid:
+[2018.3.25 22:39:38.730][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:38.730][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:38.730][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:38.730][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:38.730][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:38.730][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:38.730][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:38.730][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:38.886][SVR]task_data->devid:
+[2018.3.25 22:39:38.886][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:38.886][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:38.886][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:38.886][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:38.887][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:38.887][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:38.887][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:38.887][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:38.937][SVR]task_data->devid:
+[2018.3.25 22:39:38.937][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:38.937][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:38.937][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:38.937][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:38.937][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:38.937][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:38.937][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:38.937][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:39.610][SVR]task_data->devid:
+[2018.3.25 22:39:39.610][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:39.610][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:39.610][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:39.610][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:39.610][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:39.610][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:39.610][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:39.610][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:39.720][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:39.720][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:39.720][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:39.720][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:39.720][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:39.720][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:39.720][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:39.720][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:39.720][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:39.731][SVR]task_data->devid:
+[2018.3.25 22:39:39.731][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:39.731][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:39.731][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:39.731][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:39.731][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:39.731][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:39.731][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:39.731][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:39.887][SVR]task_data->devid:
+[2018.3.25 22:39:39.887][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:39.887][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:39.887][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:39.887][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:39.887][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:39.887][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:39.887][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:39.887][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:39.938][SVR]task_data->devid:
+[2018.3.25 22:39:39.938][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:39.938][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:39.938][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:39.938][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:39.938][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:39.938][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:39.938][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:39.938][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:40.611][SVR]task_data->devid:
+[2018.3.25 22:39:40.611][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:40.611][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:40.611][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:40.611][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:40.611][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:40.611][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:40.611][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:40.611][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:40.721][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:40.721][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:40.721][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:40.721][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:40.721][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:40.721][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:40.721][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:40.721][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:40.721][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:40.731][SVR]task_data->devid:
+[2018.3.25 22:39:40.731][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:40.731][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:40.731][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:40.731][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:40.731][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:40.731][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:40.731][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:40.731][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:40.887][SVR]task_data->devid:
+[2018.3.25 22:39:40.887][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:40.887][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:40.887][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:40.887][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:40.887][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:40.887][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:40.887][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:40.887][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:40.939][SVR]task_data->devid:
+[2018.3.25 22:39:40.939][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:40.939][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:40.939][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:40.939][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:40.939][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:40.939][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:40.939][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:40.939][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:41.612][SVR]task_data->devid:
+[2018.3.25 22:39:41.612][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:41.612][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:41.612][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:41.612][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:41.612][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:41.612][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:41.612][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:41.612][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:41.721][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:41.721][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:41.721][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:41.721][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:41.721][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:41.721][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:41.721][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:41.721][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:41.721][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:41.732][SVR]task_data->devid:
+[2018.3.25 22:39:41.732][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:41.732][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:41.732][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:41.732][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:41.732][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:41.732][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:41.732][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:41.732][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:41.888][SVR]task_data->devid:
+[2018.3.25 22:39:41.888][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:41.888][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:41.888][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:41.888][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:41.888][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:41.889][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:41.889][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:41.889][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:41.940][SVR]task_data->devid:
+[2018.3.25 22:39:41.940][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:41.940][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:41.940][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:41.941][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:41.941][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:41.941][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:41.941][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:41.941][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:42.613][SVR]task_data->devid:
+[2018.3.25 22:39:42.613][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:42.613][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:42.613][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:42.613][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:42.613][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:42.613][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:42.613][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:42.613][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:42.722][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:42.722][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:42.722][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:42.722][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:42.722][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:42.722][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:42.722][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:42.722][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:42.722][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:42.733][SVR]task_data->devid:
+[2018.3.25 22:39:42.733][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:42.733][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:42.733][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:42.733][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:42.733][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:42.733][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:42.733][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:42.733][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:42.890][SVR]task_data->devid:
+[2018.3.25 22:39:42.890][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:42.890][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:42.890][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:42.890][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:42.890][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:42.890][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:42.890][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:42.890][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:42.941][SVR]task_data->devid:
+[2018.3.25 22:39:42.941][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:42.941][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:42.941][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:42.941][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:42.941][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:42.941][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:42.941][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:42.941][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:43.614][SVR]task_data->devid:
+[2018.3.25 22:39:43.614][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:43.614][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:43.614][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:43.614][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:43.614][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:43.614][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:43.614][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:43.614][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:43.722][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:43.722][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:43.722][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:43.722][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:43.722][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:43.722][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:43.722][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:43.722][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:43.722][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:43.734][SVR]task_data->devid:
+[2018.3.25 22:39:43.734][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:43.734][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:43.734][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:43.735][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:43.735][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:43.735][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:43.735][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:43.735][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:43.891][SVR]task_data->devid:
+[2018.3.25 22:39:43.891][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:43.891][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:43.891][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:43.891][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:43.891][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:43.891][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:43.891][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:43.891][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:43.942][SVR]task_data->devid:
+[2018.3.25 22:39:43.942][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:43.942][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:43.942][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:43.942][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:43.942][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:43.942][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:43.942][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:43.942][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:44.614][SVR]task_data->devid:
+[2018.3.25 22:39:44.615][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:44.615][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:44.615][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:44.615][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:44.615][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:44.615][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:44.615][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:44.615][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:44.724][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:44.724][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:44.724][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:44.724][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:44.724][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:44.724][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:44.724][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:44.724][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:44.724][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:44.736][SVR]task_data->devid:
+[2018.3.25 22:39:44.736][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:44.736][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:44.736][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:44.736][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:44.736][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:44.736][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:44.736][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:44.736][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:44.891][SVR]task_data->devid:
+[2018.3.25 22:39:44.891][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:44.891][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:44.891][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:44.891][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:44.891][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:44.891][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:44.891][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:44.891][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:44.943][SVR]task_data->devid:
+[2018.3.25 22:39:44.943][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:44.943][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:44.943][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:44.943][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:44.943][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:44.943][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:44.943][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:44.943][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:45.616][SVR]task_data->devid:
+[2018.3.25 22:39:45.616][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:45.616][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:45.616][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:45.616][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:45.616][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:45.616][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:45.616][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:45.616][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:45.724][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:45.724][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:45.724][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:45.724][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:45.724][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:45.724][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:45.724][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:45.724][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:45.724][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:45.737][SVR]task_data->devid:
+[2018.3.25 22:39:45.737][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:45.737][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:45.737][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:45.737][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:45.737][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:45.737][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:45.737][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:45.737][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:45.891][SVR]task_data->devid:
+[2018.3.25 22:39:45.891][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:45.891][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:45.891][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:45.891][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:45.891][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:45.891][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:45.891][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:45.891][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:45.943][SVR]task_data->devid:
+[2018.3.25 22:39:45.943][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:45.943][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:45.943][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:45.943][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:45.943][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:45.943][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:45.943][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:45.943][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:46.617][SVR]task_data->devid:
+[2018.3.25 22:39:46.617][SVR]task_data->task_id:-746592512
+[2018.3.25 22:39:46.617][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:46.617][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:46.617][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:46.617][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:46.617][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:46.617][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:46.617][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:46.725][SVR]task_data->devid:xuyang_1804289383
+[2018.3.25 22:39:46.725][SVR]task_data->task_id:-648640768
+[2018.3.25 22:39:46.725][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:46.725][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:46.725][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:46.725][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:46.725][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:46.725][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:46.725][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:46.737][SVR]task_data->devid:
+[2018.3.25 22:39:46.737][SVR]task_data->task_id:-657033472
+[2018.3.25 22:39:46.737][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:46.737][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:46.737][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:46.737][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:46.737][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:46.737][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:46.737][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:46.892][SVR]task_data->devid:
+[2018.3.25 22:39:46.892][SVR]task_data->task_id:-754985216
+[2018.3.25 22:39:46.892][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:46.892][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:46.892][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:46.892][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:46.892][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:46.892][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:46.892][SVR]proc->client_info[index].cli_sockfd:4
+[2018.3.25 22:39:46.944][SVR]task_data->devid:
+[2018.3.25 22:39:46.944][SVR]task_data->task_id:-738199808
+[2018.3.25 22:39:46.944][SVR]task_data->cli_sockfd:4
+[2018.3.25 22:39:46.944][SVR]proc->task_var->devid:xuyang_1804289383
+[2018.3.25 22:39:46.944][SVR]proc->task_var->task_id:-648640768
+[2018.3.25 22:39:46.944][SVR]proc->task_var->cli_sockfd:4
+[2018.3.25 22:39:46.944][SVR]proc->client_info[index].ip:0
+[2018.3.25 22:39:46.944][SVR]proc->client_info[index].task_id:-648640768
+[2018.3.25 22:39:46.944][SVR]proc->client_info[index].cli_sockfd:4
+^C
+root@ubuntu:/home/xuyang/workspace/gm_demo# 

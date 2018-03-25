@@ -13,25 +13,12 @@
 /***************************************************************
 *            global data
 ****************************************************************/
-//uint32_t    total_rcv_data_len = 0;
-//int8_t      session_id[DEV_ID_LEN_MAX] = {0};   // in multi-thread scene, each thread has a session_id
-
-task_priv_data_t task_data = {0};
 
 
 
 /***************************************************************
 *           functions
 ****************************************************************/
-void init_session_data(task_priv_data_t *priv)
-{
-    //total_rcv_data_len = 0;
-    //session_id[0] = '\0';
-
-    memset(priv->devid, 0, DEV_ID_LEN_MAX);
-    priv->total_rcv_data_len = 0;
-}
-
 
 uint32_t calc_total_len(task_priv_data_t *priv, uint32_t len)
 {
@@ -41,8 +28,13 @@ uint32_t calc_total_len(task_priv_data_t *priv, uint32_t len)
 
 uint32_t get_total_len(void)
 {
+    uint32_t index;
+    proc_spec_data_t *priv;
 
-    return task_data.total_rcv_data_len;
+    get_proc_priv_data(&priv);
+    index = get_task_serialno();
+
+    return priv->task_var[index]->total_rcv_data_len;
 }
 
 
@@ -59,6 +51,24 @@ uint32_t send_to_client(uint32_t fd, int8_t *data, uint32_t len)
     } 
 
     return OK;
+}
+
+uint8_t check_cilent_exist(proc_spec_data_t *proc_priv, uint32_t client_ip)
+{
+    uint32_t i;
+
+    for (i = 0; i < proc_priv->client_num; i++)
+    {
+        if (proc_priv->client_info[i].ip == client_ip)
+            return BOOL_TRUE;
+    }
+
+    return BOOL_FALSE;
+}
+
+uint32_t create_monitor_task(pthread_t *taskid, task_priv_data_t *taskval)
+{
+    return pthread_create(taskid, NULL, secure_comm_task, (void*)taskval);
 }
 
 
@@ -101,12 +111,12 @@ uint32_t start_monitor(uint32_t svr_fd)
     uint32_t sin_size = sizeof(struct sockaddr_in);  
     int32_t  client_fd; 
     int8_t   buf[BUFSIZ]; 
-    int8_t   *ack_data;
+    int8_t   *ack_data = NULL;
     uint32_t ack_len;
     struct sockaddr_in client_addr;
     pthread_t th_id;
     proc_spec_data_t *proc_priv;
-    //task_priv_data_t task_data = {0};   //stub
+    uint32_t client_ip;
 
     if (listen(svr_fd, TCP_CONNECT_POOL) == -1)
     {
@@ -127,19 +137,41 @@ uint32_t start_monitor(uint32_t svr_fd)
         /* 
             for each     transaction, init        counter before       preserve data
             create task, init priv data:task_priv_data_t
-            thread id asigned by proc, restrict by PROC_THREAD_NUM_MAX
+            thread id asigned by proc, restrict by MONITOR_THREAD_NUM_MAX
         */
         get_proc_priv_data(&proc_priv);
-        if ((client_fd != proc_priv->cli_sockfd[0]))
-        {
-            init_session_data(&task_data);
-            task_data.cli_sockfd = client_fd;
-            pthread_create(&th_id, NULL, secure_comm_task, (void*)&task_data);
 
-            // stub task_id serial id0 todo...
-            proc_priv->task_id[0] = th_id;
-            proc_priv->cli_sockfd[0] = client_fd;
-        }        
+        // must use client_addr to distinguish socket connection
+        client_ip = inet_addr(inet_ntoa(client_addr.sin_addr));
+        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "client %#x been connected.", client_ip);
+        if ((!check_cilent_exist(proc_priv, client_ip)) && (proc_priv->client_num < MONITOR_THREAD_NUM_MAX))
+        {
+            //init_session_data(&task_data);
+            //task_data.cli_sockfd = client_fd;
+
+            proc_priv->task_var[proc_priv->client_num] = malloc(sizeof(task_priv_data_t));
+            if (proc_priv->task_var[proc_priv->client_num] == NULL)
+            {
+                PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "oops:memory exhaust.");
+                continue;
+            }
+            bzero(proc_priv->task_var[proc_priv->client_num], sizeof(task_priv_data_t));
+            proc_priv->task_var[proc_priv->client_num]->cli_sockfd = client_fd;
+            create_monitor_task(&th_id, proc_priv->task_var[proc_priv->client_num]);
+
+            // persist task info
+            proc_priv->client_info[proc_priv->client_num].task_id = th_id;
+            proc_priv->client_info[proc_priv->client_num].cli_sockfd = client_fd;
+
+            proc_priv->task_var[proc_priv->client_num]->task_id = th_id;
+            
+            proc_priv->client_num++;
+        } 
+        else
+        {
+            PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "oops:connection pool exhaust.");
+            continue;
+        }
         
         
         PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "client %s been connected.", inet_ntoa(client_addr.sin_addr));
@@ -171,17 +203,19 @@ uint32_t start_monitor(uint32_t svr_fd)
 
 
                 /* release resources */
-                //total_rcv_data_len = 0;
-                task_data.total_rcv_data_len = 0;
-                free(ack_data);
+                // CAUTION:must substract 1 as index
+                proc_priv->task_var[proc_priv->client_num-1]->total_rcv_data_len = 0;
+
+                if (ack_data)
+                   free(ack_data);
                 continue;
             }
 
             if (ret == OK   )
                 PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "receive next package data");
         }
-    
-        close(client_fd);
+        if (client_fd >0)
+            close(client_fd);
 
         // need timer, or may cause deadloop
         
@@ -213,19 +247,28 @@ uint32_t client_connect_timeout()
 
 void* secure_comm_task(void *priv)
 {
+    uint32_t index;
     proc_spec_data_t *proc;
     task_priv_data_t *task_data = (task_priv_data_t *)priv;
 
     get_proc_priv_data(&proc);
-    
-    PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "task id is:%d", proc->task_id[0]);
 
-
+    index = get_task_serialno();
+    PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "proc->task_var->task_id:%d", proc->task_var[index]->task_id);
 
     while(1)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "priv->cli_sockfd:%d", proc->cli_sockfd[0]);
         PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "task_data->devid:%s", task_data->devid);
+        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "task_data->task_id:%d", task_data->task_id);
+        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "task_data->cli_sockfd:%d", task_data->cli_sockfd);
+        
+        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "proc->task_var->devid:%s", proc->task_var[index]->devid);
+        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "proc->task_var->task_id:%d", proc->task_var[index]->task_id);
+        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "proc->task_var->cli_sockfd:%d", proc->task_var[index]->cli_sockfd);
+        
+        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "proc->client_info[index].ip:%#x", proc->client_info[index].ip);
+        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "proc->client_info[index].task_id:%d", proc->client_info[index].task_id);
+        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "proc->client_info[index].cli_sockfd:%d", proc->client_info[index].cli_sockfd);
         sleep(1);
     }
 

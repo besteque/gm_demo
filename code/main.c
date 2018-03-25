@@ -27,7 +27,7 @@ int init_proc_data(proc_spec_data_t *priv)
     INIT_LIST_HEAD(&priv->dev_list_head);
 
     //stub
-    strcpy(priv->devid, "xuyang_00n");
+    strcpy(priv->devid, "xuyang_00o");
 
     return OK;
 }

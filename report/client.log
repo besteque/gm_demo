@@ -1,0 +1,365 @@
+
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# gcc -o tcpclient tcp_client.c pub.h
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connect: Connection refused
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+^C
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+^C
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+^C
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+^[[A^C
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+^C
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+^C
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+^C
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connect: Connection refused
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:0
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# gcc -o tcpclient tcp_client.c pub.h
+tcp_client.c: In function ¡®main¡¯:
+tcp_client.c:136:18: error: ¡®CHAR¡¯ undeclared (first use in this function)
+                 (CHAR *)&timeout,
+                  ^
+tcp_client.c:136:18: note: each undeclared identifier is reported only once for each function it appears in
+tcp_client.c:136:24: error: expected expression before ¡®)¡¯ token
+                 (CHAR *)&timeout,
+                        ^
+tcp_client.c:137:17: error: too few arguments to function ¡®setsockopt¡¯
+                 sizeof(struct timeval));
+                 ^
+In file included from tcp_client.c:5:0:
+/usr/include/x86_64-linux-gnu/sys/socket.h:226:12: note: declared here
+ extern int setsockopt (int __fd, int __level, int __optname,
+            ^
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# gcc -o tcpclient tcp_client.c pub.h
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:-1
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:-1
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:-1
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:-1
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:-1
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:1596
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:1596
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:1596
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:1596
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:1596
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:1596
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:1596
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:-1
+root@ubuntu:/home/xuyang/workspace/tcp_client# ps -elf | grep demo
+0 S root      8020  2038  0  80   0 - 20904 inet_c 22:34 pts/6    00:00:00 ./target/demo
+0 S root      8026  2238  0  80   0 -  3995 pipe_w 22:35 pts/13   00:00:00 grep --color=auto demo
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient        
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:-1
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient        
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:-1
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:-1
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:-1
+root@ubuntu:/home/xuyang/workspace/tcp_client# free
+             total       used       free     shared    buffers     cached
+Mem:       2040168    1128892     911276       4024     192344     603980
+-/+ buffers/cache:     332568    1707600
+Swap:      2094076          0    2094076
+root@ubuntu:/home/xuyang/workspace/tcp_client# free -m
+             total       used       free     shared    buffers     cached
+Mem:          1992       1102        889          3        187        589
+-/+ buffers/cache:        324       1667
+Swap:         2044          0       2044
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:-1
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# free -m    
+             total       used       free     shared    buffers     cached
+Mem:          1992       1102        889          3        187        589
+-/+ buffers/cache:        324       1667
+Swap:         2044          0       2044
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# ./tcpclient
+connected to server 192.168.123.192 OK
+step 1 send OK, date len:312
+step 1 receive OK, date len:312
+step 2 send OK, date len:1080
+step 2 receive OK, date len:1080
+step 3 send OK, date len:1596
+step 3 receive OK, date len:1596
+step 4 send OK, date len:156
+step 4 receive OK, date len:-1
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
+root@ubuntu:/home/xuyang/workspace/tcp_client# free -m    
+             total       used       free     shared    buffers     cached
+Mem:          1992       1102        889          3        187        589
+-/+ buffers/cache:        324       1667
+Swap:         2044          0       2044
+root@ubuntu:/home/xuyang/workspace/tcp_client# 
