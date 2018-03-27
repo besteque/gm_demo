@@ -51,7 +51,12 @@ ADD_LIST:
     /*****************************************************************************
     * WARNing: new node must apply heap memeroy! stack will recycle after return
     ******************************************************************************/
-    node = malloc(sizeof(dev_info_t));
+    node = (dev_info_t*)malloc(sizeof(dev_info_t));
+    if (node == NULL)
+    {
+        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "malloc dev_info_t failed");
+        return ERROR;
+    }
     memcpy(node, info, sizeof(dev_info_t));
     
     list_add(&node->point, head);
@@ -80,7 +85,7 @@ uint32_t validate_data(int8_t *msg, uint32_t len)
         return ERROR;
     }
 
-    if (head.type > MAX_MSG_TYPE)
+    if ((head.type > MAX_MSG_TYPE) || (head.type <= MSG_TYPE_INIT))
     {
         PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "msg_head type %d unrecognized", head.type);
         return ERROR;
@@ -131,10 +136,12 @@ uint32_t handle_login_req(int8_t *msg, uint32_t len)
 
 uint32_t handle_signiture_req(int8_t *msg, uint32_t len)
 {
+    int32_t ret, index;
     msg_head_t          head;
     signiture_data_t         sign_data;
     dev_info_t          devinfo = {0};
     int8_t devid[DEV_ID_LEN_MAX] = {0};
+    proc_spec_data_t *priv;
 
     // multi-pkg todo...
 
@@ -153,8 +160,6 @@ uint32_t handle_signiture_req(int8_t *msg, uint32_t len)
     get_dev_id(devid);
     get_devinfo_by_devid(devid, &devinfo);
 
-    //devnode.sign_data = sign_data;
-
     // need decrypt ????
     //ret = IW_SM2_DecryptData(cipher, strlen(cipher), pdata, &pdataLen);
 
@@ -164,38 +169,58 @@ uint32_t handle_signiture_req(int8_t *msg, uint32_t len)
     
     PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "client %s sign data:%s", devid, sign_data.data);
 
+    // server verify client data
+    get_proc_priv_data(&priv);
+    index = get_task_serialno();
+    
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "priv->task_var[index].devid:%s", priv->task_var[index]->devid);
+    
+    ret = IW_VerifyData(priv->pub_matrix, PUB_KEY_MATRIX_LEN_MAX, 
+                    CLIENT_VERIFY_DATA_SYMBOL, strlen(CLIENT_VERIFY_DATA_SYMBOL), 
+                    sign_data.data, priv->task_var[index]->devid);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_VerifyData ret:%d", ret);
+
     return OK;
 }
 
 
+/* key enveloped by DE */
 uint32_t negotiate_crypt_type(int8_t *msg, uint32_t len)
 {
+    int32_t ret;
     msg_head_t          head;
     encrypt_data_t         crypt_data;
     dev_info_t          devinfo = {0};
     int8_t devid[DEV_ID_LEN_MAX] = {0};
+    int8_t symmetric_key[CIPHER_DATA_LEN_MAX] = {0};
+    int32_t sym_key_len = 0;
 
-    // multi-pkg todo...
-
-    if (len != (sizeof(head) + sizeof(crypt_data)))
+    if (len != (sizeof(head) + sizeof(encrypt_data_t)))
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "negotiate_crypt_type:len != (sizeof(msg_head) + sizeof(crypt_data))");
+        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "negotiate_crypt_type:len(%ld) !=%ld (sizeof(msg_head) + sizeof(encrypt_data_t)",
+                                    len, sizeof(head) + sizeof(encrypt_data_t));
         return ERROR;
     }
 
+    // multi-pkg todo...
     memcpy(&head, msg, sizeof(head));
     memcpy(&crypt_data, msg+sizeof(head), sizeof(crypt_data));
 
     get_dev_id(devid);
     get_devinfo_by_devid(devid, &devinfo);
-    //devnode.crypt_type = crypt_data;
-
 
     // need decrypt ????
     //ret = IW_SM2_DecryptData(cipher, strlen(cipher), pdata, &pdataLen);
 
     // save data
+    ret = IW_SM2_OpenEnv(crypt_data.key, symmetric_key, &sym_key_len);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_SM2_OpenEnv ret:%d", ret);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "negotiate_crypt_type crypt_data.key:%s", crypt_data.key);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "negotiate_crypt_type key after:%s", symmetric_key);
+    
     memcpy(&devinfo.crypt_type, &crypt_data, sizeof(encrypt_data_t));
+    memset(devinfo.crypt_type.key, 0, SECRET_KEY_LEN_MAX); // caution len different!
+    memcpy(&devinfo.crypt_type.key, symmetric_key, sym_key_len);
     update_devinfo_by_devid(devid, &devinfo);
     
     PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "dev %s affirmed crypt type:%#x", devid, crypt_data.algorithm);
@@ -204,12 +229,66 @@ uint32_t negotiate_crypt_type(int8_t *msg, uint32_t len)
 }
 
 
+// len:plain data len -> modify to recv data len
+uint32_t decrypt_usr_data(int8_t *data, uint32_t len)
+{
+    int32_t ret;
+    uint8_t *plain_date;
+    int32_t plain_len = 0;
+    proc_spec_data_t *priv;
+    int8_t devid[DEV_ID_LEN_MAX] = {0};
+    dev_info_t devinfo = {0};
 
+    plain_date = (uint8_t*)malloc(PACKAGE_DATA_LEN_MAX);
+    if ( plain_date == NULL)
+    {
+        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "malloc plain_date failed");
+        return ERROR;
+    }
+    memset(plain_date, 0, sizeof(PACKAGE_DATA_LEN_MAX));
+    
+    get_dev_id(devid);
+    get_devinfo_by_devid(devid, &devinfo);
+    
+    //ret = IW_SM4_DECRYPT(SM4_MODE_ECB, SM4_NOPADDING, NULL, devinfo.crypt_type.key, data,
+    //                   len, plain_date, &plain_len);
+    
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "strlen(data):%d, len:%d", strlen(data), len);
+    
+    ret = decrypt_data(&devinfo.crypt_type, data, len, plain_date, &plain_len);
+    if (ret != OK)
+    {        
+        //PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_SM2_DecryptData failed, ret:%d", ret);
+        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "decrypt_data failed, ret:%d", ret);
+        free((char*)plain_date);
+        return ERROR;
+    }
+
+    //stub
+    if (plain_len > 0)
+    {
+        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "decrypt_usr_data as follow:");
+        dbg_print_char_in_buf(plain_date, plain_len);
+        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "plain_date:%s\n", plain_date);
+    }
+
+    if (plain_date)
+    {
+        free((char*)plain_date);
+        plain_date = NULL;
+    }
+
+    return OK;
+}
+
+// len: tcp pkg size, include head
 uint32_t rcv_usr_data(int8_t *msg, uint32_t len)
 {
+    int32_t ret;
     msg_head_t          head;
     dev_info_t          devinfo = {0};
     int8_t devid[DEV_ID_LEN_MAX] = {0};
+    int8_t *usr_data;
 
     // multi-pkg todo...
 
@@ -217,20 +296,38 @@ uint32_t rcv_usr_data(int8_t *msg, uint32_t len)
 
     get_dev_id(devid);
     get_devinfo_by_devid(devid, &devinfo);
-    //devinfo = devnode;
-
 
     // need decrypt ????
     //ret = IW_SM2_DecryptData(cipher, strlen(cipher), pdata, &pdataLen);
+
+    usr_data = (int8_t*)malloc(PACKAGE_DATA_LEN_MAX);
+    if (usr_data == NULL)
+    {
+        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "malloc(PACKAGE_DATA_LEN_MAX) failed");
+        return ERROR;
+    }
+    
+    bzero(usr_data, PACKAGE_DATA_LEN_MAX);
+    strcpy(usr_data, msg+sizeof(msg_head_t));
+    ret = decrypt_usr_data(usr_data, head.data_len);
+    if (ret != OK)
+    {
+        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "rcv dev %s usr data", devid);
+        return ERROR;
+    }
 
     // usr data
     PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "rcv dev %s usr data", devid);
     dbg_print_msg_head(&head);
 
+    if (usr_data)
+    {
+        free((char*)usr_data);
+        usr_data = NULL;
+    }
+
     return OK;
 }
-
-
 
 
 /**
@@ -262,12 +359,7 @@ uint32_t parse_data(int8_t *msg, uint32_t len)
             break;
             
         case MSG_TYPE_USR_DATA:
-
-            // todo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-            //msg null, do not free it
-            ret = ERROR; 
-
+            ret = rcv_usr_data(msg, len);
             break;
 
         default:break;
@@ -277,7 +369,7 @@ uint32_t parse_data(int8_t *msg, uint32_t len)
     if (ret != OK)
     {
         PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "parse_data failed, ret:%d", ret);
-        return ERROR;
+        return FINISH;
     }
 
     // need adapt, use original data_len
@@ -292,7 +384,7 @@ uint32_t parse_data(int8_t *msg, uint32_t len)
         return FINISH;
     }
 
-    return OK;
+    return ret;
 }
 
 
@@ -307,10 +399,10 @@ uint32_t handle_login_ack(int8_t **data, uint32_t *len)
 
     data_len = sizeof(msg_head_t) + sizeof(login_data_t);
 
-    buf = malloc(data_len);
+    buf = (int8_t  *)malloc(data_len);
     if (buf == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "malloc failed");
+        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "malloc buf failed");
         return ERROR;
     }
 
@@ -331,7 +423,7 @@ uint32_t handle_login_ack(int8_t **data, uint32_t *len)
     login_data = (login_data_t*)((msg_head_t*)buf +1);
     memcpy(login_data->dev_id, proc->devid, strlen(proc->devid));
     
-    
+    return OK;
 }
 
 
@@ -345,13 +437,15 @@ uint32_t handle_sign_ack(int8_t **data, uint32_t *len)
     dev_info_t          devinfo = {0};
     int8_t devid[DEV_ID_LEN_MAX] = {0};
     int8_t sign_val[SIGN_DATA_LEN_MAX] = {0};
+    int8_t sign_final[SIGN_DATA_LEN_MAX] = {0};
+    proc_spec_data_t *priv;
 
     data_len = sizeof(msg_head_t) + sizeof(signiture_data_t);
 
-    buf = malloc(data_len);
+    buf = (int8_t  *)malloc(data_len);
     if (buf == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "malloc failed");
+        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "malloc buf failed");
         return ERROR;
     }
 
@@ -372,27 +466,36 @@ uint32_t handle_sign_ack(int8_t **data, uint32_t *len)
     get_devinfo_by_devid(devid, &devinfo);
     
     //dbg_print_char_in_buf(devinfo.sign_data.data, SIGN_DATA_LEN_MAX);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "original data:%s", devinfo.sign_data.data);
+    //PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "original data:%s", devinfo.sign_data.data);
 
     // encrypt according Base64
-    ret = IW_ServerSignData(devinfo.sign_data.data, sign_val);
+    /*ret = IW_ServerSignData(devinfo.sign_data.data, sign_val);
     if (ret != OK)
     {
         PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_ServerSignData failed, code %d");
         return ERROR;
     }
     PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "ret code %d, after sign:%s", ret, sign_val);
-    /////PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "devid:%s, sign ret:%#x", devid, ret);
+    */
 
     dbg_print_devinfo(&devinfo);
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "sign data:%s", sign_val);
+    //PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "sign data:%s", sign_val);
 
     sign_data = (signiture_data_t*)((msg_head_t*)buf +1);
 
     // need encrypt whole sign data 'sign_val', then asign to 'sign_data' ?
-    
-    memcpy(sign_data->data, sign_val, strlen(sign_val));
+    //get_proc_priv_data(priv);
+    //strncpy(sign_val, SERVER_VERIFY_DATA_SYMBOL, strlen(SERVER_VERIFY_DATA_SYMBOL));
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "[test]ack to clent:");
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "[test]original data:%s", SERVER_VERIFY_DATA_SYMBOL);
+    ret = IW_SignData(SERVER_VERIFY_DATA_SYMBOL, strlen(SERVER_VERIFY_DATA_SYMBOL), sign_val);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "[test]sign_val data:%s", sign_val);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_SignData ret:%d", ret);
+    ret = IW_ServerSignData(sign_val, sign_final);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "[test]sign_final data:%s", sign_final);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_ServerSignData ret:%d", ret);
+    memcpy(sign_data->data, sign_final, strlen(sign_final));
 
     return OK;
     
@@ -408,13 +511,15 @@ uint32_t affirm_crypt_type(int8_t **data, uint32_t *len)
     encrypt_data_t *crypt_data;
     dev_info_t          devinfo = {0};
     int8_t devid[DEV_ID_LEN_MAX] = {0};
+    proc_spec_data_t *priv;
+    int8_t evn[CIPHER_DATA_LEN_MAX] = {0};
 
     data_len = sizeof(msg_head_t) + sizeof(encrypt_data_t);
 
-    buf = malloc(data_len);
+    buf = (int8_t*)malloc(data_len);
     if (buf == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "malloc failed");
+        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "affirm_crypt_type malloc failed");
         return ERROR;
     }
 
@@ -431,19 +536,125 @@ uint32_t affirm_crypt_type(int8_t **data, uint32_t *len)
     strncpy(head->magic, MAGIC_WORD, MAGIC_WORD_LEN_MAX);
 
     get_dev_id(devid);
-    get_devinfo_by_devid(devid, &devinfo);    
-    //devinfo = devnode;
+    get_devinfo_by_devid(devid, &devinfo);
 
     crypt_data = (encrypt_data_t*)((msg_head_t*)buf +1);
     
     // need encrypt whole data 'devinfo.crypt_type', then asign to 'crypt_data' ?
+
+
+    get_proc_priv_data(&priv);
+
+    //ret = IW_SM2_MakeEnv(priv->pub_matrix, PUB_KEY_MATRIX_LEN_MAX, devid,
+    //                            devinfo.crypt_type.key, strlen(devinfo.crypt_type.key), evn);
+    
+    //PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_SM2_MakeEnv ret:%d", ret);
+
+    
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "affirm_crypt_type crypt_data->key:%s", crypt_data->key);
+    
     memcpy(crypt_data, &devinfo.crypt_type, sizeof(encrypt_data_t));
+    //memset(devinfo.crypt_type.key, 0, SECRET_KEY_LEN_MAX); // caution len different!
+    //memcpy(crypt_data->key, evn, strlen(evn));
 
     return OK;
     
 }
 
 
+// common date transmit API
+uint32_t response_to_client(int8_t **data, uint32_t *len)
+{
+    int32_t     ret;
+    int8_t      *buf;
+    uint32_t    data_len;
+    msg_head_t *head;
+    dev_info_t devinfo = {0};
+    int8_t devid[DEV_ID_LEN_MAX] = {0};
+    proc_spec_data_t *priv;
+    int8_t pub_key[PUB_KEY_LEN_MAX] = {0};
+    int8_t cipher[CIPHER_DATA_LEN_MAX] = {0};
+    uint32_t cipher_len = 0;
+
+    data_len = sizeof(msg_head_t) + CIPHER_DATA_LEN_MAX;
+    
+    buf = (int8_t*)malloc(data_len);
+    if (buf == NULL)
+    {
+        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "response_to_client malloc failed");
+        return ERROR;
+    }
+
+    memset(buf, 0, data_len);
+
+    *data = buf;
+
+    head = (msg_head_t*)buf;
+    head->type = MSG_TYPE_USR_DATA;
+    head->total_package = 1;
+    strncpy(head->magic, MAGIC_WORD, MAGIC_WORD_LEN_MAX);
+
+    get_dev_id(devid);
+    get_devinfo_by_devid(devid, &devinfo);
+    
+    // need encrypt whole data 'devinfo.crypt_type', then asign to 'crypt_data' ?
+    
+    get_proc_priv_data(&priv);
+    ret = CPK_Get_IPK(devid, priv->pub_matrix, PUB_KEY_MATRIX_LEN_MAX, pub_key);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "CPK_Get_IPK ret:%d", ret);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "devid:%s", devid);
+    
+    ret = IW_SM2_EncryptData(pub_key, LITERIAL_TEXT_FOR_TEST, strlen(LITERIAL_TEXT_FOR_TEST)+1, cipher);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_SM2_EncryptData ret:%d", ret);
+    cipher_len = strlen(cipher);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "response_to_client cipher_len:%d", cipher_len);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "response_to_client cipher:%s", cipher);
+    
+    /*ret = IW_SM4_ENCRYPT(SM4_MODE_ECB, SM4_NOPADDING, NULL, devinfo.crypt_type.key, 
+                    LITERIAL_TEXT_FOR_TEST, ((strlen(LITERIAL_TEXT_FOR_TEST)+SYMMETRIC_KEY_LEN-1)/SYMMETRIC_KEY_LEN)*SYMMETRIC_KEY_LEN, cipher, &cipher_len);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_SM4_ENCRYPT ret:%d", ret);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "cipher_len:%d", cipher_len);*/
+    
+    memcpy((char*)((msg_head_t*)buf +1), cipher, cipher_len);    
+    *len = sizeof(msg_head_t) + cipher_len;
+    
+    head->data_len = cipher_len;
+    head->total_length = head->data_len;
+
+    return OK;
+}
+
+
+uint32_t send_err_ack(uint32_t fd, int8_t **data)
+{
+    int32_t ret;
+    uint32_t    data_len;
+    int8_t      *buf; 
+    msg_head_t *head;
+
+    data_len = sizeof(msg_head_t);
+    
+    buf = (int8_t*)malloc(data_len);
+    if (buf == NULL)
+    {
+        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "send_err_ack malloc failed");
+        return ERROR;
+    }
+
+    *data = buf;
+
+    head = (msg_head_t*)buf;
+    head->type = MSG_TYPE_USR_DATA;
+    head->data_len = 0;
+    head->total_length = head->data_len;
+    head->total_package = 1;
+    strncpy(head->magic, MAGIC_WORD, MAGIC_WORD_LEN_MAX);
+    head->err_type = 12345;
+    
+    send_to_client(fd, buf, data_len);
+
+    return OK;
+}
 
 /**
  * response data to TE
@@ -451,7 +662,7 @@ uint32_t affirm_crypt_type(int8_t **data, uint32_t *len)
 
 uint32_t prepare_interactive_data(uint32_t msg_type, int8_t **data, uint32_t *len)
 {
-    int32_t ret;
+    int32_t ret = ERROR;
 
     switch (msg_type)
     {
@@ -469,7 +680,7 @@ uint32_t prepare_interactive_data(uint32_t msg_type, int8_t **data, uint32_t *le
             break;
             
         case MSG_TYPE_USR_DATA:
-
+            ret = response_to_client(data, len);
             break;
     }
 

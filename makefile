@@ -10,10 +10,11 @@ LIB_DIR := $(ROOT_DIR)/libs
 OUTPUT_DIR = target
 TARGET = $(OUTPUT_DIR)/$(ARTIFACT)
 
-CC = gcc
+CC = gcc -g
 LD = $(CC)
 
-#FLAGS = -O2 -Wno-unused-result -fstack-protector #-Wall
+# -fstack-protector #-Wall
+FLAGS = -O2 -Wno-unused-result 
 DEPS = -Wp,-MMD,$(@:%.o=%.d),-MT,$@
 
 INCLUDES += -I$(SRC_DIR)/pub

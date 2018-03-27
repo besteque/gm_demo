@@ -29,6 +29,8 @@ uint32_t prepare_interactive_data(uint32_t msg_type, int8_t **data, uint32_t *le
 uint32_t get_key_by_devid(int8_t *dev_id, int8_t *pk);
 uint32_t get_devinfo_by_devid(int8_t *dev_id, dev_info_t *info);
 uint32_t update_devinfo_by_devid(int8_t *dev_id, dev_info_t *info);
+uint32_t send_to_client(uint32_t fd, int8_t *data, uint32_t len);
+uint32_t send_err_ack(uint32_t fd, int8_t **data);
 
 
 

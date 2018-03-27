@@ -22,6 +22,7 @@
 #define DEBUG_TRUE          1
 #define DEBUG_FALSE         0
 #define F_DESC(x)        0      // use for code interpret
+#define LITERIAL_TEXT_FOR_TEST      "haohao xuexi, tiantian xiangshang"
 
 
 #define FILE_PATH_NAME_LEN_MAX      256
@@ -39,8 +40,8 @@
 #define SMT_PKM_FILE                "res/iwall/iwall.smt.pkm"
 #define SMT_SKM_FILE                "res/iwall/iwall.smt.skm"
 
-#define BOOL_TRUE               (uint8_t)1
-#define BOOL_FALSE              (uint8_t)0
+#define BOOL_TRUE                   1
+#define BOOL_FALSE                  0
 
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
@@ -73,6 +74,7 @@ typedef enum tag_error_num
     OK = 0,
     ERROR,
     FINISH,
+    EXCEPTION,      /* exception occur,need ack to client */
     KEY_EXIST_IN_SERVER,
 }error_num_t;
 
@@ -82,7 +84,7 @@ typedef struct tag_device_info
     struct list_head       point;
     int8_t      id[DEV_ID_LEN_MAX];                /* device id      */
     uint32_t    dev_type;                           /* device type      */
-    uint32_t    algorithm;                          /* data    encrypt algorithm, ref:encrpyt_alg_type_t         */
+    //uint32_t    algorithm;                          /* data    encrypt algorithm, ref:encrpyt_alg_type_t         */
     signiture_data_t sign_data;                     /* device signiture data */
     encrypt_data_t          crypt_type;              /* symmetric encryption algorithm */
     int8_t      pad[1024];

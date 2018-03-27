@@ -19,15 +19,13 @@ proc_spec_data_t *proc_data = NULL;
 //struct list_head      dev_list_head = {0};
 
 
-extern main_crypt(void);
-
 
 int init_proc_data(proc_spec_data_t *priv)
 {    
     INIT_LIST_HEAD(&priv->dev_list_head);
 
     //stub
-    strcpy(priv->devid, "xuyang_00o");
+    strcpy(priv->devid, "xuyang_1000e");
 
     return OK;
 }
@@ -41,7 +39,7 @@ int main(int argc, char *argv[])
 
 
     /* 0 init proc private data */
-    proc_data = malloc(sizeof(proc_spec_data_t));
+    proc_data = (proc_spec_data_t*)malloc(sizeof(proc_spec_data_t));
     if (proc_data == NULL)
     {
         PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "main alloc mem failed");
@@ -60,7 +58,18 @@ int main(int argc, char *argv[])
     PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "init sw shield OK");
 
     /* 3 generate key matrix */
-    //gene_key_matrix(proc_data->pub_matrix, proc_data->skey_matrix);
+    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "gene_key_matrix begin");
+    gene_key_matrix(proc_data->pub_matrix, proc_data->skey_matrix);
+    if (ret != OK)
+    {
+        PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "gene_key_matrix failed, code:%ld", ret);
+        return ERROR;
+    }    
+    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "gene_key_matrix OK");
+
+    // stub: verify API
+    dbg_test_verify(proc_data->devid, proc_data->pub_matrix, PUB_KEY_MATRIX_LEN_MAX);
+
     
     /* 4 start service monitor */
     sock_fd = init_monitor(NULL, SVR_LISTEN_PORT_NUM);

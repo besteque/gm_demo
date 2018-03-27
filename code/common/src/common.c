@@ -8,10 +8,10 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-//#include <sys/time.h>
+#include <sys/time.h>
 #include <time.h>
 
-
+#include "pub.h"
 #include "common.h"
 
 
@@ -206,6 +206,7 @@ uint32_t get_task_serialno(void)
 void dbg_print_msg_head(msg_head_t *head)
 {
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "msg head(size:%ld) as follow:", sizeof(msg_head_t));
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "------------------------------------\n");
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t magic        :%s", head->magic);
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t type         :%d", head->type);
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t date_len     :%d", head->data_len);
@@ -214,6 +215,7 @@ void dbg_print_msg_head(msg_head_t *head)
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t total_length :%ld", head->total_length);
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t total_package:%d", head->total_package);
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t index        :%d", head->index);
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "------------------------------------\n");
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\n");
 }
 
@@ -221,7 +223,7 @@ void dbg_print_devinfo(dev_info_t    *devinfo)
 {
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t id        :%s", devinfo->id);
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t dev_type  :%ld", devinfo->dev_type);
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t algorithm :%ld", devinfo->algorithm);
+    //PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t algorithm :%ld", devinfo->algorithm);
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\n");
 
     // to be continued...  sign_data/crypt_type
@@ -277,11 +279,14 @@ void dbg_print_char_in_buf(int8_t *buf, uint32_t len)
 
     for (i = 0; i < len; i++)
     {
+        if (/*(buf[i] == '\n') || (buf[i] == '\t')||*/ (buf[i] == '\0'))
+            return;
         printf( "%c", buf[i]);
         
-        if ((i+1)%16 == 0)
+        if ((i+1)%256 == 0)
             printf("\n");
     }
-        
+    
+    printf("\n");        
 }
 

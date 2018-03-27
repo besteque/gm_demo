@@ -1,10 +1,10 @@
 /*
- * common.h
+ * crypt.c
  *
  *  Created on: 2018-3-22
  *      Author: xuyang
  */
-    
+
 #include "crypt.h"
 
 
@@ -95,6 +95,7 @@ APPL_KEY:
     PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "get secret key from sk-center OK");
 
     /* generate key matrix */
+    /*
     PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "gene_key_matrix begin");
     get_proc_priv_data(&priv);
     ret = gene_key_matrix(priv->pub_matrix, priv->skey_matrix);
@@ -104,6 +105,8 @@ APPL_KEY:
         return ERROR;
     }    
     PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "gene_key_matrix OK");
+
+    */
 
     return OK;
 }
@@ -248,11 +251,8 @@ uint32_t init_sw_shield_ex(int8_t *dev_id, int8_t *pkey)
     out2:skey_matrix
 */
 
-#if 1
+#if 0
 
-/**
-*   CAUTION: beijing testX incorrect!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-*/
 uint32_t gene_key_matrix(BYTE *pub_matrix, BYTE * skey_matrix)
 {
     int32_t ret = OK;
@@ -341,6 +341,10 @@ REL_RES:
 
 #else
 
+
+/**
+*   CAUTION: beijing testX incorrect!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+*/
 uint32_t gene_key_matrix(BYTE *pub_matrix, BYTE * skey_matrix)
 {
     int32_t ret = OK;
@@ -371,7 +375,7 @@ uint32_t gene_key_matrix(BYTE *pub_matrix, BYTE * skey_matrix)
     block_size = PUB_KEY_MATRIX_LEN_MAX-256;
     count = 1;
     len = fread(pkmbuf + 256, block_size, count, fp);
-    if (len < (block_size*count))
+    if (len < 0)
     {
         PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "read pkmbuf failed: len(%ld), need(%ld)", len, block_size*count);
         ret = ERROR;
@@ -380,7 +384,7 @@ uint32_t gene_key_matrix(BYTE *pub_matrix, BYTE * skey_matrix)
 
     }
 
-    memcpy(pub_matrix, pkmbuf, len);
+    memcpy(pub_matrix, pkmbuf, block_size);
 
     
     /* 2 s-key matrix */
@@ -407,18 +411,18 @@ uint32_t gene_key_matrix(BYTE *pub_matrix, BYTE * skey_matrix)
         goto REL_RES;
     }
     
-    memset(skmbuf, 0, PUB_KEY_MATRIX_LEN_MAX);    
+    memset(skmbuf, 0, SECRET_KEY_MATRIX_LEN_MAX);
     
     block_size = SECRET_KEY_MATRIX_LEN_MAX-256;
     count = 1;
     len = fread(skmbuf + 256, block_size, count, fp);
-    if (len < (block_size*count))
+    if (len < 0)
     {
         PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "read skmbuf failed: len(%ld), need(%ld)", len, block_size*count);
         return ERROR;
     }
     
-    memcpy(skey_matrix, skmbuf, len);
+    memcpy(skey_matrix, skmbuf, block_size);
 
 REL_RES:    
     if (fp) {
@@ -426,9 +430,15 @@ REL_RES:
         fp = NULL;
     }
     if (pkmbuf)
-        free(pkmbuf);
+    {
+        free((char*)pkmbuf);
+        pkmbuf = NULL;
+    }
     if (skmbuf)
-        free(skmbuf);
+    {
+        free((char*)skmbuf);
+        pkmbuf = NULL;
+    }
 
     return ret;
 }
@@ -436,172 +446,174 @@ REL_RES:
 
 #endif
 
-
-#if DEBUG_FALSE
-void main6667(void)
+uint32_t sm2_encrypt_data(int8_t *orig_data,uint32_t orig_len, int8_t *ciph_data,uint32_t *ciph_len)
 {
-	char testKeyId[16] = { 0 };
-	printf("请输入一个标识用于申请密钥.(例如：id0001)\n");
-	scanf("%s", testKeyId);
-	if (testKeyId == NULL) {
-		printf("您输入的标识为NULL");
-		return;
-	}
-	printf("您输入的标识是\"%s\"", testKeyId);
+    return OK;
+}
 
-	unsigned char testData[128] = { 0 };
-	memset(testData, 0, strlen(testData));
-	strcpy(testData, "this is test data! zhe shi ce shi shu ju.1234567890.");
+uint32_t sm4_encrypt_data(encrypt_data_t *algorithm, int8_t *orig_data,uint32_t orig_len, int8_t *ciph_data,uint32_t *ciph_len)
+{
 
-	int rv = 0;
-	char pBlob[256] = { 0 };
-	char pEnvelopedKeyBlob[1024] = { 0 }; //设备私钥
-	int		pubMatrixLen = 66560 + 256;//65 * 1024
-	int		skeyMatrixLen = 1024 * 32 + 256;
-	BYTE*	pkmbuf = (BYTE*)malloc(pubMatrixLen);
-	BYTE*	skmbuf = (BYTE*)malloc(skeyMatrixLen);
-	FILE	*fp = NULL;
+    return OK;
+}
 
-	rv = IW_InitDevice(testKeyId, IWALL_SVKD_REPO);
-	printf("初始化软盾设备(rv = 0：成功) rv = %d\n", rv);
 
-	rv = IW_OpenDevice(testKeyId, IWALL_SVKD_REPO);
-	printf("打开软盾设备(rv = 0：成功) rv = %d\n\n", rv);
-
-	rv = IW_GenKeyRequest(testKeyId, pBlob);
-	printf("生成临时密钥对(rv = 0：成功) rv = %d\n密钥对的公钥：%s\n", rv, pBlob);
+uint32_t encrypt_data(encrypt_data_t *algorithm, int8_t *orig_data,uint32_t orig_len, int8_t *ciph_data,uint32_t *ciph_len)
+{
+    int32_t ret;
     
-	fp = fopen(SMT_PKM_FILE, "rb");
-	//fp = fopen("../iwall.test.pkm", "rb");
-	if (fp == NULL)
-	{
-		printf("pkm_open_err!\n");
-		return;
-	}
-	//fread(pkmbuf, 1024 * 65 + 256, 1, fp);
-	fread(pkmbuf + 256, 1024 * 65, 1, fp);
-	if (fp) {
-		fclose(fp);
-		fp = NULL;
-	}
+    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "encrypt_data algorithm:%d", algorithm);
 
-	fp = fopen(SMT_SKM_FILE, "rb");
-	//fp = fopen("../iwall.test.skm", "rb");
-	if (fp == NULL)
-	{
-		printf("skm_open_err!\n");
-		return;
-	}
-	//fread(skmbuf, 1024 * 32 + 256, 1, fp);
-	fread(skmbuf + 256, 1024 * 32, 1, fp);
-	if (fp) {
-		fclose(fp);
-		fp = NULL;
-	}
+    switch (algorithm->algorithm)
+    {
+        case ALG_TYPE_RSA:
+        case ALG_TYPE_DES:
+        case ALG_TYPE_DES3:
+        case ALG_TYPE_AES:
+        case ALG_TYPE_BASE64:
+        case ALG_TYPE_SM3:
+        {
+            break;
+        }
+        case ALG_TYPE_SM2:
+        {
+            ret = sm2_encrypt_data(orig_data, orig_len, ciph_data, ciph_len);
+            break;
+        }
+        case ALG_TYPE_SM4:
+        {
+            ret = sm4_encrypt_data(algorithm, orig_data, orig_len, ciph_data, ciph_len);
+            break;
+        }
+        default:break;
+    }
 
-	// pBlog -公钥
-	// pEnvelopedKeyBlob -服务端返回的私钥
-	//id和公钥发给密钥中心，密钥中心返回加密的私钥，用临时私钥解密后，存放在pEnvelopedKeyBlob
-	IW_Sendrequest(testKeyId, pBlob, pEnvelopedKeyBlob);
-	if (strlen(pEnvelopedKeyBlob) < 32) {
-		printf("申请私钥失败：%s,请重新运行程序并尝试用新的标识来申请私钥\n", pEnvelopedKeyBlob);
-		return;
-	}
-	else {
-		printf("申请私钥成功：Socket返回的私钥保护结构为 %s\n", pEnvelopedKeyBlob);
-	}
+    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "encrypt_data ret:%d", ret);
 
-	char seServerKey[256] = { 0 };
-	//rv = IW_WriteKeycard(pEnvelopedKeyBlob,seServerKey);
-	rv = IW_WriteKeycard(pEnvelopedKeyBlob, NULL);
-	printf("导入私钥到软盾(rv = 0：成功) rv = %d\n", rv);
-
-// 通过id计算对端公钥pPublic
-	char pPublic[512] = { 0 };
-	rv = CPK_Get_IPK(testKeyId, pkmbuf, pubMatrixLen, pPublic);
-	//printf("\nCPK_Get_IPK rv = %d\npPublic is: %s", rv, pPublic);
-	printf("计算公钥(rv = 0：成功) rv = %d\n标识(%s)的公钥：%s\n\n", rv, testKeyId, pPublic);
-
-// TE
-	char pSignature[256] = { 0 };
-	rv = IW_SignData(testData, strlen(testData), pSignature);
-	//printf("IW_SignData rv is %d\n", rv);
-
-// svr
-	char pSignaturefinal[512] = { 0 };
-	rv = IW_ServerSignData(pSignature, pSignaturefinal);
-	//printf("IW_ServerSignData rv is %d\n", rv);
-	printf("数字签名(rv = 0：成功) rv = %d\n被签名数据：%s\n签名值：%s\n", rv, testData, pSignaturefinal);
-
-// TE
-	rv = IW_VerifyData(pkmbuf, pubMatrixLen, testData, strlen(testData), pSignaturefinal, testKeyId);
-	//printf("\nSM2VerifySignData rv = %d\n", rv);
-	printf("验证签名(rv = 0：成功) rv = %d\n\n", rv);
-
-
-// 随机数？
-	rv = WriteToken(1, "12243432432423");
-	//printf("\nWriteToken rv = %d\n", rv);
-
-	char token[64] = { 0 };
-	rv = ReadToken(1, token);
-	//printf("\nReadToken rv = %d\ntoken is %s\n", rv,token);
-
-	char cipher[1024] = { 0 };
-	rv = IW_SM2_EncryptData(pPublic, testData, strlen(testData), cipher);
-	printf("SM2 加密(rv = 0：成功) rv = %d\n待加密的数据：%s\n加密后的密文：%s\n", rv, testData, cipher);
-	//printf("\nIW_SM2_EncryptData rv = %d\n,%s", rv, cipher);
-
-	int	 pdataLen = 512;
-	char pdata[512] = { 0 };
-	//memset(cipher, 0, strlen(cipher));
-	//strcpy(cipher, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8RFjYRDtchtW5+I97DaEhXIudtzPYggSy5RjuwrOSjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAy8lAsr4ca8WWAx0xRwBLZsP8Dy3hZPOxCDpS712AsqriAQlg/IK8N/cYiXn8ITI9mJNOdTheDfta+pInsHO3LTIAAAADWdh0BePQQCezWL50T+cJGDxwEgXdpB/+nmPTjZKj8XMukoW3kIowGbGHQFmyYiYItwA=pkdfCryjH+mBWbd4C19NAXXOTlBxYIbTZ0uUSzw=");
-	rv = IW_SM2_DecryptData(cipher, strlen(cipher), pdata, &pdataLen);
-	printf("SM2 解密(rv = 0：成功) rv = %d\n待解密的数据：%s\n解密后的明文：%s\n\n", rv, cipher, pdata);
-	//printf("\nIW_SM2_DecryptData rv = %d, plain = %s\n", rv, pdata);
-
-	BYTE skey[128] = { 0 };
-	memset(cipher, 0, 1024);
-	rv = IW_SM2_MakeEnv(pkmbuf, pubMatrixLen, testKeyId, testData, strlen(testData), cipher);
-	printf("制作数字信封(rv = 0：成功) rv = %d\n信封中的数据：%s\n数字信封：%s\n", rv, testData, cipher);
-	//printf("\nIW_SM2_MakeEnv rv = %d,%s\n", rv, cipher);
-
-	int skeyLen = 128;
-	memset(skey, 0, 128);
-	//memset(cipher, 0, strlen(cipher));
-	//strcpy(cipher, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8RFjYRDtchtW5+I97DaEhXIudtzPYggSy5RjuwrOSjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAy8lAsr4ca8WWAx0xRwBLZsP8Dy3hZPOxCDpS712AsqriAQlg/IK8N/cYiXn8ITI9mJNOdTheDfta+pInsHO3LTIAAAADWdh0BePQQCezWL50T+cJGDxwEgXdpB/+nmPTjZKj8XMukoW3kIowGbGHQFmyYiYItwA=pkdfCryjH+mBWbd4C19NAXXOTlBxYIbTZ0uUSzw=");
-	rv = IW_SM2_OpenEnv(cipher, skey, &skeyLen);
-	printf("打开数字信封(rv = 0：成功) rv = %d\n数字信封：%s\n信封中的数据：%s\n\n", rv, cipher, skey);
-	//printf("\nIW_SM2_OpenEnv rv = %d, plain(ex) = %s\n", rv, skey);
-
-	int keyIdLen = 128;
-	char keyId[128] = { 0 };
-	rv = IW_ReadKeyID(keyId, &keyIdLen);
-	printf("读取软盾设备的标识(rv = 0：成功) rv = %d\n软盾标识：%s\n", rv, keyId);
-	//printf("\nReadKeyID rv = %d keyId = %s\n", rv, keyId);
-
-
-	//CloseLogFile();
-	printf("测试完成\n");
-
-
-	if (pkmbuf)
-		free(pkmbuf);
-	if (skmbuf)
-		free(skmbuf);
-
-	//system("pause");
+    return OK;
 }
 
-void main_crypt()
+
+uint32_t sm2_decrypt_data(int8_t *ciph_data,uint32_t ciph_len, int8_t *orig_data,uint32_t *orig_len)
 {
-	int i = 0;
-	for (i; i < 1; i++)
-	{
-		main6667();
-	}
-	//system("pause");
+    return IW_SM2_DecryptData(ciph_data, ciph_len, orig_data, orig_len);
 }
 
-#endif
+uint32_t sm4_decrypt_data(encrypt_data_t *algorithm, int8_t *ciph_data,uint32_t ciph_len, int8_t *orig_data,uint32_t *orig_len)
+{
+    int32_t ret;
+
+    // stub:mode&padding
+    ret = IW_SM4_DECRYPT(SM4_MODE_ECB, SM4_NOPADDING, NULL, algorithm->key, 
+                        ciph_data, ciph_len, orig_data, orig_len);
+
+    return ret;
+}
+
+uint32_t decrypt_data(encrypt_data_t *algorithm, int8_t *ciph_data,uint32_t ciph_len, int8_t *orig_data,uint32_t *orig_len)
+{
+    int32_t ret;
+    
+    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "decrypt_data algorithm:%d", algorithm->algorithm);
+
+    switch (algorithm->algorithm)
+    {
+        case ALG_TYPE_RSA:
+        case ALG_TYPE_DES:
+        case ALG_TYPE_DES3:
+        case ALG_TYPE_AES:
+        case ALG_TYPE_BASE64:
+        case ALG_TYPE_SM3:
+        {
+            break;
+        }
+        case ALG_TYPE_SM2:
+        {
+            ret = sm2_decrypt_data(ciph_data, ciph_len,orig_data, orig_len);
+            break;
+        }
+        case ALG_TYPE_SM4:
+        {
+            ret = sm4_decrypt_data(algorithm, ciph_data, ciph_len, orig_data, orig_len);
+            break;
+        }
+        default:break;
+    }
+
+    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "decrypt_data ret:%d", ret);
+
+    return OK;
+}
+
+
+
+// test API----->
+void dbg_test_verify(char * devid, uint8_t *matrix, uint32_t klen)
+{
+
+    unsigned char testData[128] = { 0 };
+    int32_t ret = OK;
+    int32_t len, block_size, count;
+    FILE     *fp = NULL;
+    BYTE*    pkmbuf;
+    BYTE*    skmbuf;
+    uint8_t pub_matrix[PUB_KEY_MATRIX_LEN_MAX] = {0};     
+    uint8_t skey_matrix[SECRET_KEY_MATRIX_LEN_MAX] = {0};
+
+
+    /* 1 p-key matrix */
+    fp = fopen(SMT_PKM_FILE, "rb");
+    if (fp == NULL)
+    {
+        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "pkm_open_err");
+        return;
+    }
+
+    pkmbuf = (BYTE*)malloc(PUB_KEY_MATRIX_LEN_MAX);
+    if (pkmbuf == NULL)
+    {
+        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "malloc pkmbuf failed");
+        return;
+    }
+    
+    memset(pkmbuf, 0, PUB_KEY_MATRIX_LEN_MAX);
+
+    // why subtract 256 ???
+    block_size = PUB_KEY_MATRIX_LEN_MAX-256;
+    count = 1;
+    len = fread(pkmbuf + 256, block_size, count, fp);
+    if (len < 0)
+    {
+        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "read pkmbuf failed: len(%ld), need(%ld)", len, block_size*count);
+        return;
+    }
+
+    memcpy(pub_matrix, pkmbuf, block_size);
+    
+    memset(testData, 0, strlen(testData));
+    strcpy(testData, "chun hui dada, wanwu fusu. yangguang mingmei, wu gufu hao shiguang.");
+
+    char pSignature[256] = { 0 };
+    ret = IW_SignData(testData, strlen(testData), pSignature);
+    printf("IW_SignData rv is %d\n", ret);
+
+    char pSignaturefinal[512] = { 0 };
+    ret = IW_ServerSignData(pSignature, pSignaturefinal);
+    printf("IW_ServerSignData rv is %d\n", ret);
+    printf("数字签名(rv = 0：成功) rv = %d\n被签名数据：%s\n签名值：%s\n", ret, testData, pSignaturefinal);
+
+
+    //printf("proc_data->pub_matrix:%s\n", proc_data->pub_matrix);
+    //dbg_print_char_in_buf(proc_data->pub_matrix, 128);
+    //printf("pub_matrix:%s\n", pub_matrix);
+    //dbg_print_char_in_buf(pub_matrix, PUB_KEY_MATRIX_LEN_MAX);
+    //printf("pkmbuf:%s\n", pkmbuf);
+    //dbg_print_char_in_buf(pkmbuf, PUB_KEY_MATRIX_LEN_MAX);
+
+    ret = IW_VerifyData(matrix, klen, testData, strlen(testData), pSignaturefinal, devid);
+    printf("\nSM2VerifySignData rv = %d\n", ret);
+    printf("验证签名(rv = 0：成功) rv = %d\n\n", ret);
+    return;
+}
+
 
