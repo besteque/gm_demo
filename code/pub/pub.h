@@ -53,8 +53,8 @@ typedef enum tag_msg_type
 
 typedef enum tag_encryp_alg_type 
 {
-    //ALG_TYPE_NULL = 0,---------------reserve for no encrypt!!!!!!!!!!!!!!!!!!!!!!!!!!
-    ALG_TYPE_RSA = 0,
+    ALG_TYPE_NULL = 0,
+    ALG_TYPE_RSA,
     ALG_TYPE_DES,
     ALG_TYPE_DES3,
     ALG_TYPE_AES,

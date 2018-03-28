@@ -32,6 +32,10 @@
 #define TCP_CONNECT_POOL            5
 #define ETH_IADDR_STR_LEN           16   //ip address, eg. 1.2.3.4
 
+
+#define THREAD_NAME_LEN_MAX         64
+
+
 #define INVALID_UINT32            -1
 
 #define MONITOR_THREAD_NUM_MAX         TCP_CONNECT_POOL /* max thread in proccess, imply socket connect number */

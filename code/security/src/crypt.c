@@ -466,6 +466,11 @@ uint32_t encrypt_data(encrypt_data_t *algorithm, int8_t *orig_data,uint32_t orig
 
     switch (algorithm->algorithm)
     {
+        case ALG_TYPE_NULL:
+        {
+            // set default algorithm here!
+            break;
+        }
         case ALG_TYPE_RSA:
         case ALG_TYPE_DES:
         case ALG_TYPE_DES3:
@@ -518,6 +523,11 @@ uint32_t decrypt_data(encrypt_data_t *algorithm, int8_t *ciph_data,uint32_t ciph
 
     switch (algorithm->algorithm)
     {
+        case ALG_TYPE_NULL:
+        {
+            // set default algorithm here!
+            break;
+        }
         case ALG_TYPE_RSA:
         case ALG_TYPE_DES:
         case ALG_TYPE_DES3:

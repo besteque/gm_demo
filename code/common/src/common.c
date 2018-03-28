@@ -206,7 +206,7 @@ uint32_t get_task_serialno(void)
 void dbg_print_msg_head(msg_head_t *head)
 {
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "msg head(size:%ld) as follow:", sizeof(msg_head_t));
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "------------------------------------\n");
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "----------------------------------");
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t magic        :%s", head->magic);
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t type         :%d", head->type);
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t date_len     :%d", head->data_len);
@@ -215,7 +215,7 @@ void dbg_print_msg_head(msg_head_t *head)
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t total_length :%ld", head->total_length);
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t total_package:%d", head->total_package);
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t index        :%d", head->index);
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "------------------------------------\n");
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "----------------------------------");
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\n");
 }
 
@@ -224,7 +224,7 @@ void dbg_print_devinfo(dev_info_t    *devinfo)
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t id        :%s", devinfo->id);
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t dev_type  :%ld", devinfo->dev_type);
     //PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t algorithm :%ld", devinfo->algorithm);
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\n");
+    //PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\n");
 
     // to be continued...  sign_data/crypt_type
 }
@@ -251,6 +251,7 @@ void dbg_print_dev_list(struct list_head *head)
     }
     
     PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "devinfo(size:%ld) as follow:", sizeof(dev_info_t));
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "-----------------------------------");
 
 #if 1   // both OK
     list_for_each_entry_safe(pos, n, head, point)
@@ -258,6 +259,8 @@ void dbg_print_dev_list(struct list_head *head)
         devinfo = list_entry(&pos->point, dev_info_t, point);
         dbg_print_devinfo(devinfo);
     }
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "-----------------------------------");
+    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\n");
 
 #else
     struct list_head *pt, *nt;

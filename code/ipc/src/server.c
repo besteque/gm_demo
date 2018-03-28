@@ -44,8 +44,6 @@ uint32_t get_total_len(void)
 */
 uint32_t send_to_client(uint32_t fd, int8_t *data, uint32_t len)
 {
-    printf("-----------enter send_to_client-----------\n");
-
     if (send(fd,data,len,0) < 0)  
     {  
         PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "response_to_client failed.");  
@@ -75,7 +73,16 @@ uint8_t check_cilent_exist(proc_spec_data_t *proc_priv, uint32_t client_ip)
 
 uint32_t create_monitor_task(pthread_t *taskid, task_priv_data_t *taskval)
 {
-    return pthread_create(taskid, NULL, secure_comm_task, (void*)taskval);
+    int32_t ret;
+    void * tret;
+    
+    ret = pthread_create(taskid, NULL, secure_comm_task, (void*)taskval);
+    PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "pthread_create <taskid:%d> ret:%d", *taskid, ret);  
+    
+    ret = pthread_join(*taskid, &tret);
+    PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "pthread_join ret:%d", ret);  
+
+    return ret;
 }
 
 
@@ -139,6 +146,7 @@ uint32_t start_monitor(uint32_t svr_fd)
 
     while(1)
     {
+
         // same client has unique fd, if not closed or timeout
         if((client_fd = accept(svr_fd, (struct sockaddr *)(&client_addr), &sin_size)) == -1)
         {
@@ -281,6 +289,7 @@ uint32_t client_connect_timeout()
 
 void* secure_comm_task(void *priv)
 {
+    int8_t  child_name[THREAD_NAME_LEN_MAX];
     uint32_t index;
     proc_spec_data_t *proc;
     task_priv_data_t *task_data = (task_priv_data_t *)priv;
@@ -289,6 +298,10 @@ void* secure_comm_task(void *priv)
 
     index = get_task_serialno();
     PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "proc->task_var->task_id:%d", proc->task_var[index]->task_id);
+
+    // set child name
+    snprintf(child_name, THREAD_NAME_LEN_MAX, "THREAD_%d", index);
+    prctl(PR_SET_NAME, child_name);
 
     while(1)
     {

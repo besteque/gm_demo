@@ -209,8 +209,7 @@ uint32_t negotiate_crypt_type(int8_t *msg, uint32_t len)
     get_dev_id(devid);
     get_devinfo_by_devid(devid, &devinfo);
 
-    // need decrypt ????
-    //ret = IW_SM2_DecryptData(cipher, strlen(cipher), pdata, &pdataLen);
+    // need decrypt
 
     // save data
     ret = IW_SM2_OpenEnv(crypt_data.key, symmetric_key, &sym_key_len);
@@ -346,19 +345,23 @@ uint32_t parse_data(int8_t *msg, uint32_t len)
     switch (head.type)
     {
         case MSG_TYPE_LOGIN:
+            PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "-----------------> step 1 begin...");
             ret = handle_login_req(msg, len);
             break;
 
         
         case MSG_TYPE_SIGNITURE:
+            PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "-----------------> step 2 begin...");
             ret = handle_signiture_req(msg, len);
             break;
             
         case MSG_TYPE_ENCRYPT_INFO:
+            PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "-----------------> step 3 begin...");
             ret = negotiate_crypt_type(msg, len);
             break;
             
         case MSG_TYPE_USR_DATA:
+            PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "-----------------> step 4 begin...");
             ret = rcv_usr_data(msg, len);
             break;
 
@@ -544,18 +547,22 @@ uint32_t affirm_crypt_type(int8_t **data, uint32_t *len)
 
 
     get_proc_priv_data(&priv);
-
-    //ret = IW_SM2_MakeEnv(priv->pub_matrix, PUB_KEY_MATRIX_LEN_MAX, devid,
-    //                            devinfo.crypt_type.key, strlen(devinfo.crypt_type.key), evn);
     
-    //PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_SM2_MakeEnv ret:%d", ret);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "affirm_crypt_type:devinfo.crypt_type.key:%s", devinfo.crypt_type.key);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "affirm_crypt_type:strlen(devinfo.crypt_type.key:%d", strlen(devinfo.crypt_type.key));
+
+    ret = IW_SM2_MakeEnv(priv->pub_matrix, PUB_KEY_MATRIX_LEN_MAX, devid,
+                                devinfo.crypt_type.key, SYMMETRIC_KEY_LEN/*strlen(devinfo.crypt_type.key)*/, evn);
+    
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_SM2_MakeEnv ret:%d", ret);
 
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "affirm_crypt_type crypt_data->key:%s", crypt_data->key);
+    //PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "affirm_crypt_type crypt_data->key:%s", crypt_data->key);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "affirm_crypt_type evn:%s", evn);
     
     memcpy(crypt_data, &devinfo.crypt_type, sizeof(encrypt_data_t));
-    //memset(devinfo.crypt_type.key, 0, SECRET_KEY_LEN_MAX); // caution len different!
-    //memcpy(crypt_data->key, evn, strlen(evn));
+    memset(devinfo.crypt_type.key, 0, SECRET_KEY_LEN_MAX); // caution len different!
+    memcpy(crypt_data->key, evn, strlen(evn));
 
     return OK;
     
@@ -668,15 +675,18 @@ uint32_t prepare_interactive_data(uint32_t msg_type, int8_t **data, uint32_t *le
     {
         case MSG_TYPE_LOGIN:
             ret = handle_login_ack(data, len);
+            PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "-----------------> step 1 end.");
             break;
 
         
         case MSG_TYPE_SIGNITURE:
             ret = handle_sign_ack(data, len);
+            PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "-----------------> step 2 end.");
             break;
             
         case MSG_TYPE_ENCRYPT_INFO:
             ret = affirm_crypt_type(data, len);
+            PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "-----------------> step 3 end.");
             break;
             
         case MSG_TYPE_USR_DATA:

@@ -17,8 +17,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <pthread.h>
-
-
+#include <sys/prctl.h>
 
 #include "pub.h"
 #include "common.h"
