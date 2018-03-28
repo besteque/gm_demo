@@ -21,8 +21,14 @@ proc_spec_data_t *proc_data = NULL;
 
 
 int init_proc_data(proc_spec_data_t *priv)
-{    
+{
+    int32_t ret;
     INIT_LIST_HEAD(&priv->dev_list_head);
+    ret = pthread_mutex_init(&priv->dev_mutex, NULL);
+    if (ret != OK)
+    {
+        PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "pthread_mutex_init ret:%d", ret);
+    }
 
     //stub
     strcpy(priv->devid, "xuyang_1000e");
@@ -34,7 +40,6 @@ int init_proc_data(proc_spec_data_t *priv)
 int main(int argc, char *argv[])
 {
     int32_t ret;
-    uint32_t sock_fd;
     int8_t   tmp_pkey[PUB_KEY_LEN_MAX] = {0}; /* temporary key for comm with sk-centor */
 
 
@@ -72,16 +77,20 @@ int main(int argc, char *argv[])
 
     
     /* 4 start service monitor */
-    sock_fd = init_monitor(NULL, SVR_LISTEN_PORT_NUM);
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "start monitor, svr_fd:%ld", sock_fd);
+    proc_data ->sockfd = init_monitor(NULL, SVR_LISTEN_PORT_NUM);
+    
+    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "start monitor, svr_fd:%ld", proc_data ->sockfd);
 
-    if (sock_fd > 0)
-        start_monitor(sock_fd);
+    if (proc_data ->sockfd > 0)
+        start_monitor(proc_data ->sockfd);
 
-    close_monitor(sock_fd);
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "shutdown monitor, svr_fd:%ld", sock_fd);
 
     /* 5 to be continued... */
+
+
+    // run here, when all task exit
+    close_monitor(proc_data);
+    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "shutdown monitor OK");
 
     return 0;
 }

@@ -13,6 +13,8 @@
 #include <string.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <pthread.h>
+#include <errno.h>
 
 #include "list.h"
 #include "pub.h"
@@ -120,8 +122,10 @@ typedef struct tag_svr_task_data
 typedef struct tag_svr_priv_data
 {
     struct list_head dev_list_head;
-    int8_t devid[DEV_ID_LEN_MAX];               /* svr device id */
-    uint32_t client_num;    /* the number of clients */ 
+    pthread_mutex_t dev_mutex;          /* mutex for list */
+    int32_t     sockfd; /* server socket fd */
+    int8_t      devid[DEV_ID_LEN_MAX];               /* svr device id */
+    uint32_t    client_num;    /* the number of clients */ 
     client_info_t client_info[MONITOR_THREAD_NUM_MAX]; /* statistic data, taskid as clue */
     task_priv_data_t *task_var[MONITOR_THREAD_NUM_MAX]; /* dynamic data:run-time info */
     uint8_t pub_matrix[PUB_KEY_MATRIX_LEN_MAX];     /* server is owner */
@@ -150,8 +154,6 @@ extern proc_spec_data_t *proc_data;
 uint32_t get_proc_priv_data(proc_spec_data_t **priv);
 uint32_t get_task_serialno(void);
 
-void get_dev_id(int8_t *id);
-
 void     getcurtime(uint8_t *dtime, uint32_t len);
 uint32_t rel_slogf(const uint8_t *fmt, ...);
 uint32_t print_sys_msg(const uint8_t *module, const uint8_t *fmt, ...);
@@ -163,7 +165,6 @@ void dbg_print_msg_head(msg_head_t *head);
 void dbg_print_devinfo(dev_info_t    *devinfo);
 void dbg_print_dev_list(struct list_head *head);
 void dbg_print_char_in_buf(int8_t *buf, uint32_t len);
-void dbg_add_data_to_list(struct list_head *head);
 
 
 

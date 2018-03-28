@@ -446,25 +446,54 @@ REL_RES:
 
 #endif
 
-uint32_t sm2_encrypt_data(int8_t *orig_data,uint32_t orig_len, int8_t *ciph_data,uint32_t *ciph_len)
+uint32_t sm2_encrypt_data(int8_t *devid, int8_t *orig_data,uint32_t orig_len, int8_t *ciph_data,uint32_t *ciph_len)
 {
-    return OK;
+    int32_t ret;    
+    proc_spec_data_t *priv;
+    int8_t pub_key[PUB_KEY_LEN_MAX] = {0};
+
+    get_proc_priv_data(&priv);
+    ret = CPK_Get_IPK(devid, priv->pub_matrix, PUB_KEY_MATRIX_LEN_MAX, pub_key);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "CPK_Get_IPK ret:%d", ret);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "devid:%s", devid);
+    
+    ret = IW_SM2_EncryptData(pub_key, orig_data, strlen(orig_data)+1, ciph_data);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_SM2_EncryptData ret:%d", ret);
+    *ciph_len = strlen(ciph_data);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "sm2_encrypt_data cipher_len:%d", *ciph_len);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "sm2_encrypt_data cipher:%s", ciph_data);
+    
+    return ret;
 }
 
 uint32_t sm4_encrypt_data(encrypt_data_t *algorithm, int8_t *orig_data,uint32_t orig_len, int8_t *ciph_data,uint32_t *ciph_len)
 {
+    int32_t ret;
+    
+    // stub:mode&padding
+    ret = IW_SM4_ENCRYPT(SM4_MODE_ECB, SM4_NOPADDING, NULL, algorithm->key, 
+                    orig_data, orig_len, ciph_data, ciph_len);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_SM4_ENCRYPT ret:%d", ret);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "sm4_encrypt_data cipher_len:%d", *ciph_len);
+    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "sm4_encrypt_data cipher:%s", ciph_data);
 
-    return OK;
+    return ret;
 }
 
 
-uint32_t encrypt_data(encrypt_data_t *algorithm, int8_t *orig_data,uint32_t orig_len, int8_t *ciph_data,uint32_t *ciph_len)
+uint32_t encrypt_data(int8_t      *devid, int8_t *orig_data,uint32_t orig_len, int8_t *ciph_data,uint32_t *ciph_len)
 {
     int32_t ret;
+    dev_info_t devinfo = {0};
+    encrypt_data_t *algo;
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "encrypt_data algorithm:%d", algorithm);
+    get_devinfo_by_devid(devid, &devinfo);
 
-    switch (algorithm->algorithm)
+    algo = &devinfo.crypt_type;
+    
+    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "encrypt_data algorithm:%d", algo->algorithm);
+
+    switch (algo->algorithm)
     {
         case ALG_TYPE_NULL:
         {
@@ -482,12 +511,15 @@ uint32_t encrypt_data(encrypt_data_t *algorithm, int8_t *orig_data,uint32_t orig
         }
         case ALG_TYPE_SM2:
         {
-            ret = sm2_encrypt_data(orig_data, orig_len, ciph_data, ciph_len);
+            ret = sm2_encrypt_data(devid, orig_data, orig_len, ciph_data, ciph_len);
             break;
         }
         case ALG_TYPE_SM4:
         {
-            ret = sm4_encrypt_data(algorithm, orig_data, orig_len, ciph_data, ciph_len);
+            // sm4 data len must be times of symmetric kesy
+            orig_len = ((orig_len+SYMMETRIC_KEY_LEN-1)/SYMMETRIC_KEY_LEN)*SYMMETRIC_KEY_LEN;
+            
+            ret = sm4_encrypt_data(algo, orig_data, orig_len, ciph_data, ciph_len);
             break;
         }
         default:break;

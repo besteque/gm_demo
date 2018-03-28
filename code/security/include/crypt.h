@@ -25,10 +25,10 @@ uint32_t gene_key_matrix(BYTE *pub_matrix, BYTE * skey_matrix);
 
 void dbg_test_verify(char * devid, uint8_t *matrix, uint32_t klen);
 
-uint32_t encrypt_data(encrypt_data_t *algorithm, int8_t *orig_data,uint32_t orig_len, 
-                            int8_t *ciph_data,uint32_t *ciph_len);
-uint32_t decrypt_data(encrypt_data_t *algorithm, int8_t *ciph_data,uint32_t ciph_len, 
-                            int8_t *orig_data,uint32_t *orig_len);
+uint32_t encrypt_data(int8_t      *devid, int8_t *orig_data,uint32_t orig_len,
+                    int8_t *ciph_data,uint32_t *ciph_len);
+uint32_t decrypt_data(encrypt_data_t *algorithm, int8_t *ciph_data,uint32_t ciph_len,
+                    int8_t *orig_data,uint32_t *orig_len);
 
 
 #endif

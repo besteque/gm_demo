@@ -230,15 +230,6 @@ void dbg_print_devinfo(dev_info_t    *devinfo)
 }
 
 
-void dbg_add_data_to_list(struct list_head *head)
-{
-    dev_info_t devinfo = {0};
-    
-    sprintf(devinfo.id, "%s_%ld", "xuyang", random());    
-    list_add_device(&devinfo, head);
-}
-
-
 void dbg_print_dev_list(struct list_head *head)
 {
     dev_info_t   *pos, *n;

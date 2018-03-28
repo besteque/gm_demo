@@ -23,10 +23,11 @@ makefile
 可变参数、宏变参
 socke编程
 双向链表
+数据分包
 字节序转换 --todo
 多线程
-线程间通讯
-信号量 --todo
+进/线程间通讯(LWT)
+信号量 (互斥)
 typdef函数指针，回掉
-二级指针
+二级指针/指针数组
 websocket  ref:libs\http\apply_2_server.c

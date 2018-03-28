@@ -26,15 +26,15 @@ uint32_t calc_total_len(task_priv_data_t *priv, uint32_t len)
     return OK;
 }
 
-uint32_t get_total_len(void)
+uint32_t get_total_len(task_priv_data_t *task_val)
 {
-    uint32_t index;
-    proc_spec_data_t *priv;
+    //uint32_t index;
+    //proc_spec_data_t *priv;
 
-    get_proc_priv_data(&priv);
-    index = get_task_serialno();
+    //get_proc_priv_data(&priv);
+    //index = get_task_serialno();
 
-    return priv->task_var[index]->total_rcv_data_len;
+    return task_val->total_rcv_data_len;
 }
 
 
@@ -125,13 +125,8 @@ int serial_msg = 0;
 
 uint32_t start_monitor(uint32_t svr_fd)
 {
-    int32_t ret;  
-    int32_t len = 0;  
     uint32_t sin_size = sizeof(struct sockaddr_in);  
     int32_t  client_fd; 
-    int8_t   buf[BUFSIZ]; 
-    int8_t   *ack_data = NULL;
-    uint32_t ack_len;
     struct sockaddr_in client_addr;
     pthread_t th_id;
     proc_spec_data_t *proc_priv;
@@ -163,10 +158,12 @@ uint32_t start_monitor(uint32_t svr_fd)
 
         // must use client_addr to distinguish socket connection
         client_ip = inet_addr(inet_ntoa(client_addr.sin_addr));
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "client %#x been connected.", client_ip);
+        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "client %s(%#x) been connected.", 
+                            inet_ntoa(client_addr.sin_addr), client_ip);
+        
+        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "check_cilent_exist proc_priv->client_num %d", proc_priv->client_num);
         if ((!check_cilent_exist(proc_priv, client_ip)) && (proc_priv->client_num < MONITOR_THREAD_NUM_MAX))
         {
-            PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "create thread child id %d", proc_priv->client_num);
             proc_priv->task_var[proc_priv->client_num] = (task_priv_data_t *)malloc(sizeof(task_priv_data_t));
             if (proc_priv->task_var[proc_priv->client_num] == NULL)
             {
@@ -176,6 +173,7 @@ uint32_t start_monitor(uint32_t svr_fd)
             bzero(proc_priv->task_var[proc_priv->client_num], sizeof(task_priv_data_t));
             proc_priv->task_var[proc_priv->client_num]->cli_sockfd = client_fd;
             create_monitor_task(&th_id, proc_priv->task_var[proc_priv->client_num]);
+            PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "create_monitor_task taskid %d", th_id);
 
             // persist task info
             proc_priv->client_info[proc_priv->client_num].task_id = th_id;
@@ -200,66 +198,7 @@ uint32_t start_monitor(uint32_t svr_fd)
         }
         
         
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "client %s been connected.", inet_ntoa(client_addr.sin_addr));
-
-        //getsockopt(client_fd, SOL_SOCKET, SO_KEEPALIVE, &stat, (socklen_t *)&len); 
-
-
-        // set timer, when task_data.total_rcv_data_len when timeout
-        
-        while ((len = recv(client_fd, buf, BUFSIZ, 0)) > 0)
-        {
-
-            serial_msg++;
-            printf("---------------------serial_msg:%d---------------\n", serial_msg);
-            
-            PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "recv data len:%ld", len);
-        
-            if (validate_data(buf, len) != OK)
-                continue;
-
-            
-             /* transaction */         // or EXCEPTION
-             ret = parse_data(buf, len);
-            if ((ret == FINISH) || (ret == EXCEPTION))
-            {
-                ret = prepare_interactive_data(((msg_head_t*)buf)->type, &ack_data, &ack_len);
-                PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "prepare_interactive_data ret:%d", ret);
-                if (ret == OK)
-                {                    
-                    send_to_client(client_fd, ack_data, ack_len);
-                    PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "send_to_client OK");
-                }
-                else
-                {
-                    PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "send_err_ack to client.");
-                    send_err_ack(client_fd, &ack_data);
-                    //continue;
-                }
-                
-                //PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "data sent to client:%s", ack_data+sizeof(msg_head_t));
-                //dbg_print_char_in_buf(ack_data+sizeof(msg_head_t), 64);
-
-
-                /* release resources */
-                // CAUTION:must substract 1 as index
-                proc_priv->task_var[proc_priv->client_num-1]->total_rcv_data_len = 0;
-
-                if (ack_data)
-                {
-                    free((char*)ack_data);
-                    ack_data = NULL;
-                }
-                continue;
-            }
-
-            if (ret == OK   )
-                PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "receive next package data");
-        }
-        if (client_fd >0)
-            close(client_fd);
-
-        // need timer, or may cause deadloop
+        //PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "client %s been connected.", inet_ntoa(client_addr.sin_addr));
         
     } 
 
@@ -267,13 +206,30 @@ uint32_t start_monitor(uint32_t svr_fd)
 }
 
 
-uint32_t close_monitor(uint32_t svr_fd)
+uint32_t close_monitor(proc_spec_data_t *proc_data)
 {
-    if(svr_fd != INVALID_SOCKET_FD)        
-        close(svr_fd);
+    int32_t i;
+    if(proc_data->sockfd != INVALID_SOCKET_FD)
+    {
+        close(proc_data->sockfd);        
+    }
+
+    pthread_mutex_destroy(&proc_data->dev_mutex);
 
     //free devlist
+    clear_dev_node(&proc_data->dev_list_head);
+    
     //free task var
+    for (i=0;i<MONITOR_THREAD_NUM_MAX;i++)
+    {
+        if (proc_data->task_var[i])
+        {
+            free((char*)proc_data->task_var[i]);
+            proc_data->task_var[i] = NULL;
+        }
+    }
+
+    free((char*)proc_data);
 
     return OK;
 }
@@ -289,36 +245,99 @@ uint32_t client_connect_timeout()
 
 void* secure_comm_task(void *priv)
 {
-    int8_t  child_name[THREAD_NAME_LEN_MAX];
+    int32_t ret, ack_ret;  
+    int32_t  len = 0;  
+    int8_t   buf[BUFSIZ]; 
+    int8_t   child_name[THREAD_NAME_LEN_MAX];
     uint32_t index;
-    proc_spec_data_t *proc;
-    task_priv_data_t *task_data = (task_priv_data_t *)priv;
+    int32_t  client_fd; 
+    int8_t   *ack_data = NULL;
+    uint32_t ack_len;
+    proc_spec_data_t *proc_val;
+    task_priv_data_t *task_val = (task_priv_data_t *)priv;
 
-    get_proc_priv_data(&proc);
+    client_fd = task_val->cli_sockfd;
+    get_proc_priv_data(&proc_val);
 
     index = get_task_serialno();
-    PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "proc->task_var->task_id:%d", proc->task_var[index]->task_id);
+    
+    //PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "[child]task_data->devid:%s", task_val->devid);
+    PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "[child]task_data->task_id:%d", task_val->task_id);
+    PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "[child]proc->task_var->task_id:%d", proc_val->task_var[index]->task_id);
+    PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "[child]task_data->cli_sockfd:%d", task_val->cli_sockfd);
+    
 
     // set child name
     snprintf(child_name, THREAD_NAME_LEN_MAX, "THREAD_%d", index);
     prctl(PR_SET_NAME, child_name);
 
-    while(1)
+    //getsockopt(client_fd, SOL_SOCKET, SO_KEEPALIVE, &stat, (socklen_t *)&len); 
+    
+    
+    // set timer, when task_data.total_rcv_data_len when timeout
+    
+    while ((len = recv(client_fd, buf, BUFSIZ, 0)) > 0)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "[child]task_data->devid:%s", task_data->devid);
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "[child]task_data->task_id:%d", task_data->task_id);
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "[child]task_data->cli_sockfd:%d", task_data->cli_sockfd);
-        /*
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "[child]proc->task_var->devid:%s", proc->task_var[index]->devid);
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "[child]proc->task_var->task_id:%d", proc->task_var[index]->task_id);
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "[child]proc->task_var->cli_sockfd:%d", proc->task_var[index]->cli_sockfd);
+    
+        serial_msg++;
+        printf("---------------------serial_msg:%d---------------\n", serial_msg);
         
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "[child]proc->client_info[index].ip:%#x", proc->client_info[index].ip);
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "[child]proc->client_info[index].task_id:%d", proc->client_info[index].task_id);
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "[child]proc->client_info[index].cli_sockfd:%d", proc->client_info[index].cli_sockfd);
-        */
-        sleep(1);
+        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "recv data len:%ld", len);
+    
+        if (validate_data(buf, len) != OK)
+            continue;
+    
+        
+         /* transaction */         // or EXCEPTION
+         ret = parse_data(task_val, buf, len);
+        if ((ret == FINISH) || (ret == EXCEPTION))
+        {
+            ack_ret = prepare_interactive_data(task_val, ((msg_head_t*)buf)->type, &ack_data, &ack_len);
+            PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "prepare_interactive_data ret:%d", ack_ret);
+            if (ack_ret == OK)
+            {                    
+                send_to_client(client_fd, ack_data, ack_len);
+                PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "send_to_client OK");
+            }
+            else
+            {
+                PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "send_err_ack to client.");
+                send_err_ack(client_fd, &ack_data);
+                //continue;
+            }
+            
+            //PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "data sent to client:%s", ack_data+sizeof(msg_head_t));
+            //dbg_print_char_in_buf(ack_data+sizeof(msg_head_t), 64);
+    
+    
+            /* release resources */
+            // CAUTION:must substract 1 as index
+            task_val->total_rcv_data_len = 0;
+    
+            if (ack_data)
+            {
+                free((char*)ack_data);
+                ack_data = NULL;
+            }
+        }
+    
+        if (ret == OK   )
+            PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "wait for next package data");
     }
+
+    if (client_fd >0)
+        close(client_fd);
+    
+    // need timer, or may cause deadloop
+
+
+    // release resource, and destroy task???
+    if (priv)
+    {
+        free(priv);
+        priv = NULL;
+    }
+    pthread_exit(NULL);
 
     return NULL;
 }
