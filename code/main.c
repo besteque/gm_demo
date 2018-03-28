@@ -27,7 +27,7 @@ int init_proc_data(proc_spec_data_t *priv)
     ret = pthread_mutex_init(&priv->dev_mutex, NULL);
     if (ret != OK)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "pthread_mutex_init ret:%d", ret);
+        log_info(MSG_LOG_DBG, INIT, "pthread_mutex_init ret:%d", ret);
     }
 
     //stub
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     proc_data = (proc_spec_data_t*)malloc(sizeof(proc_spec_data_t));
     if (proc_data == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "main alloc mem failed");
+        log_info(MSG_LOG_DBG, INIT, "main alloc mem failed");
         return ERROR;
     }
     memset(proc_data, 0, sizeof(proc_spec_data_t));
@@ -56,21 +56,21 @@ int main(int argc, char *argv[])
     init_proc_data(proc_data);
 
     /* 2 get secret key from sk-center, gen pk and sk  */
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "init sw shield begin...");
+    log_info(MSG_LOG_DBG, INIT, "init sw shield begin...");
     ret = init_sw_shield(proc_data->devid, tmp_pkey);
     if (ret != OK)
         return -1;
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "init sw shield OK");
+    log_info(MSG_LOG_DBG, INIT, "init sw shield OK");
 
     /* 3 generate key matrix */
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "gene_key_matrix begin");
+    log_info(MSG_LOG_DBG, INIT, "gene_key_matrix begin");
     gene_key_matrix(proc_data->pub_matrix, proc_data->skey_matrix);
     if (ret != OK)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "gene_key_matrix failed, code:%ld", ret);
+        log_info(MSG_LOG_DBG, INIT, "gene_key_matrix failed, code:%ld", ret);
         return ERROR;
     }    
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "gene_key_matrix OK");
+    log_info(MSG_LOG_DBG, INIT, "gene_key_matrix OK");
 
     // stub: verify API
     dbg_test_verify(proc_data->devid, proc_data->pub_matrix, PUB_KEY_MATRIX_LEN_MAX);
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
     /* 4 start service monitor */
     proc_data ->sockfd = init_monitor(NULL, SVR_LISTEN_PORT_NUM);
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "start monitor, svr_fd:%ld", proc_data ->sockfd);
+    log_info(MSG_LOG_DBG, INIT, "start monitor, svr_fd:%ld", proc_data ->sockfd);
 
     if (proc_data ->sockfd > 0)
         start_monitor(proc_data ->sockfd);
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 
     // run here, when all task exit
     close_monitor(proc_data);
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "shutdown monitor OK");
+    log_info(MSG_LOG_DBG, INIT, "shutdown monitor OK");
 
     return 0;
 }

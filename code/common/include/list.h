@@ -1,3 +1,10 @@
+/*
+ * list.h
+ *
+ *  Created on: 2018-3-20
+ *      Author: Linus
+ *      Modify: transplant from kernel by XuYang
+ */
 
 #ifndef _LIST_H
 #define _LIST_H

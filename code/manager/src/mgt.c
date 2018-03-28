@@ -29,7 +29,7 @@ int list_add_device(dev_info_t *info, struct list_head *head)
     
     if (list_empty(head))
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "devlist empty, create it");
+        log_info(MSG_LOG_DBG, MGT, "devlist empty, create it");
         goto ADD_LIST;
     }
 
@@ -54,13 +54,13 @@ ADD_LIST:
     node = (dev_info_t*)malloc(sizeof(dev_info_t));
     if (node == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "malloc dev_info_t failed");
+        log_info(MSG_LOG_DBG, MGT, "malloc dev_info_t failed");
         return ERROR;
     }
     memcpy(node, info, sizeof(dev_info_t));
     
     list_add(&node->point, head);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "add node OK");
+    log_info(MSG_LOG_DBG, MGT, "add node OK");
     
     return OK;
 }
@@ -73,7 +73,7 @@ uint32_t validate_data(int8_t *msg, uint32_t len)
 
     if (len < sizeof(head))
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "len(%d) < sizeof(msg_head)(%ld)", len, sizeof(head));
+        log_info(MSG_LOG_DBG, MGT, "len(%d) < sizeof(msg_head)(%ld)", len, sizeof(head));
         return ERROR;
     }
 
@@ -81,13 +81,13 @@ uint32_t validate_data(int8_t *msg, uint32_t len)
 
     if (strncmp(head.magic, MAGIC_WORD, strlen(MAGIC_WORD)))
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "msg_head magic incorrect: %s", head.magic);
+        log_info(MSG_LOG_DBG, MGT, "msg_head magic incorrect: %s", head.magic);
         return ERROR;
     }
 
     if ((head.type > MAX_MSG_TYPE) || (head.type <= MSG_TYPE_INIT))
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "msg_head type %d unrecognized", head.type);
+        log_info(MSG_LOG_DBG, MGT, "msg_head type %d unrecognized", head.type);
         return ERROR;
     }
 
@@ -109,14 +109,14 @@ uint32_t handle_login_req(task_priv_data_t *task_val, int8_t *msg, uint32_t len)
 
     if (len != (sizeof(head) + sizeof(log_data)))
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "len != (sizeof(msg_head) + sizeof(log_data))");
+        log_info(MSG_LOG_DBG, MGT, "len != (sizeof(msg_head) + sizeof(log_data))");
         return ERROR;
     }
 
     memcpy(&head, msg, sizeof(head));
     memcpy(&log_data, msg+sizeof(head), sizeof(log_data));
 
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "rcv msgid:%#x, devid:%s", head.type, log_data.dev_id);    
+    log_info(MSG_LOG_DBG, MGT, "rcv msgid:%#x, devid:%s", head.type, log_data.dev_id);    
 
     strncpy(task_val->devid, log_data.dev_id, strlen(log_data.dev_id));
 
@@ -148,7 +148,7 @@ uint32_t handle_signiture_req(task_priv_data_t *task_val, int8_t *msg, uint32_t 
 
     if (len != (sizeof(head) + sizeof(sign_data)))
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "handle_signiture_req:len != (sizeof(msg_head) + sizeof(sign_data))");
+        log_info(MSG_LOG_DBG, MGT, "handle_signiture_req:len != (sizeof(msg_head) + sizeof(sign_data))");
         return ERROR;
     }
 
@@ -171,16 +171,16 @@ uint32_t handle_signiture_req(task_priv_data_t *task_val, int8_t *msg, uint32_t 
     update_devinfo_by_devid(task_val->devid, &devinfo);
     pthread_mutex_unlock(&priv->dev_mutex);
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "client %s sign data:%s", task_val->devid, sign_data.data);
+    log_info(MSG_LOG_DBG, MGT, "client %s sign data:%s", task_val->devid, sign_data.data);
 
     // server verify client data
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "task_val->devid:%s", task_val->devid);
+    log_info(MSG_LOG_DBG, MGT, "task_val->devid:%s", task_val->devid);
     
     ret = IW_VerifyData(priv->pub_matrix, PUB_KEY_MATRIX_LEN_MAX, 
                     CLIENT_VERIFY_DATA_SYMBOL, strlen(CLIENT_VERIFY_DATA_SYMBOL), 
                     sign_data.data, task_val->devid);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_VerifyData ret:%d", ret);
+    log_info(MSG_LOG_DBG, MGT, "IW_VerifyData ret:%d", ret);
 
     return OK;
 }
@@ -200,7 +200,7 @@ uint32_t negotiate_crypt_type(task_priv_data_t *task_val, int8_t *msg, uint32_t 
 
     if (len != (sizeof(head) + sizeof(encrypt_data_t)))
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "negotiate_crypt_type:len(%ld) !=%ld (sizeof(msg_head) + sizeof(encrypt_data_t)",
+        log_info(MSG_LOG_DBG, MGT, "negotiate_crypt_type:len(%ld) !=%ld (sizeof(msg_head) + sizeof(encrypt_data_t)",
                                     len, sizeof(head) + sizeof(encrypt_data_t));
         return ERROR;
     }
@@ -215,9 +215,9 @@ uint32_t negotiate_crypt_type(task_priv_data_t *task_val, int8_t *msg, uint32_t 
 
     // save data
     ret = IW_SM2_OpenEnv(crypt_data.key, symmetric_key, &sym_key_len);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_SM2_OpenEnv ret:%d", ret);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "negotiate_crypt_type crypt_data.key:%s", crypt_data.key);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "negotiate_crypt_type key after:%s", symmetric_key);
+    log_info(MSG_LOG_DBG, MGT, "IW_SM2_OpenEnv ret:%d", ret);
+    log_info(MSG_LOG_DBG, MGT, "negotiate_crypt_type crypt_data.key:%s", crypt_data.key);
+    log_info(MSG_LOG_DBG, MGT, "negotiate_crypt_type key after:%s", symmetric_key);
     
     memcpy(&devinfo.crypt_type, &crypt_data, sizeof(encrypt_data_t));
     memset(devinfo.crypt_type.key, 0, SECRET_KEY_LEN_MAX); // caution len different!
@@ -228,7 +228,7 @@ uint32_t negotiate_crypt_type(task_priv_data_t *task_val, int8_t *msg, uint32_t 
     update_devinfo_by_devid(task_val->devid, &devinfo);
     pthread_mutex_unlock(&priv->dev_mutex);
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "dev %s affirmed crypt type:%#x", task_val->devid, crypt_data.algorithm);
+    log_info(MSG_LOG_DBG, MGT, "dev %s affirmed crypt type:%#x", task_val->devid, crypt_data.algorithm);
 
     return OK;
 }
@@ -246,7 +246,7 @@ uint32_t decrypt_usr_data(int8_t *devid, int8_t *data, uint32_t len)
     plain_date = (uint8_t*)malloc(PACKAGE_DATA_LEN_MAX);
     if ( plain_date == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "malloc plain_date failed");
+        log_info(MSG_LOG_DBG, MGT, "malloc plain_date failed");
         return ERROR;
     }
     memset(plain_date, 0, sizeof(PACKAGE_DATA_LEN_MAX));
@@ -256,13 +256,13 @@ uint32_t decrypt_usr_data(int8_t *devid, int8_t *data, uint32_t len)
     //ret = IW_SM4_DECRYPT(SM4_MODE_ECB, SM4_NOPADDING, NULL, devinfo.crypt_type.key, data,
     //                   len, plain_date, &plain_len);
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "strlen(data):%d, len:%d", strlen(data), len);
+    log_info(MSG_LOG_DBG, MGT, "strlen(data):%d, len:%d", strlen(data), len);
     
     ret = decrypt_data(&devinfo.crypt_type, data, len, plain_date, &plain_len);
     if (ret != OK)
     {        
-        //PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_SM2_DecryptData failed, ret:%d", ret);
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "decrypt_data failed, ret:%d", ret);
+        //log_info(MSG_LOG_DBG, MGT, "IW_SM2_DecryptData failed, ret:%d", ret);
+        log_info(MSG_LOG_DBG, MGT, "decrypt_data failed, ret:%d", ret);
         free((char*)plain_date);
         return ERROR;
     }
@@ -270,9 +270,9 @@ uint32_t decrypt_usr_data(int8_t *devid, int8_t *data, uint32_t len)
     //stub
     if (plain_len > 0)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "decrypt_usr_data as follow:");
+        log_info(MSG_LOG_DBG, MGT, "decrypt_usr_data as follow:");
         dbg_print_char_in_buf(plain_date, plain_len);
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "plain_date:%s\n", plain_date);
+        log_info(MSG_LOG_DBG, MGT, "plain_date:%s\n", plain_date);
     }
 
     if (plain_date)
@@ -304,7 +304,7 @@ uint32_t rcv_usr_data(task_priv_data_t *task_val, int8_t *msg, uint32_t len)
     usr_data = (int8_t*)malloc(PACKAGE_DATA_LEN_MAX);
     if (usr_data == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "malloc(PACKAGE_DATA_LEN_MAX) failed");
+        log_info(MSG_LOG_DBG, MGT, "malloc(PACKAGE_DATA_LEN_MAX) failed");
         return ERROR;
     }
     
@@ -313,12 +313,12 @@ uint32_t rcv_usr_data(task_priv_data_t *task_val, int8_t *msg, uint32_t len)
     ret = decrypt_usr_data(task_val->devid, usr_data, head.data_len);
     if (ret != OK)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "rcv dev %s usr data", task_val->devid);
+        log_info(MSG_LOG_DBG, MGT, "rcv dev %s usr data", task_val->devid);
         return ERROR;
     }
 
     // usr data
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "rcv dev %s usr data", task_val->devid);
+    log_info(MSG_LOG_DBG, MGT, "rcv dev %s usr data", task_val->devid);
     dbg_print_msg_head(&head);
 
     if (usr_data)
@@ -341,35 +341,35 @@ uint32_t parse_data(task_priv_data_t *task_val, int8_t *msg, uint32_t len)
     //proc_spec_data_t *priv;
 
     memcpy(&head, msg, sizeof(head));
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "parse_data rcv msgid %#x", head.type);
+    log_info(MSG_LOG_DBG, MGT, "parse_data rcv msgid %#x", head.type);
     dbg_print_msg_head(&head);
 
     switch (head.type)
     {
         case MSG_TYPE_LOGIN:
-            PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "-----------------> step 1 begin...");
+            log_info(MSG_LOG_DBG, MGT, "-----------------> step 1 begin...");
             ret = handle_login_req(task_val, msg, len);
             break;
 
         
         case MSG_TYPE_SIGNITURE:
-            PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "-----------------> step 2 begin...");
+            log_info(MSG_LOG_DBG, MGT, "-----------------> step 2 begin...");
             ret = handle_signiture_req(task_val, msg, len);
             break;
             
         case MSG_TYPE_ENCRYPT_INFO:
-            PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "-----------------> step 3 begin...");
+            log_info(MSG_LOG_DBG, MGT, "-----------------> step 3 begin...");
             ret = negotiate_crypt_type(task_val, msg, len);
             break;
             
         case MSG_TYPE_USR_DATA:
-            PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "-----------------> step 4 begin...");
+            log_info(MSG_LOG_DBG, MGT, "-----------------> step 4 begin...");
             ret = rcv_usr_data(task_val, msg, len);
             break;
 
         default:
         {
-            PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "msgid:%d unrecognized.", head.type);
+            log_info(MSG_LOG_DBG, MGT, "msgid:%d unrecognized.", head.type);
             ret = ERROR;
             break;
         }
@@ -378,7 +378,7 @@ uint32_t parse_data(task_priv_data_t *task_val, int8_t *msg, uint32_t len)
 
     if (ret != OK)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "parse_data failed, ret:%d", ret);
+        log_info(MSG_LOG_DBG, MGT, "parse_data failed, ret:%d", ret);
         return FINISH;
     }
 
@@ -387,7 +387,7 @@ uint32_t parse_data(task_priv_data_t *task_val, int8_t *msg, uint32_t len)
     //index = get_task_serialno();
     //calc_total_len(priv->task_var[index], head.data_len);
     calc_total_len(task_val, head.data_len);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "receive data total len:%ld, expect:%ld", 
+    log_info(MSG_LOG_DBG, MGT, "receive data total len:%ld, expect:%ld", 
                          get_total_len(task_val), head.total_length);
         
     if (get_total_len(task_val) >= head.total_length)
@@ -413,7 +413,7 @@ uint32_t handle_login_ack(task_priv_data_t *task_val, int8_t **data, uint32_t *l
     buf = (int8_t  *)malloc(data_len);
     if (buf == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "malloc buf failed");
+        log_info(MSG_LOG_DBG, MGT, "malloc buf failed");
         return ERROR;
     }
 
@@ -455,7 +455,7 @@ uint32_t handle_sign_ack(task_priv_data_t *task_val, int8_t **data, uint32_t *le
     buf = (int8_t  *)malloc(data_len);
     if (buf == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "malloc buf failed");
+        log_info(MSG_LOG_DBG, MGT, "malloc buf failed");
         return ERROR;
     }
 
@@ -471,26 +471,26 @@ uint32_t handle_sign_ack(task_priv_data_t *task_val, int8_t **data, uint32_t *le
     head->total_package = 1;
     strncpy(head->magic, MAGIC_WORD, MAGIC_WORD_LEN_MAX);
 
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "handle_sign_ack devid:%s", task_val->devid);
+    log_info(MSG_LOG_DBG, MGT, "handle_sign_ack devid:%s", task_val->devid);
     get_devinfo_by_devid(task_val->devid, &devinfo);
 
     dbg_print_devinfo(&devinfo);
     
-    //PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "sign data:%s", sign_val);
+    //log_info(MSG_LOG_DBG, MGT, "sign data:%s", sign_val);
 
     sign_data = (signiture_data_t*)((msg_head_t*)buf +1);
 
     // need encrypt whole sign data 'sign_val', then asign to 'sign_data' ?
     //get_proc_priv_data(priv);
     //strncpy(sign_val, SERVER_VERIFY_DATA_SYMBOL, strlen(SERVER_VERIFY_DATA_SYMBOL));
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "[handle_sign_ack]ack to clent:");
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "[handle_sign_ack]original data:%s", SERVER_VERIFY_DATA_SYMBOL);
+    log_info(MSG_LOG_DBG, MGT, "[handle_sign_ack]ack to clent:");
+    log_info(MSG_LOG_DBG, MGT, "[handle_sign_ack]original data:%s", SERVER_VERIFY_DATA_SYMBOL);
     ret = IW_SignData(SERVER_VERIFY_DATA_SYMBOL, strlen(SERVER_VERIFY_DATA_SYMBOL), sign_val);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "[handle_sign_ack]sign_val data:%s", sign_val);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_SignData ret:%d", ret);
+    log_info(MSG_LOG_DBG, MGT, "[handle_sign_ack]sign_val data:%s", sign_val);
+    log_info(MSG_LOG_DBG, MGT, "IW_SignData ret:%d", ret);
     ret = IW_ServerSignData(sign_val, sign_final);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "[handle_sign_ack]sign_final data:%s", sign_final);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_ServerSignData ret:%d", ret);
+    log_info(MSG_LOG_DBG, MGT, "[handle_sign_ack]sign_final data:%s", sign_final);
+    log_info(MSG_LOG_DBG, MGT, "IW_ServerSignData ret:%d", ret);
     memcpy(sign_data->data, sign_final, strlen(sign_final));
 
     return OK;
@@ -514,7 +514,7 @@ uint32_t affirm_crypt_type(task_priv_data_t *task_val, int8_t **data, uint32_t *
     buf = (int8_t*)malloc(data_len);
     if (buf == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "affirm_crypt_type malloc failed");
+        log_info(MSG_LOG_DBG, MGT, "affirm_crypt_type malloc failed");
         return ERROR;
     }
 
@@ -539,17 +539,17 @@ uint32_t affirm_crypt_type(task_priv_data_t *task_val, int8_t **data, uint32_t *
 
     get_proc_priv_data(&priv);
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "affirm_crypt_type:devinfo.crypt_type.key:%s", devinfo.crypt_type.key);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "affirm_crypt_type:strlen(devinfo.crypt_type.key:%d", strlen(devinfo.crypt_type.key));
+    log_info(MSG_LOG_DBG, MGT, "affirm_crypt_type:devinfo.crypt_type.key:%s", devinfo.crypt_type.key);
+    log_info(MSG_LOG_DBG, MGT, "affirm_crypt_type:strlen(devinfo.crypt_type.key:%d", strlen(devinfo.crypt_type.key));
 
     ret = IW_SM2_MakeEnv(priv->pub_matrix, PUB_KEY_MATRIX_LEN_MAX, task_val->devid,
                                 devinfo.crypt_type.key, SYMMETRIC_KEY_LEN/*strlen(devinfo.crypt_type.key)*/, evn);
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_SM2_MakeEnv ret:%d", ret);
+    log_info(MSG_LOG_DBG, MGT, "IW_SM2_MakeEnv ret:%d", ret);
 
     
-    //PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "affirm_crypt_type crypt_data->key:%s", crypt_data->key);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "affirm_crypt_type evn:%s", evn);
+    //log_info(MSG_LOG_DBG, MGT, "affirm_crypt_type crypt_data->key:%s", crypt_data->key);
+    log_info(MSG_LOG_DBG, MGT, "affirm_crypt_type evn:%s", evn);
     
     memcpy(crypt_data, &devinfo.crypt_type, sizeof(encrypt_data_t));
     memset(devinfo.crypt_type.key, 0, SECRET_KEY_LEN_MAX); // caution len different!
@@ -576,7 +576,7 @@ uint32_t response_to_client(task_priv_data_t *task_val, int8_t **data, uint32_t 
     buf = (int8_t*)malloc(data_len);
     if (buf == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "response_to_client malloc failed");
+        log_info(MSG_LOG_DBG, MGT, "response_to_client malloc failed");
         return ERROR;
     }
 
@@ -596,7 +596,7 @@ uint32_t response_to_client(task_priv_data_t *task_val, int8_t **data, uint32_t 
     ret = encrypt_data(task_val->devid, LITERIAL_TEXT_FOR_TEST,strlen(LITERIAL_TEXT_FOR_TEST), cipher, &cipher_len);
     if (ret != OK)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "encrypt_data failed, ret:%d", ret);
+        log_info(MSG_LOG_DBG, MGT, "encrypt_data failed, ret:%d", ret);
         return ERROR;
     }
     
@@ -622,7 +622,7 @@ uint32_t send_err_ack(uint32_t fd, int8_t **data)
     buf = (int8_t*)malloc(data_len);
     if (buf == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "send_err_ack malloc failed");
+        log_info(MSG_LOG_DBG, MGT, "send_err_ack malloc failed");
         return ERROR;
     }
 
@@ -653,18 +653,18 @@ uint32_t prepare_interactive_data(task_priv_data_t *task_val, uint32_t msg_type,
     {
         case MSG_TYPE_LOGIN:
             ret = handle_login_ack(task_val, data, len);
-            PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "-----------------> step 1 end.");
+            log_info(MSG_LOG_DBG, MGT, "-----------------> step 1 end.");
             break;
 
         
         case MSG_TYPE_SIGNITURE:
             ret = handle_sign_ack(task_val, data, len);
-            PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "-----------------> step 2 end.");
+            log_info(MSG_LOG_DBG, MGT, "-----------------> step 2 end.");
             break;
             
         case MSG_TYPE_ENCRYPT_INFO:
             ret = affirm_crypt_type(task_val, data, len);
-            PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "-----------------> step 3 end.");
+            log_info(MSG_LOG_DBG, MGT, "-----------------> step 3 end.");
             break;
             
         case MSG_TYPE_USR_DATA:
@@ -674,7 +674,7 @@ uint32_t prepare_interactive_data(task_priv_data_t *task_val, uint32_t msg_type,
 
     if (ret != OK)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "prepare_interactive_data failed, ret:%d", ret);
+        log_info(MSG_LOG_DBG, INIT, "prepare_interactive_data failed, ret:%d", ret);
         return ret;
     }
 
@@ -696,7 +696,7 @@ uint32_t get_key_by_devid(int8_t *dev_id, int8_t *pk)
 
     if (list_empty(&priv->dev_list_head))
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "list dev_list_head is empty");
+        log_info(MSG_LOG_DBG, INIT, "list dev_list_head is empty");
         return ERROR;
     }
 
@@ -731,7 +731,7 @@ uint32_t get_devinfo_by_devid(int8_t *dev_id, dev_info_t *info)
 
     if (list_empty(&priv->dev_list_head))
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "list dev_list_head is empty");
+        log_info(MSG_LOG_DBG, INIT, "list dev_list_head is empty");
         return ERROR;
     }
 
@@ -741,7 +741,7 @@ uint32_t get_devinfo_by_devid(int8_t *dev_id, dev_info_t *info)
 
         if (dev == NULL)
         {
-            PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "error, list is null");
+            log_info(MSG_LOG_DBG, INIT, "error, list is null");
             return ERROR;
         }
 
@@ -752,7 +752,7 @@ uint32_t get_devinfo_by_devid(int8_t *dev_id, dev_info_t *info)
         }
     }
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "error, get_devinfo_by_devid failed");
+    log_info(MSG_LOG_DBG, INIT, "error, get_devinfo_by_devid failed");
 
     return ERROR;
 }
@@ -773,7 +773,7 @@ uint32_t update_devinfo_by_devid(int8_t *dev_id, dev_info_t *info)
 
     if (list_empty(&priv->dev_list_head))
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "list dev_list_head is empty");
+        log_info(MSG_LOG_DBG, INIT, "list dev_list_head is empty");
         return ERROR;
     }
 
@@ -783,7 +783,7 @@ uint32_t update_devinfo_by_devid(int8_t *dev_id, dev_info_t *info)
 
         if (dev == NULL)
         {
-            PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "error, list is null");
+            log_info(MSG_LOG_DBG, INIT, "error, list is null");
             return ERROR;
         }
 
@@ -794,7 +794,7 @@ uint32_t update_devinfo_by_devid(int8_t *dev_id, dev_info_t *info)
         }
     }
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, INIT, "error, update_devinfo_by_devid failed");
+    log_info(MSG_LOG_DBG, INIT, "error, update_devinfo_by_devid failed");
 
     return ERROR;
 }

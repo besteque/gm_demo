@@ -184,7 +184,7 @@ uint32_t get_proc_priv_data(proc_spec_data_t **priv)
 {
     if (!proc_data)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "proc_data is null");
+        log_info(MSG_LOG_DBG, DBG, "proc_data is null");
         return ERROR;
     }
     
@@ -205,26 +205,26 @@ uint32_t get_task_serialno(void)
 
 void dbg_print_msg_head(msg_head_t *head)
 {
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "msg head(size:%ld) as follow:", sizeof(msg_head_t));
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "----------------------------------");
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t magic        :%s", head->magic);
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t type         :%d", head->type);
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t date_len     :%d", head->data_len);
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t version      :%d", head->version);
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t trans_id     :%d", head->trans_id);
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t total_length :%ld", head->total_length);
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t total_package:%d", head->total_package);
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t index        :%d", head->index);
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "----------------------------------");
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\n");
+    log_info(MSG_LOG_DBG, DBG, "msg head(size:%ld) as follow:", sizeof(msg_head_t));
+    log_info(MSG_LOG_DBG, DBG, "----------------------------------");
+    log_info(MSG_LOG_DBG, DBG, "\t magic        :%s", head->magic);
+    log_info(MSG_LOG_DBG, DBG, "\t type         :%d", head->type);
+    log_info(MSG_LOG_DBG, DBG, "\t date_len     :%d", head->data_len);
+    log_info(MSG_LOG_DBG, DBG, "\t version      :%d", head->version);
+    log_info(MSG_LOG_DBG, DBG, "\t trans_id     :%d", head->trans_id);
+    log_info(MSG_LOG_DBG, DBG, "\t total_length :%ld", head->total_length);
+    log_info(MSG_LOG_DBG, DBG, "\t total_package:%d", head->total_package);
+    log_info(MSG_LOG_DBG, DBG, "\t index        :%d", head->index);
+    log_info(MSG_LOG_DBG, DBG, "----------------------------------");
+    log_info(MSG_LOG_DBG, DBG, "\n");
 }
 
 void dbg_print_devinfo(dev_info_t    *devinfo)
 {
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t id        :%s", devinfo->id);
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t dev_type  :%ld", devinfo->dev_type);
-    //PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\t algorithm :%ld", devinfo->algorithm);
-    //PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\n");
+    log_info(MSG_LOG_DBG, DBG, "\t id        :%s", devinfo->id);
+    log_info(MSG_LOG_DBG, DBG, "\t dev_type  :%ld", devinfo->dev_type);
+    //log_info(MSG_LOG_DBG, DBG, "\t algorithm :%ld", devinfo->algorithm);
+    //log_info(MSG_LOG_DBG, DBG, "\n");
 
     // to be continued...  sign_data/crypt_type
 }
@@ -237,12 +237,12 @@ void dbg_print_dev_list(struct list_head *head)
 
     if (list_empty(head))
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "list is empty");
+        log_info(MSG_LOG_DBG, DBG, "list is empty");
         return;
     }
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "devinfo(size:%ld) as follow:", sizeof(dev_info_t));
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "-----------------------------------");
+    log_info(MSG_LOG_DBG, DBG, "devinfo(size:%ld) as follow:", sizeof(dev_info_t));
+    log_info(MSG_LOG_DBG, DBG, "-----------------------------------");
 
 #if 1   // both OK
     list_for_each_entry_safe(pos, n, head, point)
@@ -250,8 +250,8 @@ void dbg_print_dev_list(struct list_head *head)
         devinfo = list_entry(&pos->point, dev_info_t, point);
         dbg_print_devinfo(devinfo);
     }
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "-----------------------------------");
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "\n");
+    log_info(MSG_LOG_DBG, DBG, "-----------------------------------");
+    log_info(MSG_LOG_DBG, DBG, "\n");
 
 #else
     struct list_head *pt, *nt;
@@ -269,7 +269,7 @@ void dbg_print_dev_list(struct list_head *head)
 void dbg_print_char_in_buf(int8_t *buf, uint32_t len)
 {
     uint32_t i;
-    PRINT_SYS_MSG(MSG_LOG_DBG, DBG, "buf info as follow:");
+    log_info(MSG_LOG_DBG, DBG, "buf info as follow:");
 
     for (i = 0; i < len; i++)
     {

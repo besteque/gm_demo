@@ -135,7 +135,7 @@ typedef struct tag_svr_priv_data
 
 
 //maybe '__VA_ARGS__' or '##__VA_ARGS__' or '##args'
-#define PRINT_SYS_MSG(level, module, fmt, ...)    \
+#define log_info(level, module, fmt, ...)    \
     do{                                            \
         if (level == MSG_LOG_DBG) {                \
             print_sys_msg(#module, (fmt), ##__VA_ARGS__);\

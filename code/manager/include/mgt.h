@@ -1,3 +1,10 @@
+/*
+ * mgt.h
+ *
+ *  Created on: 2018-3-22
+ *      Author: xuyang
+ */
+    
 
 #ifndef _MGT_H_
 #define _MGT_H_

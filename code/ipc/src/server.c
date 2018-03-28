@@ -46,7 +46,7 @@ uint32_t send_to_client(uint32_t fd, int8_t *data, uint32_t len)
 {
     if (send(fd,data,len,0) < 0)  
     {  
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "response_to_client failed.");  
+        log_info(MSG_LOG_DBG, SVR, "response_to_client failed.");  
         return ERROR;  
     }
 
@@ -61,7 +61,7 @@ uint8_t check_cilent_exist(proc_spec_data_t *proc_priv, uint32_t client_ip)
 
     for (i = 0; i < proc_priv->client_num; i++)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "proc_priv->client_info[i].ip:%#x, client_ip:%#x", 
+        log_info(MSG_LOG_DBG, SVR, "proc_priv->client_info[i].ip:%#x, client_ip:%#x", 
                     proc_priv->client_info[i].ip, client_ip);
     
         if (proc_priv->client_info[i].ip == client_ip)
@@ -77,10 +77,10 @@ uint32_t create_monitor_task(pthread_t *taskid, task_priv_data_t *taskval)
     void * tret;
     
     ret = pthread_create(taskid, NULL, secure_comm_task, (void*)taskval);
-    PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "pthread_create <taskid:%d> ret:%d", *taskid, ret);  
+    log_info(MSG_LOG_DBG, SVR, "pthread_create <taskid:%d> ret:%d", *taskid, ret);  
     
     ret = pthread_join(*taskid, &tret);
-    PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "pthread_join ret:%d", ret);  
+    log_info(MSG_LOG_DBG, SVR, "pthread_join ret:%d", ret);  
 
     return ret;
 }
@@ -105,7 +105,7 @@ uint32_t init_monitor(int8_t *addr, uint32_t port)
 
     if ((svr_fd = socket(AF_INET,SOCK_STREAM,0))<0)  
     {    
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "create socket failed.");  
+        log_info(MSG_LOG_DBG, SVR, "create socket failed.");  
         return ERROR;  
     }  
     
@@ -113,7 +113,7 @@ uint32_t init_monitor(int8_t *addr, uint32_t port)
     
     if (bind(svr_fd,(struct sockaddr *)(&svr_addr),sizeof(struct sockaddr))==-1)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "bind error, fd:%d", svr_fd);
+        log_info(MSG_LOG_DBG, SVR, "bind error, fd:%d", svr_fd);
         return ERROR;  
     }
 
@@ -134,7 +134,7 @@ uint32_t start_monitor(uint32_t svr_fd)
 
     if (listen(svr_fd, TCP_CONNECT_POOL) == -1)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "listen error");
+        log_info(MSG_LOG_DBG, SVR, "listen error");
         return ERROR;  
     }
 
@@ -145,7 +145,7 @@ uint32_t start_monitor(uint32_t svr_fd)
         // same client has unique fd, if not closed or timeout
         if((client_fd = accept(svr_fd, (struct sockaddr *)(&client_addr), &sin_size)) == -1)
         {
-            PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "accept error");
+            log_info(MSG_LOG_DBG, SVR, "accept error");
             continue;
         }
         
@@ -158,22 +158,22 @@ uint32_t start_monitor(uint32_t svr_fd)
 
         // must use client_addr to distinguish socket connection
         client_ip = inet_addr(inet_ntoa(client_addr.sin_addr));
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "client %s(%#x) been connected.", 
+        log_info(MSG_LOG_DBG, SVR, "client %s(%#x) been connected.", 
                             inet_ntoa(client_addr.sin_addr), client_ip);
         
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "check_cilent_exist proc_priv->client_num %d", proc_priv->client_num);
+        log_info(MSG_LOG_DBG, SVR, "check_cilent_exist proc_priv->client_num %d", proc_priv->client_num);
         if ((!check_cilent_exist(proc_priv, client_ip)) && (proc_priv->client_num < MONITOR_THREAD_NUM_MAX))
         {
             proc_priv->task_var[proc_priv->client_num] = (task_priv_data_t *)malloc(sizeof(task_priv_data_t));
             if (proc_priv->task_var[proc_priv->client_num] == NULL)
             {
-                PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "oops:memory exhaust.");
+                log_info(MSG_LOG_DBG, SVR, "oops:memory exhaust.");
                 continue;
             }
             bzero(proc_priv->task_var[proc_priv->client_num], sizeof(task_priv_data_t));
             proc_priv->task_var[proc_priv->client_num]->cli_sockfd = client_fd;
             create_monitor_task(&th_id, proc_priv->task_var[proc_priv->client_num]);
-            PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "create_monitor_task taskid %d", th_id);
+            log_info(MSG_LOG_DBG, SVR, "create_monitor_task taskid %d", th_id);
 
             // persist task info
             proc_priv->client_info[proc_priv->client_num].task_id = th_id;
@@ -186,10 +186,10 @@ uint32_t start_monitor(uint32_t svr_fd)
         } 
         else
         {
-            PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "create thread child id else branch");
+            log_info(MSG_LOG_DBG, SVR, "create thread child id else branch");
             if (proc_priv->client_num >= MONITOR_THREAD_NUM_MAX)
             {
-                PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "oops:connection pool exhaust.");
+                log_info(MSG_LOG_DBG, SVR, "oops:connection pool exhaust.");
                 continue;
             }
 
@@ -198,7 +198,7 @@ uint32_t start_monitor(uint32_t svr_fd)
         }
         
         
-        //PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "client %s been connected.", inet_ntoa(client_addr.sin_addr));
+        //log_info(MSG_LOG_DBG, SVR, "client %s been connected.", inet_ntoa(client_addr.sin_addr));
         
     } 
 
@@ -261,10 +261,10 @@ void* secure_comm_task(void *priv)
 
     index = get_task_serialno();
     
-    //PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "[child]task_data->devid:%s", task_val->devid);
-    PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "[child]task_data->task_id:%d", task_val->task_id);
-    PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "[child]proc->task_var->task_id:%d", proc_val->task_var[index]->task_id);
-    PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "[child]task_data->cli_sockfd:%d", task_val->cli_sockfd);
+    //log_info(MSG_LOG_DBG, SVR, "[child]task_data->devid:%s", task_val->devid);
+    log_info(MSG_LOG_DBG, SVR, "[child]task_data->task_id:%d", task_val->task_id);
+    log_info(MSG_LOG_DBG, SVR, "[child]proc->task_var->task_id:%d", proc_val->task_var[index]->task_id);
+    log_info(MSG_LOG_DBG, SVR, "[child]task_data->cli_sockfd:%d", task_val->cli_sockfd);
     
 
     // set child name
@@ -282,7 +282,7 @@ void* secure_comm_task(void *priv)
         serial_msg++;
         printf("---------------------serial_msg:%d---------------\n", serial_msg);
         
-        PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "recv data len:%ld", len);
+        log_info(MSG_LOG_DBG, SVR, "recv data len:%ld", len);
     
         if (validate_data(buf, len) != OK)
             continue;
@@ -293,20 +293,20 @@ void* secure_comm_task(void *priv)
         if ((ret == FINISH) || (ret == EXCEPTION))
         {
             ack_ret = prepare_interactive_data(task_val, ((msg_head_t*)buf)->type, &ack_data, &ack_len);
-            PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "prepare_interactive_data ret:%d", ack_ret);
+            log_info(MSG_LOG_DBG, SVR, "prepare_interactive_data ret:%d", ack_ret);
             if (ack_ret == OK)
             {                    
                 send_to_client(client_fd, ack_data, ack_len);
-                PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "send_to_client OK");
+                log_info(MSG_LOG_DBG, SVR, "send_to_client OK");
             }
             else
             {
-                PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "send_err_ack to client.");
+                log_info(MSG_LOG_DBG, SVR, "send_err_ack to client.");
                 send_err_ack(client_fd, &ack_data);
                 //continue;
             }
             
-            //PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "data sent to client:%s", ack_data+sizeof(msg_head_t));
+            //log_info(MSG_LOG_DBG, SVR, "data sent to client:%s", ack_data+sizeof(msg_head_t));
             //dbg_print_char_in_buf(ack_data+sizeof(msg_head_t), 64);
     
     
@@ -322,7 +322,7 @@ void* secure_comm_task(void *priv)
         }
     
         if (ret == OK   )
-            PRINT_SYS_MSG(MSG_LOG_DBG, SVR, "wait for next package data");
+            log_info(MSG_LOG_DBG, SVR, "wait for next package data");
     }
 
     if (client_fd >0)

@@ -25,7 +25,7 @@ uint32_t init_sw_shield(int8_t *dev_id, int8_t *pkey)
 
     if (!dev_id ||!*dev_id || strlen(dev_id)>DEV_ID_LEN_MAX)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "device id illegal.");
+        log_info(MSG_LOG_DBG, CRYPT, "device id illegal.");
         return ERROR;
     }
 
@@ -33,7 +33,7 @@ uint32_t init_sw_shield(int8_t *dev_id, int8_t *pkey)
     if (ret != OK)
     {
         // SVKD_OPEN_FAIL = 17003
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "IW_OpenDevice ret:%ld. maybe usr not exist(code:17003)", ret);
+        log_info(MSG_LOG_DBG, CRYPT, "IW_OpenDevice ret:%ld. maybe usr not exist(code:17003)", ret);
         goto APPL_KEY;
     }
     
@@ -41,7 +41,7 @@ uint32_t init_sw_shield(int8_t *dev_id, int8_t *pkey)
     
     if (ret == OK)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "svkd usr_id:%s, usr_id:%s", usr_id, dev_id);
+        log_info(MSG_LOG_DBG, CRYPT, "svkd usr_id:%s, usr_id:%s", usr_id, dev_id);
         if (!strncmp(dev_id, usr_id, id_len))
         {
             return OK;
@@ -49,7 +49,7 @@ uint32_t init_sw_shield(int8_t *dev_id, int8_t *pkey)
     }
     
     // SVKD_ID_VOID = 17005
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "IW_ReadKeyID code:%ld", ret);
+    log_info(MSG_LOG_DBG, CRYPT, "IW_ReadKeyID code:%ld", ret);
 
 
 APPL_KEY:
@@ -57,7 +57,7 @@ APPL_KEY:
     
     if (ret != OK)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "IW_InitDevice failed, ret = %ld", ret);
+        log_info(MSG_LOG_DBG, CRYPT, "IW_InitDevice failed, ret = %ld", ret);
         return ERROR;
     }
 
@@ -65,46 +65,46 @@ APPL_KEY:
     ret = IW_OpenDevice(dev_id, IWALL_SVKD_REPO);
     if (ret != OK)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "IW_OpenDevice failed, ret = %ld", ret);
+        log_info(MSG_LOG_DBG, CRYPT, "IW_OpenDevice failed, ret = %ld", ret);
         return ERROR;
     }    
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "IW_InitDevice OK");
+    log_info(MSG_LOG_DBG, CRYPT, "IW_InitDevice OK");
 
     /* gene temporary key-pair */
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "generate temporary key-pair begin");
+    log_info(MSG_LOG_DBG, CRYPT, "generate temporary key-pair begin");
     ret = IW_GenKeyRequest(dev_id, tmp_key);
     if (ret != OK)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "IW_GenKeyRequest failed, ret = %ld", ret);
+        log_info(MSG_LOG_DBG, CRYPT, "IW_GenKeyRequest failed, ret = %ld", ret);
         return ERROR;
     }    
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "generate temporary key-pair OK");
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "\"%s\"'s pk is %s", dev_id, tmp_key);
+    log_info(MSG_LOG_DBG, CRYPT, "generate temporary key-pair OK");
+    log_info(MSG_LOG_DBG, CRYPT, "\"%s\"'s pk is %s", dev_id, tmp_key);
 
     strncpy(pkey, tmp_key, strlen(tmp_key));
     
     /* apply and preserve secret kety */
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "get secret key from sk-center");
+    log_info(MSG_LOG_DBG, CRYPT, "get secret key from sk-center");
     ret = persist_secret_key(dev_id, tmp_key);
     if (ret != OK)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "get secret key from sk-center failed, code:%ld", ret);
+        log_info(MSG_LOG_DBG, CRYPT, "get secret key from sk-center failed, code:%ld", ret);
         return ERROR;
     }    
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "get secret key from sk-center OK");
+    log_info(MSG_LOG_DBG, CRYPT, "get secret key from sk-center OK");
 
     /* generate key matrix */
     /*
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "gene_key_matrix begin");
+    log_info(MSG_LOG_DBG, CRYPT, "gene_key_matrix begin");
     get_proc_priv_data(&priv);
     ret = gene_key_matrix(priv->pub_matrix, priv->skey_matrix);
     if (ret != OK)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "gene_key_matrix failed, code:%ld", ret);
+        log_info(MSG_LOG_DBG, CRYPT, "gene_key_matrix failed, code:%ld", ret);
         return ERROR;
     }    
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "gene_key_matrix OK");
+    log_info(MSG_LOG_DBG, CRYPT, "gene_key_matrix OK");
 
     */
 
@@ -126,7 +126,7 @@ uint32_t persist_secret_key(int8_t *dev_id, int8_t *pkey)
     
     // need open dev ? all disappointed
     //ret = IW_OpenDevice(dev_id, IWALL_SVKD_REPO);
-    //PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "open sw-shield ret = %#x", ret);
+    //log_info(MSG_LOG_DBG, CRYPT, "open sw-shield ret = %#x", ret);
     
     ret = IW_Sendrequest(dev_id, pkey, secret_key);
     if (ret != OK)
@@ -134,13 +134,13 @@ uint32_t persist_secret_key(int8_t *dev_id, int8_t *pkey)
         /* 10008 means key already applied succeeded */
         if (ret != 10008)
         {
-            PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "apply secret key failed, ret:%ld.", ret);
+            log_info(MSG_LOG_DBG, CRYPT, "apply secret key failed, ret:%ld.", ret);
             return ERROR;
         }
         else
         {
             if (strlen(secret_key) > 0)
-                PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "secret key already applied(code:10008).");
+                log_info(MSG_LOG_DBG, CRYPT, "secret key already applied(code:10008).");
             
             return KEY_EXIST_IN_SERVER;
         }
@@ -151,17 +151,17 @@ uint32_t persist_secret_key(int8_t *dev_id, int8_t *pkey)
         key_len = strlen(secret_key);
         if ( key_len < SECRET_KEY_LEN_MIN) 
         {
-            PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, 
+            log_info(MSG_LOG_DBG, CRYPT, 
                         "apply secret key failed, key len:%ld, expect larger than %ld.", 
                         key_len, SECRET_KEY_LEN_MIN);
             return ERROR;            
         }
     }
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "apply secret key OK, value:%s", secret_key);
+    log_info(MSG_LOG_DBG, CRYPT, "apply secret key OK, value:%s", secret_key);
 
     ret = IW_WriteKeycard(secret_key, NULL);
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "import secret key to sw-shield OK.");
+    log_info(MSG_LOG_DBG, CRYPT, "import secret key to sw-shield OK.");
 
     return OK;
 }
@@ -185,7 +185,7 @@ uint32_t init_sw_shield_ex(int8_t *dev_id, int8_t *pkey)
 
     if (!dev_id ||!*dev_id || strlen(dev_id)>DEV_ID_LEN_MAX)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "device id illegal.");
+        log_info(MSG_LOG_DBG, CRYPT, "device id illegal.");
         return ERROR;
     }
 
@@ -193,16 +193,16 @@ uint32_t init_sw_shield_ex(int8_t *dev_id, int8_t *pkey)
     ret = IW_InitDevice(dev_id, IWALL_SVKD_REPO);
 
     if (ret != OK)
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "init sw-shield failed ret = %d", ret);
+        log_info(MSG_LOG_DBG, CRYPT, "init sw-shield failed ret = %d", ret);
 
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "init sw-shield OK");
+    log_info(MSG_LOG_DBG, CRYPT, "init sw-shield OK");
 
     ret = IW_OpenDevice(dev_id, IWALL_SVKD_REPO);
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "open sw-shield ret = %#x", ret);
+    log_info(MSG_LOG_DBG, CRYPT, "open sw-shield ret = %#x", ret);
 
     /* step2: gene temporary key-pair */
     ret = IW_GenKeyRequest(dev_id, tmp_key);
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "dev %s\'s pk is %s", dev_id, tmp_key);
+    log_info(MSG_LOG_DBG, CRYPT, "dev %s\'s pk is %s", dev_id, tmp_key);
     
     strncpy(pkey, tmp_key, strlen(tmp_key));
 
@@ -214,13 +214,13 @@ uint32_t init_sw_shield_ex(int8_t *dev_id, int8_t *pkey)
         /* 10008 means key already applied succeeded */
         if (ret != 10008)
         {
-            PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "apply secret key failed, ret:%ld.", ret);
+            log_info(MSG_LOG_DBG, CRYPT, "apply secret key failed, ret:%ld.", ret);
             return ERROR;
         }
         else
         {
             if (strlen(secret_key) > 0)
-                PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "secret key already applied.");
+                log_info(MSG_LOG_DBG, CRYPT, "secret key already applied.");
         }
     }
 
@@ -229,17 +229,17 @@ uint32_t init_sw_shield_ex(int8_t *dev_id, int8_t *pkey)
         key_len = strlen(secret_key);
         if ( key_len < SECRET_KEY_LEN_MIN) 
         {
-            PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, 
+            log_info(MSG_LOG_DBG, CRYPT, 
                         "apply secret key failed, key len:%ld, expect larger than %ld.", 
                         key_len, SECRET_KEY_LEN_MIN);
             return ERROR;            
         }
     }
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "apply secret key OK, value:%s", secret_key);
+    log_info(MSG_LOG_DBG, CRYPT, "apply secret key OK, value:%s", secret_key);
 
     ret = IW_WriteKeycard(secret_key, NULL);
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "import secret key to sw-shield OK.");
+    log_info(MSG_LOG_DBG, CRYPT, "import secret key to sw-shield OK.");
 
     
     return ret;
@@ -266,14 +266,14 @@ uint32_t gene_key_matrix(BYTE *pub_matrix, BYTE * skey_matrix)
     fd = open(SMT_PKM_FILE, O_RDONLY);
     if (fd < 0)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "pkm_open_err");
+        log_info(MSG_LOG_DBG, CRYPT, "pkm_open_err");
         return ERROR;
     }
 
     pkmbuf = (BYTE*)malloc(PUB_KEY_MATRIX_LEN_MAX);
     if (pkmbuf == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "malloc pkmbuf failed");
+        log_info(MSG_LOG_DBG, CRYPT, "malloc pkmbuf failed");
         return ERROR;
     }
     
@@ -284,7 +284,7 @@ uint32_t gene_key_matrix(BYTE *pub_matrix, BYTE * skey_matrix)
     len = read(fd, pkmbuf +256, block_size);
     if (len < block_size)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "read pkmbuf failed: len(%ld), need(%ld)", len, block_size);
+        log_info(MSG_LOG_DBG, CRYPT, "read pkmbuf failed: len(%ld), need(%ld)", len, block_size);
         ret = ERROR;
 
         goto REL_RES;
@@ -301,7 +301,7 @@ uint32_t gene_key_matrix(BYTE *pub_matrix, BYTE * skey_matrix)
     fd = open(SMT_SKM_FILE, O_RDONLY);
     if (fd < 0)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "skm_open_err!");
+        log_info(MSG_LOG_DBG, CRYPT, "skm_open_err!");
         ret = ERROR;
 
         goto REL_RES;
@@ -310,7 +310,7 @@ uint32_t gene_key_matrix(BYTE *pub_matrix, BYTE * skey_matrix)
     skmbuf = (BYTE*)malloc(SECRET_KEY_MATRIX_LEN_MAX);
     if (skmbuf == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "malloc skmbuf failed");
+        log_info(MSG_LOG_DBG, CRYPT, "malloc skmbuf failed");
         ret = ERROR;
 
         goto REL_RES;
@@ -322,7 +322,7 @@ uint32_t gene_key_matrix(BYTE *pub_matrix, BYTE * skey_matrix)
     len = read(fd, skmbuf+256, block_size);
     if (len < block_size)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "read skmbuf failed: len(%ld), need(%ld)", len, block_size);
+        log_info(MSG_LOG_DBG, CRYPT, "read skmbuf failed: len(%ld), need(%ld)", len, block_size);
         return ERROR;
     }
     
@@ -358,14 +358,14 @@ uint32_t gene_key_matrix(BYTE *pub_matrix, BYTE * skey_matrix)
     fp = fopen(SMT_PKM_FILE, "rb");
     if (fp == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "pkm_open_err");
+        log_info(MSG_LOG_DBG, CRYPT, "pkm_open_err");
         return ERROR;
     }
 
     pkmbuf = (BYTE*)malloc(PUB_KEY_MATRIX_LEN_MAX);
     if (pkmbuf == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "malloc pkmbuf failed");
+        log_info(MSG_LOG_DBG, CRYPT, "malloc pkmbuf failed");
         return ERROR;
     }
     
@@ -377,7 +377,7 @@ uint32_t gene_key_matrix(BYTE *pub_matrix, BYTE * skey_matrix)
     len = fread(pkmbuf + 256, block_size, count, fp);
     if (len < 0)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "read pkmbuf failed: len(%ld), need(%ld)", len, block_size*count);
+        log_info(MSG_LOG_DBG, CRYPT, "read pkmbuf failed: len(%ld), need(%ld)", len, block_size*count);
         ret = ERROR;
 
         goto REL_RES;
@@ -396,7 +396,7 @@ uint32_t gene_key_matrix(BYTE *pub_matrix, BYTE * skey_matrix)
     fp = fopen(SMT_SKM_FILE, "rb");
     if (fp == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "skm_open_err!");
+        log_info(MSG_LOG_DBG, CRYPT, "skm_open_err!");
         ret = ERROR;
 
         goto REL_RES;
@@ -405,7 +405,7 @@ uint32_t gene_key_matrix(BYTE *pub_matrix, BYTE * skey_matrix)
     skmbuf = (BYTE*)malloc(SECRET_KEY_MATRIX_LEN_MAX);
     if (skmbuf == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "malloc skmbuf failed");
+        log_info(MSG_LOG_DBG, CRYPT, "malloc skmbuf failed");
         ret = ERROR;
 
         goto REL_RES;
@@ -418,7 +418,7 @@ uint32_t gene_key_matrix(BYTE *pub_matrix, BYTE * skey_matrix)
     len = fread(skmbuf + 256, block_size, count, fp);
     if (len < 0)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "read skmbuf failed: len(%ld), need(%ld)", len, block_size*count);
+        log_info(MSG_LOG_DBG, CRYPT, "read skmbuf failed: len(%ld), need(%ld)", len, block_size*count);
         return ERROR;
     }
     
@@ -454,14 +454,14 @@ uint32_t sm2_encrypt_data(int8_t *devid, int8_t *orig_data,uint32_t orig_len, in
 
     get_proc_priv_data(&priv);
     ret = CPK_Get_IPK(devid, priv->pub_matrix, PUB_KEY_MATRIX_LEN_MAX, pub_key);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "CPK_Get_IPK ret:%d", ret);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "devid:%s", devid);
+    log_info(MSG_LOG_DBG, MGT, "CPK_Get_IPK ret:%d", ret);
+    log_info(MSG_LOG_DBG, MGT, "devid:%s", devid);
     
     ret = IW_SM2_EncryptData(pub_key, orig_data, strlen(orig_data)+1, ciph_data);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_SM2_EncryptData ret:%d", ret);
+    log_info(MSG_LOG_DBG, MGT, "IW_SM2_EncryptData ret:%d", ret);
     *ciph_len = strlen(ciph_data);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "sm2_encrypt_data cipher_len:%d", *ciph_len);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "sm2_encrypt_data cipher:%s", ciph_data);
+    log_info(MSG_LOG_DBG, MGT, "sm2_encrypt_data cipher_len:%d", *ciph_len);
+    log_info(MSG_LOG_DBG, MGT, "sm2_encrypt_data cipher:%s", ciph_data);
     
     return ret;
 }
@@ -473,9 +473,9 @@ uint32_t sm4_encrypt_data(encrypt_data_t *algorithm, int8_t *orig_data,uint32_t 
     // stub:mode&padding
     ret = IW_SM4_ENCRYPT(SM4_MODE_ECB, SM4_NOPADDING, NULL, algorithm->key, 
                     orig_data, orig_len, ciph_data, ciph_len);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "IW_SM4_ENCRYPT ret:%d", ret);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "sm4_encrypt_data cipher_len:%d", *ciph_len);
-    PRINT_SYS_MSG(MSG_LOG_DBG, MGT, "sm4_encrypt_data cipher:%s", ciph_data);
+    log_info(MSG_LOG_DBG, MGT, "IW_SM4_ENCRYPT ret:%d", ret);
+    log_info(MSG_LOG_DBG, MGT, "sm4_encrypt_data cipher_len:%d", *ciph_len);
+    log_info(MSG_LOG_DBG, MGT, "sm4_encrypt_data cipher:%s", ciph_data);
 
     return ret;
 }
@@ -491,7 +491,7 @@ uint32_t encrypt_data(int8_t      *devid, int8_t *orig_data,uint32_t orig_len, i
 
     algo = &devinfo.crypt_type;
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "encrypt_data algorithm:%d", algo->algorithm);
+    log_info(MSG_LOG_DBG, CRYPT, "encrypt_data algorithm:%d", algo->algorithm);
 
     switch (algo->algorithm)
     {
@@ -525,7 +525,7 @@ uint32_t encrypt_data(int8_t      *devid, int8_t *orig_data,uint32_t orig_len, i
         default:break;
     }
 
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "encrypt_data ret:%d", ret);
+    log_info(MSG_LOG_DBG, CRYPT, "encrypt_data ret:%d", ret);
 
     return OK;
 }
@@ -551,7 +551,7 @@ uint32_t decrypt_data(encrypt_data_t *algorithm, int8_t *ciph_data,uint32_t ciph
 {
     int32_t ret;
     
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "decrypt_data algorithm:%d", algorithm->algorithm);
+    log_info(MSG_LOG_DBG, CRYPT, "decrypt_data algorithm:%d", algorithm->algorithm);
 
     switch (algorithm->algorithm)
     {
@@ -582,7 +582,7 @@ uint32_t decrypt_data(encrypt_data_t *algorithm, int8_t *ciph_data,uint32_t ciph
         default:break;
     }
 
-    PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "decrypt_data ret:%d", ret);
+    log_info(MSG_LOG_DBG, CRYPT, "decrypt_data ret:%d", ret);
 
     return OK;
 }
@@ -607,14 +607,14 @@ void dbg_test_verify(char * devid, uint8_t *matrix, uint32_t klen)
     fp = fopen(SMT_PKM_FILE, "rb");
     if (fp == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "pkm_open_err");
+        log_info(MSG_LOG_DBG, CRYPT, "pkm_open_err");
         return;
     }
 
     pkmbuf = (BYTE*)malloc(PUB_KEY_MATRIX_LEN_MAX);
     if (pkmbuf == NULL)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "malloc pkmbuf failed");
+        log_info(MSG_LOG_DBG, CRYPT, "malloc pkmbuf failed");
         return;
     }
     
@@ -626,7 +626,7 @@ void dbg_test_verify(char * devid, uint8_t *matrix, uint32_t klen)
     len = fread(pkmbuf + 256, block_size, count, fp);
     if (len < 0)
     {
-        PRINT_SYS_MSG(MSG_LOG_DBG, CRYPT, "read pkmbuf failed: len(%ld), need(%ld)", len, block_size*count);
+        log_info(MSG_LOG_DBG, CRYPT, "read pkmbuf failed: len(%ld), need(%ld)", len, block_size*count);
         return;
     }
 
