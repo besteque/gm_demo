@@ -1,3 +1,176 @@
+root@iZbp18l1h2hdbkxke91d6pZ:/home/xuyang/workspace/gm_demo# 
+root@iZbp18l1h2hdbkxke91d6pZ:/home/xuyang/workspace/gm_demo# ./target/demo 
+[2018.3.28 19:6:18.536][INIT]init sw shield begin...
+[2018.3.28 19:6:18.536][CRYPT]svkd usr_id:xuyang_1000e, usr_id:xuyang_1000e
+[2018.3.28 19:6:18.536][INIT]init sw shield OK
+[2018.3.28 19:6:18.536][INIT]gene_key_matrix begin
+[2018.3.28 19:6:18.536][INIT]gene_key_matrix OK
+IW_SignData rv is 0
+IW_ServerSignData rv is 0
+数字签名(rv = 0：成功) rv = 0
+被签名数据：chun hui dada, wanwu fusu. yangguang mingmei, wu gufu hao shiguang.
+签名值：AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoHd7djGL0QcZ1Fv/R401JS53ZNMpOUMtuHzJNB1P7xgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXizAUXZgO/8u35jVZzEMwfC5C9QnDNyt5ykja6GcY4=
+
+SM2VerifySignData rv = 0
+验证签名(rv = 0：成功) rv = 0
+
+[2018.3.28 19:6:18.540][INIT]start monitor, svr_fd:4
+[2018.3.28 19:9:24.279][SVR]client 49.95.209.14(0xed15f31) been connected.
+[2018.3.28 19:9:24.279][SVR]check_cilent_exist proc_priv->client_num 0
+[2018.3.28 19:9:24.279][SVR]pthread_create <taskid:-102844672> ret:0
+[2018.3.28 19:9:24.279][SVR][child]task_data->task_id:0
+[2018.3.28 19:9:24.279][SVR][child]proc->task_var->task_id:0
+[2018.3.28 19:9:24.279][SVR][child]task_data->cli_sockfd:5
+---------------------serial_msg:1---------------
+[2018.3.28 19:9:24.287][SVR]recv data len:312
+[2018.3.28 19:9:24.287][MGT]parse_data rcv msgid 0x1
+[2018.3.28 19:9:24.287][DBG]msg head(size:56) as follow:
+[2018.3.28 19:9:24.287][DBG]----------------------------------
+[2018.3.28 19:9:24.287][DBG]     magic        :@YGET@
+[2018.3.28 19:9:24.287][DBG]     type         :1
+[2018.3.28 19:9:24.287][DBG]     date_len     :7
+[2018.3.28 19:9:24.287][DBG]     version      :0
+[2018.3.28 19:9:24.287][DBG]     trans_id     :0
+[2018.3.28 19:9:24.287][DBG]     total_length :7
+[2018.3.28 19:9:24.287][DBG]     total_package:1
+[2018.3.28 19:9:24.287][DBG]     index        :0
+[2018.3.28 19:9:24.287][DBG]----------------------------------
+
+[2018.3.28 19:9:24.287][MGT]-----------------> step 1 begin...
+[2018.3.28 19:9:24.287][MGT]rcv msgid:0x1, devid:id12211
+[2018.3.28 19:9:24.287][MGT]devlist empty, create it
+[2018.3.28 19:9:24.287][MGT]add node OK
+[2018.3.28 19:9:24.287][DBG]devinfo(size:3480) as follow:
+[2018.3.28 19:9:24.287][DBG]-----------------------------------
+[2018.3.28 19:9:24.287][DBG]     id        :id12211
+[2018.3.28 19:9:24.287][DBG]     dev_type  :0
+[2018.3.28 19:9:24.287][DBG]-----------------------------------
+
+[2018.3.28 19:9:24.287][MGT]receive data total len:7, expect:7
+[2018.3.28 19:9:24.287][MGT]-----------------> step 1 end.
+[2018.3.28 19:9:24.287][SVR]prepare_interactive_data ret:0
+[2018.3.28 19:9:24.287][SVR]send_to_client OK
+---------------------serial_msg:2---------------
+[2018.3.28 19:9:25.495][SVR]recv data len:1080
+[2018.3.28 19:9:25.495][MGT]parse_data rcv msgid 0x2
+[2018.3.28 19:9:25.495][DBG]msg head(size:56) as follow:
+[2018.3.28 19:9:25.495][DBG]----------------------------------
+[2018.3.28 19:9:25.495][DBG]     magic        :@YGET@
+[2018.3.28 19:9:25.495][DBG]     type         :2
+[2018.3.28 19:9:25.495][DBG]     date_len     :172
+[2018.3.28 19:9:25.495][DBG]     version      :0
+[2018.3.28 19:9:25.495][DBG]     trans_id     :0
+[2018.3.28 19:9:25.495][DBG]     total_length :172
+[2018.3.28 19:9:25.495][DBG]     total_package:1
+[2018.3.28 19:9:25.495][DBG]     index        :0
+[2018.3.28 19:9:25.495][DBG]----------------------------------
+
+[2018.3.28 19:9:25.495][MGT]-----------------> step 2 begin...
+[2018.3.28 19:9:25.495][MGT]client id12211 sign data:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACo/bnt+Ds4S2oLBtTjndOe2YuqOUpr4P6R/+HxXD9XUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAi4EZIZ2yfAXcfTNKAeiSWbosHMhp+GTrDFx5hshbsZM=
+[2018.3.28 19:9:25.495][MGT]task_val->devid:id12211
+[2018.3.28 19:9:25.498][MGT]IW_VerifyData ret:0
+[2018.3.28 19:9:25.498][MGT]receive data total len:172, expect:172
+[2018.3.28 19:9:25.498][MGT]handle_sign_ack devid:id12211
+[2018.3.28 19:9:25.498][DBG]     id        :id12211
+[2018.3.28 19:9:25.498][DBG]     dev_type  :0
+[2018.3.28 19:9:25.498][MGT][handle_sign_ack]ack to clent:
+[2018.3.28 19:9:25.498][MGT][handle_sign_ack]original data:YGET SECURITY SERVER
+[2018.3.28 19:9:25.499][MGT][handle_sign_ack]sign_val data:AAAAAF6psdjyfxHRvhIBlRhKd3NJFWrLQkcWdvmeXqt/bG53fPhvBc0OueWckzWPqJThwX/6mZLi5mFM1H8yDzljQOHhYzteEYeiRZEONt/LwYsYWfYPvIYb9HwJGZSxLBBv1g==
+[2018.3.28 19:9:25.499][MGT]IW_SignData ret:0
+[2018.3.28 19:9:25.499][MGT][handle_sign_ack]sign_final data:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABeqbHY8n8R0b4SAZUYSndzSRVqy0JHFnb5nl6rf2xudwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsRmL21IVD3O1dqrPFKbEmO67np13Heao/5Th7mjGZ4U=
+[2018.3.28 19:9:25.499][MGT]IW_ServerSignData ret:0
+[2018.3.28 19:9:25.499][MGT]-----------------> step 2 end.
+[2018.3.28 19:9:25.499][SVR]prepare_interactive_data ret:0
+[2018.3.28 19:9:25.499][SVR]send_to_client OK
+---------------------serial_msg:3---------------
+[2018.3.28 19:9:25.578][SVR]recv data len:1340
+[2018.3.28 19:9:25.578][MGT]parse_data rcv msgid 0x3
+[2018.3.28 19:9:25.578][DBG]msg head(size:56) as follow:
+[2018.3.28 19:9:25.578][DBG]----------------------------------
+[2018.3.28 19:9:25.578][DBG]     magic        :@YGET@
+[2018.3.28 19:9:25.578][DBG]     type         :3
+[2018.3.28 19:9:25.578][DBG]     date_len     :244
+[2018.3.28 19:9:25.578][DBG]     version      :0
+[2018.3.28 19:9:25.578][DBG]     trans_id     :0
+[2018.3.28 19:9:25.578][DBG]     total_length :244
+[2018.3.28 19:9:25.578][DBG]     total_package:1
+[2018.3.28 19:9:25.578][DBG]     index        :0
+[2018.3.28 19:9:25.578][DBG]----------------------------------
+
+[2018.3.28 19:9:25.578][MGT]-----------------> step 3 begin...
+[2018.3.28 19:9:25.580][MGT]IW_SM2_OpenEnv ret:0
+[2018.3.28 19:9:25.580][MGT]negotiate_crypt_type crypt_data.key:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB8sDxrpO9MVdkWESuhxGX7vW5D8wgwwEomUE+aOwj7BQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAvU+xNuZ/yu6Tt2xOq1nSF7vN5ezbZiR+i3gT9pJ8ZPjI8wuKiVjhBGAd34wQA7wlUt54UfEO9JmGZRwM3sppQxAAAAB89ylWYEVUy5wYOIC6eIplAA==
+[2018.3.28 19:9:25.580][MGT]negotiate_crypt_type key after:[2018.3.28 19:9:25.580][MGT]dev id12211 affirmed crypt type:0x5
+[2018.3.28 19:9:25.580][MGT]receive data total len:244, expect:244
+[2018.3.28 19:9:25.580][MGT]affirm_crypt_type:devinfo.crypt_type.key:[2018.3.28 19:9:25.580][MGT]affirm_crypt_type:strlen(devinfo.crypt_type.key:16
+[2018.3.28 19:9:25.584][MGT]IW_SM2_MakeEnv ret:0
+[2018.3.28 19:9:25.584][MGT]affirm_crypt_type evn:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxXg8afHElAeGQMKoUxc0sK2HBca96AYp4eq0qkChr0wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAurtaBO33ILIMl7mbGSQp+Kg/VE3VJCJUnbUlWkg8l5hRTWb8NXC9q3AxckR7zK1ReDE+doLromD9ciGLleW0uhAAAADqXH/ru3uo9GkE6isxxueNAA==
+[2018.3.28 19:9:25.584][MGT]-----------------> step 3 end.
+[2018.3.28 19:9:25.584][SVR]prepare_interactive_data ret:0
+[2018.3.28 19:9:25.584][SVR]send_to_client OK
+---------------------serial_msg:4---------------
+[2018.3.28 19:9:30.703][SVR]recv data len:284
+[2018.3.28 19:9:30.703][MGT]parse_data rcv msgid 0x4
+[2018.3.28 19:9:30.703][DBG]msg head(size:56) as follow:
+[2018.3.28 19:9:30.703][DBG]----------------------------------
+[2018.3.28 19:9:30.703][DBG]     magic        :@YGET@
+[2018.3.28 19:9:30.703][DBG]     type         :4
+[2018.3.28 19:9:30.703][DBG]     date_len     :228
+[2018.3.28 19:9:30.703][DBG]     version      :0
+[2018.3.28 19:9:30.703][DBG]     trans_id     :0
+[2018.3.28 19:9:30.703][DBG]     total_length :228
+[2018.3.28 19:9:30.703][DBG]     total_package:1
+[2018.3.28 19:9:30.703][DBG]     index        :0
+[2018.3.28 19:9:30.703][DBG]----------------------------------
+
+[2018.3.28 19:9:30.703][MGT]-----------------> step 4 begin...
+[2018.3.28 19:9:30.703][MGT]strlen(data):248, len:228
+[2018.3.28 19:9:30.703][CRYPT]decrypt_data algorithm:5
+[2018.3.28 19:9:30.705][CRYPT]decrypt_data ret:0
+[2018.3.28 19:9:30.705][MGT]decrypt_usr_data as follow:
+[2018.3.28 19:9:30.705][DBG]buf info as follow:
+123[2018.3.28 19:9:30.705][MGT]plain_date:123
+
+[2018.3.28 19:9:30.705][MGT]rcv dev id12211 usr data
+[2018.3.28 19:9:30.705][DBG]msg head(size:56) as follow:
+[2018.3.28 19:9:30.705][DBG]----------------------------------
+[2018.3.28 19:9:30.705][DBG]     magic        :@YGET@
+[2018.3.28 19:9:30.705][DBG]     type         :4
+[2018.3.28 19:9:30.705][DBG]     date_len     :228
+[2018.3.28 19:9:30.705][DBG]     version      :0
+[2018.3.28 19:9:30.705][DBG]     trans_id     :0
+[2018.3.28 19:9:30.705][DBG]     total_length :228
+[2018.3.28 19:9:30.705][DBG]     total_package:1
+[2018.3.28 19:9:30.705][DBG]     index        :0
+[2018.3.28 19:9:30.705][DBG]----------------------------------
+
+[2018.3.28 19:9:30.705][MGT]receive data total len:228, expect:228
+[2018.3.28 19:9:30.705][CRYPT]encrypt_data algorithm:5
+[2018.3.28 19:9:30.706][MGT]CPK_Get_IPK ret:0
+[2018.3.28 19:9:30.706][MGT]devid:id12211
+[2018.3.28 19:9:30.709][MGT]IW_SM2_EncryptData ret:0
+[2018.3.28 19:9:30.709][MGT]sm2_encrypt_data cipher_len:268
+[2018.3.28 19:9:30.709][MGT]sm2_encrypt_data cipher:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB8Cx9N+FIklJ2uvIr8wmgPbGy0nu9zpxi9ZQfEW+Ws5gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmXL25P5aUZuQIgwqesuOXztF+I53BzAjymRDUjD/rHjAlrSAj3gdTjdeoUvJAKvTgo6qdFUoXWnVCCc2plvvLCIAAADcFLxz3gLPvxURT0yc3YKML2BGTp3rlEXoQi6/EVbHz/U+AA==
+[2018.3.28 19:9:30.709][CRYPT]encrypt_data ret:0
+[2018.3.28 19:9:30.709][SVR]prepare_interactive_data ret:0
+[2018.3.28 19:9:30.709][SVR]send_to_client OK
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 root@ubuntu:/home/xuyang/workspace/gm_demo# make clean
 root@ubuntu:/home/xuyang/workspace/gm_demo# make clean;make

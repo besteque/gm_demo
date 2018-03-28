@@ -1,3 +1,10 @@
+/*
+ * tcp_client.c
+ *
+ *  Created on: 2018-3-23
+ *      Author: xuyang
+ */
+
 #include <stdlib.h>
 #include <stdio.h>  
 #include <string.h>
@@ -7,6 +14,9 @@
 #include <arpa/inet.h>  
 
 #include "pub.h"
+
+
+#define SERVER_IP_ADDR             "192.168.0.107"     //aliyun:"116.62.137.197"   pc:"192.168.0.107"
 
 
 int send_to_server(int setp, char *buf, int buf_len, int *data_len)
@@ -94,38 +104,50 @@ int get_domain_iaddr(char *domain)
 }
 
 
-/* gcc -o tcpclient tcp_client.c pub.h */  
+/* gcc -o tcpclient  pub.h tcp_client.c */  
 int main(int argc, char *argv[])
 {  
+    char server_addr[16] = {0};
     int client_sockfd;  
     int i = 0, len, data_len;  
-    struct sockaddr_in remote_addr; //服务器端网络地址结构体  
-    char buf[BUFSIZ];  //数据传送的缓冲区
+    struct sockaddr_in remote_addr; 
+    char buf[BUFSIZ];       //BUFSIZ=8096
     struct timeval      timeout;
+
+    if (argc < 2)
+    {
+        printf("server ip not input, use %s as default.\n", SERVER_IP_ADDR);
+        strcpy(server_addr, SERVER_IP_ADDR);
+    }
+    else
+    {
+        if (strlen(argv[1]) <7)
+        {
+            printf("server ip %s illegal.\n", argv[1]);
+            return -1;
+        }
+        printf("server ip %s\n", argv[1]);
+        strcpy(server_addr, argv[1]);
+    }
+        
     
-    memset(&remote_addr,0,sizeof(remote_addr)); //数据初始化--清零  
-    remote_addr.sin_family = AF_INET; //设置为IP通信  
-    remote_addr.sin_addr.s_addr = inet_addr("192.168.123.192");//服务器IP地址  
-    remote_addr.sin_port = htons(SVR_LISTEN_PORT_NUM); //服务器端口号  
+    memset(&remote_addr,0,sizeof(remote_addr));
+    remote_addr.sin_family = AF_INET; //set ip protocol family
+    remote_addr.sin_addr.s_addr = inet_addr(server_addr);
+    remote_addr.sin_port = htons(SVR_LISTEN_PORT_NUM); 
       
-    /*创建客户端套接字--IPv4协议，面向连接通信，TCP协议*/  
+    /* ipv4 tcp protocol */  
     if((client_sockfd=socket(PF_INET,SOCK_STREAM,0))<0)  
     {  
         perror("socket");  
         return 1;  
-    }  
-      
-    /*将套接字绑定到服务器的网络地址上*/  
+    }
     if(connect(client_sockfd, (struct sockaddr *)&remote_addr, sizeof(struct sockaddr))<0)  
     {  
         perror("connect");  
         return 1;  
     }  
-    printf("connected to server 192.168.123.192 OK\n");  
-    
-    //len=recv(client_sockfd,buf,BUFSIZ,0);//接收服务器端信息  
-    //buf[len]='\0';  
-    //printf("%s",buf); //打印服务器端信息  
+    printf("connected to server %s OK\n", server_addr);
 
     // ack timer
     timeout.tv_sec  = 3;    
@@ -136,7 +158,6 @@ int main(int argc, char *argv[])
                 (char*)&timeout,
                 sizeof(struct timeval));
   
-    /*循环的发送接收信息并打印接收信息--recv返回接收到的字节数，send返回发送的字节数*/  
     while(1)  
     {
         //step
@@ -154,7 +175,7 @@ int main(int argc, char *argv[])
             break;
     }  
     
-    close(client_sockfd);//关闭套接字  
+    close(client_sockfd);
     
     return 0;  
 }  

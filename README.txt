@@ -17,6 +17,8 @@
 	2) code\security\include\apkapi.h
 	3 libs\libgmapi.a  libgmurl.a (修改密钥中心地址，参见2)
 
+	
+客户端示例代码：report\tcp_client
 ----------------------------------------
 技术栈：
 makefile
