@@ -82,26 +82,26 @@ uint32_t create_monitor_task(pthread_t *taskid, task_priv_data_t *taskval)
     get_proc_priv_data(&priv);
     
     ret = pthread_create(taskid, NULL, secure_comm_task, (void*)taskval);
-    log_info(MSG_LOG_DBG, SVR, "create_monitor_task pthread_create <taskid:%d> ret:%d", *taskid, ret);
+    log_info(MSG_LOG_DBG, SVR, "create_monitor_task pthread_create <taskid:%ld> ret:%d", *taskid, ret);
     
     log_info(MSG_LOG_DBG, SVR, "create_monitor_task priv->client_num:%d", priv->client_num);
 
     // fill in some import field
     priv->client_info[priv->client_num].task_id = *taskid;
     taskval->task_id = *taskid;
-    log_info(MSG_LOG_DBG, SVR, "create_monitor_task *taskid:%d", *taskid);
+    log_info(MSG_LOG_DBG, SVR, "create_monitor_task *taskid:%ld", *taskid);
 
 
     /* if run here, task may exit */
     task_id = taskval->task_id;
-    ret = pthread_join(*taskid, &tret);
+    ret = pthread_join(task_id, &tret);
     log_info(MSG_LOG_DBG, SVR, "pthread_join ret:%d", ret);
-    log_info(MSG_LOG_DBG, SVR, "task exit, id %d", taskval->task_id);
+    log_info(MSG_LOG_DBG, SVR, "task exit, id %ld", task_id);
 
     // free task var data
     for (i = 0; i< MONITOR_THREAD_NUM_MAX; i++)
     {
-        log_info(MSG_LOG_DBG, SVR, "priv->client_info[i].task_id:%d ?= taskval->task_id:%d", priv->client_info[i].task_id, taskval->task_id);
+        log_info(MSG_LOG_DBG, SVR, "priv->client_info[i].task_id:%ld ?= taskval->task_id:%ld", priv->client_info[i].task_id, taskval->task_id);
         if (priv->client_info[i].task_id == task_id)
         {
             priv->client_num--;

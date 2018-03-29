@@ -103,7 +103,7 @@ typedef struct tag_device_info
 typedef struct tag_client_info
 {
     int32_t cli_sockfd;         /* client socket fd */
-    int32_t task_id;
+    pthread_t task_id;
     //int8_t  address[ETH_IADDR_STR_LEN];
     uint32_t ip;
     uint16_t port;
@@ -118,7 +118,7 @@ typedef struct tag_svr_task_data
     int32_t     cli_sockfd;
     uint32_t    client_ip;
     uint16_t    client_port;
-    int32_t     task_id;            /* self id */
+    pthread_t   task_id;            /* self id */
     uint32_t    total_rcv_data_len; /* rc data total len(without head) in every step, reset for each step over */
 
 }task_priv_data_t;

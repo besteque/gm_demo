@@ -50,7 +50,9 @@ int init_proc_data(proc_spec_data_t *priv)
     return OK;
 }
 
-/* port can be customized */
+/* port can be customized
+ * e.g: gm_demo# ./target/secureGW 80911
+*/
 int main(int argc, char *argv[])
 {
     int32_t ret;
@@ -61,17 +63,17 @@ int main(int argc, char *argv[])
     /* parse param */
     if (argc < 2)
     {
-        printf("listen port not input, use %d as default.\n", SVR_LISTEN_PORT_NUM);
+        log_info(MSG_LOG_DBG, INIT, "listen port not input, use %d as default.\n", SVR_LISTEN_PORT_NUM);
         port = SVR_LISTEN_PORT_NUM;
     }
     else
     {
         if ((strlen(argv[1]) <1) || (argv[1][0] == '0'))
         {
-            printf("port %s illegal.\n", argv[1]);
+            log_info(MSG_LOG_DBG, INIT, "port %s illegal.\n", argv[1]);
             return -1;
         }
-        printf("listen port %s\n", argv[1]);
+        log_info(MSG_LOG_DBG, INIT, "server will listen port:%s\n", argv[1]);
         strcpy(val, argv[1]);
         
         port = strtoul(val, 0, 0);
