@@ -106,7 +106,7 @@ int get_domain_iaddr(char *domain)
 
 /* gcc -o tcpclient  pub.h tcp_client.c */  
 int main(int argc, char *argv[])
-{  
+{
     char server_addr[16] = {0};
     int client_sockfd;  
     int i = 0, len, data_len;  

@@ -20,9 +20,23 @@ proc_spec_data_t *proc_data = NULL;
 
 
 
+int stub_get_devid(int8_t *devid)
+{
+    int8_t testid[DEV_ID_LEN_MAX] = "yuge_server001";
+
+    if (devid != NULL)
+        strcpy(devid, testid);
+
+    return OK;
+}
+
+
+
 int init_proc_data(proc_spec_data_t *priv)
 {
     int32_t ret;
+    int8_t  svr_devid[DEV_ID_LEN_MAX] = {0};
+    
     INIT_LIST_HEAD(&priv->dev_list_head);
     ret = pthread_mutex_init(&priv->dev_mutex, NULL);
     if (ret != OK)
@@ -31,17 +45,37 @@ int init_proc_data(proc_spec_data_t *priv)
     }
 
     //stub
-    strcpy(priv->devid, "xuyang_1000e");
+    stub_get_devid(priv->devid);
 
     return OK;
 }
 
-
+/* port can be customized */
 int main(int argc, char *argv[])
 {
     int32_t ret;
+    char val[16] = {0};
+    uint32_t port= 0;
     int8_t   tmp_pkey[PUB_KEY_LEN_MAX] = {0}; /* temporary key for comm with sk-centor */
 
+    /* parse param */
+    if (argc < 2)
+    {
+        printf("listen port not input, use %d as default.\n", SVR_LISTEN_PORT_NUM);
+        port = SVR_LISTEN_PORT_NUM;
+    }
+    else
+    {
+        if ((strlen(argv[1]) <1) || (argv[1][0] == '0'))
+        {
+            printf("port %s illegal.\n", argv[1]);
+            return -1;
+        }
+        printf("listen port %s\n", argv[1]);
+        strcpy(val, argv[1]);
+        
+        port = strtoul(val, 0, 0);
+    }
 
     /* 0 init proc private data */
     proc_data = (proc_spec_data_t*)malloc(sizeof(proc_spec_data_t));
@@ -77,7 +111,7 @@ int main(int argc, char *argv[])
 
     
     /* 4 start service monitor */
-    proc_data ->sockfd = init_monitor(NULL, SVR_LISTEN_PORT_NUM);
+    proc_data ->sockfd = init_monitor(NULL, port);
     
     log_info(MSG_LOG_DBG, INIT, "start monitor, svr_fd:%ld", proc_data ->sockfd);
 
@@ -93,6 +127,21 @@ int main(int argc, char *argv[])
     log_info(MSG_LOG_DBG, INIT, "shutdown monitor OK");
 
     return 0;
+}
+
+
+/* print key words that affect flow running */
+void dbg_print_key_words(proc_spec_data_t *priv)
+{
+    if (!priv)
+        return;
+
+    log_info(MSG_LOG_DBG, DBG, "key words as follow:");
+    log_info(MSG_LOG_DBG, DBG, "server devid:%s", priv->devid);
+    log_info(MSG_LOG_DBG, DBG, "socket fd:%d", priv->sockfd);
+    log_info(MSG_LOG_DBG, DBG, "client_num:%d", priv->client_num);
+    log_info(MSG_LOG_DBG, DBG, "\n");
+
 }
 
 

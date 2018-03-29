@@ -1,4 +1,4 @@
-ARTIFACT = demo
+ARTIFACT = secureGW
 
 #Project root dir
 #ROOT_DIR := $(notdir $(CURDIR))
@@ -24,7 +24,8 @@ INCLUDES += -I$(SRC_DIR)/security/include
 INCLUDES += -I$(SRC_DIR)/ipc/include
 
 
-LIBS += -L$(LIB_DIR) -lc -lm -lgmapi -lgmurl -lpthread 
+#LIBS += -L$(LIB_DIR) -lc -lm -lgmapi -lgmurl -lpthread -luuid
+LIBS += -L$(LIB_DIR) -lc -lm -lgmapi -lgmurl -lpthread
 
 #Macro to expand files recursively: parameters $1 -  directory, $2 - extension, i.e. cpp
 rwildcard = $(wildcard $(addprefix $1/*.,$2)) $(foreach d,$(wildcard $1/*),$(call rwildcard,$d,$2))

@@ -138,6 +138,41 @@ uint32_t getpid_by_name(const uint8_t* procname)
 
 #endif
 
+/* judge endian */
+int32_t is_big_endian(void)
+{
+    unsigned short test_data = 0x00FF;
+
+    if (0 == *((unsigned short *)&test_data))
+    {
+        return BOOL_TRUE;
+    }
+    return BOOL_FALSE;
+}
+
+
+/* changed every time */
+/*
+int get_dev_uuid(int8_t *devid, uint32_t *len)
+{
+    char buf[64] = {0};
+    uuid_t uuid;
+    uint32_t id_len;
+    
+    uuid_generate(uuid);
+    uuid_unparse(uuid, buf);
+
+    id_len = strlen(buf);
+
+    strncpy(devid, buf, id_len);
+    *len = id_len;
+    
+    log_info(MSG_LOG_DBG, INIT, "uuid:%s", buf); 
+
+    return OK;
+}
+*/
+
 
 void dbg_print_cur_dir(void)
 {

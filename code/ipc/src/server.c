@@ -75,12 +75,46 @@ uint32_t create_monitor_task(pthread_t *taskid, task_priv_data_t *taskval)
 {
     int32_t ret;
     void * tret;
+    uint32_t index, i;
+    pthread_t task_id;
+    proc_spec_data_t *priv;
+
+    get_proc_priv_data(&priv);
     
     ret = pthread_create(taskid, NULL, secure_comm_task, (void*)taskval);
-    log_info(MSG_LOG_DBG, SVR, "pthread_create <taskid:%d> ret:%d", *taskid, ret);  
+    log_info(MSG_LOG_DBG, SVR, "create_monitor_task pthread_create <taskid:%d> ret:%d", *taskid, ret);
     
+    log_info(MSG_LOG_DBG, SVR, "create_monitor_task priv->client_num:%d", priv->client_num);
+
+    // fill in some import field
+    priv->client_info[priv->client_num].task_id = *taskid;
+    taskval->task_id = *taskid;
+    log_info(MSG_LOG_DBG, SVR, "create_monitor_task *taskid:%d", *taskid);
+
+
+    /* if run here, task may exit */
+    task_id = taskval->task_id;
     ret = pthread_join(*taskid, &tret);
-    log_info(MSG_LOG_DBG, SVR, "pthread_join ret:%d", ret);  
+    log_info(MSG_LOG_DBG, SVR, "pthread_join ret:%d", ret);
+    log_info(MSG_LOG_DBG, SVR, "task exit, id %d", taskval->task_id);
+
+    // free task var data
+    for (i = 0; i< MONITOR_THREAD_NUM_MAX; i++)
+    {
+        log_info(MSG_LOG_DBG, SVR, "priv->client_info[i].task_id:%d ?= taskval->task_id:%d", priv->client_info[i].task_id, taskval->task_id);
+        if (priv->client_info[i].task_id == task_id)
+        {
+            priv->client_num--;
+            memset(&priv->client_info[i], 0, sizeof(client_info_t));        
+        }
+    }
+
+    // auto free, when task exit
+    /*if (taskval != NULL)
+    {
+        free((char*)taskval);
+        taskval = NULL;
+    }*/
 
     return ret;
 }
@@ -128,7 +162,7 @@ uint32_t start_monitor(uint32_t svr_fd)
     uint32_t sin_size = sizeof(struct sockaddr_in);  
     int32_t  client_fd; 
     struct sockaddr_in client_addr;
-    pthread_t th_id;
+    pthread_t th_id = 0;
     proc_spec_data_t *proc_priv;
     uint32_t client_ip;
 
@@ -170,23 +204,26 @@ uint32_t start_monitor(uint32_t svr_fd)
                 log_info(MSG_LOG_DBG, SVR, "oops:memory exhaust.");
                 continue;
             }
-            bzero(proc_priv->task_var[proc_priv->client_num], sizeof(task_priv_data_t));
-            proc_priv->task_var[proc_priv->client_num]->cli_sockfd = client_fd;
-            create_monitor_task(&th_id, proc_priv->task_var[proc_priv->client_num]);
-            log_info(MSG_LOG_DBG, SVR, "create_monitor_task taskid %d", th_id);
 
-            // persist task info
-            proc_priv->client_info[proc_priv->client_num].task_id = th_id;
+            /* persist task info */
+            // static data
+            //proc_priv->client_info[proc_priv->client_num].task_id = *taskid;
             proc_priv->client_info[proc_priv->client_num].cli_sockfd = client_fd;
             proc_priv->client_info[proc_priv->client_num].ip = client_ip;
 
-            proc_priv->task_var[proc_priv->client_num]->task_id = th_id;
+            // dynamic data, some field will make-up later, such as taskid
+            bzero(proc_priv->task_var[proc_priv->client_num], sizeof(task_priv_data_t));
+            proc_priv->task_var[proc_priv->client_num]->cli_sockfd = client_fd;
+            proc_priv->task_var[proc_priv->client_num]->client_ip = client_ip;
+
+            // create task
+            create_monitor_task(&th_id, proc_priv->task_var[proc_priv->client_num]);
             
-            proc_priv->client_num++;
         } 
         else
         {
             log_info(MSG_LOG_DBG, SVR, "create thread child id else branch");
+            
             if (proc_priv->client_num >= MONITOR_THREAD_NUM_MAX)
             {
                 log_info(MSG_LOG_DBG, SVR, "oops:connection pool exhaust.");
@@ -194,11 +231,9 @@ uint32_t start_monitor(uint32_t svr_fd)
             }
 
             // same client, reset dynamic data
+            log_info(MSG_LOG_DBG, SVR, "client %s(%#x) re-connected.");
             proc_priv->task_var[proc_priv->client_num-1]->total_rcv_data_len = 0;
         }
-        
-        
-        //log_info(MSG_LOG_DBG, SVR, "client %s been connected.", inet_ntoa(client_addr.sin_addr));
         
     } 
 
@@ -249,7 +284,7 @@ void* secure_comm_task(void *priv)
     int32_t  len = 0;  
     int8_t   buf[BUFSIZ]; 
     int8_t   child_name[THREAD_NAME_LEN_MAX];
-    uint32_t index;
+    //uint32_t index;
     int32_t  client_fd; 
     int8_t   *ack_data = NULL;
     uint32_t ack_len;
@@ -258,18 +293,14 @@ void* secure_comm_task(void *priv)
 
     client_fd = task_val->cli_sockfd;
     get_proc_priv_data(&proc_val);
-
-    index = get_task_serialno();
-    
-    //log_info(MSG_LOG_DBG, SVR, "[child]task_data->devid:%s", task_val->devid);
-    log_info(MSG_LOG_DBG, SVR, "[child]task_data->task_id:%d", task_val->task_id);
-    log_info(MSG_LOG_DBG, SVR, "[child]proc->task_var->task_id:%d", proc_val->task_var[index]->task_id);
-    log_info(MSG_LOG_DBG, SVR, "[child]task_data->cli_sockfd:%d", task_val->cli_sockfd);
+    log_info(MSG_LOG_DBG, SVR, "[child]task_data->cli_sockfd:%d", task_val->cli_sockfd);        
     
 
     // set child name
-    snprintf(child_name, THREAD_NAME_LEN_MAX, "THREAD_%d", index);
+    snprintf(child_name, THREAD_NAME_LEN_MAX, "THREAD_%d", proc_val->client_num);
     prctl(PR_SET_NAME, child_name);
+    
+    proc_val->client_num++;
 
     //getsockopt(client_fd, SOL_SOCKET, SO_KEEPALIVE, &stat, (socklen_t *)&len); 
     
@@ -277,8 +308,7 @@ void* secure_comm_task(void *priv)
     // set timer, when task_data.total_rcv_data_len when timeout
     
     while ((len = recv(client_fd, buf, BUFSIZ, 0)) > 0)
-    {
-    
+    {    
         serial_msg++;
         printf("---------------------serial_msg:%d---------------\n", serial_msg);
         

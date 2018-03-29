@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <errno.h>
+//#include <uuid/uuid.h>
 
 #include "list.h"
 #include "pub.h"
@@ -24,7 +25,7 @@
 #define DEBUG_TRUE          1
 #define DEBUG_FALSE         0
 #define F_DESC(x)        0      // use for code interpret
-#define LITERIAL_TEXT_FOR_TEST      "haohao xuexi, tiantian xiangshang"
+#define LITERIAL_TEXT_FOR_TEST      "this is test data sent from server"
 
 
 #define FILE_PATH_NAME_LEN_MAX      256
@@ -38,7 +39,7 @@
 #define THREAD_NAME_LEN_MAX         64
 
 
-#define INVALID_UINT32            -1
+#define INVALID_UINT32            (unint32_t)-1
 
 #define MONITOR_THREAD_NUM_MAX         TCP_CONNECT_POOL /* max thread in proccess, imply socket connect number */
 
@@ -68,6 +69,7 @@ typedef enum tag_module_def
 {
     INIT = 0,
     DBG,
+    DEMO,
     COMMON,
     IPC,
     MGT,
@@ -114,11 +116,14 @@ typedef struct tag_svr_task_data
 {
     int8_t      devid[DEV_ID_LEN_MAX];     /* TE device id */ /* use as unique index*/
     int32_t     cli_sockfd;
+    uint32_t    client_ip;
+    uint16_t    client_port;
     int32_t     task_id;            /* self id */
     uint32_t    total_rcv_data_len; /* rc data total len(without head) in every step, reset for each step over */
 
 }task_priv_data_t;
 
+/* todo:need protected in multi-thread env */
 typedef struct tag_svr_priv_data
 {
     struct list_head dev_list_head;
@@ -157,6 +162,8 @@ uint32_t get_task_serialno(void);
 void     getcurtime(uint8_t *dtime, uint32_t len);
 uint32_t rel_slogf(const uint8_t *fmt, ...);
 uint32_t print_sys_msg(const uint8_t *module, const uint8_t *fmt, ...);
+//int get_dev_uuid(int8_t *devid, uint32_t *len);
+
 
 uint32_t getpid_by_name(const uint8_t* procname);
 
