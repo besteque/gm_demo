@@ -22,7 +22,7 @@ proc_spec_data_t *proc_data = NULL;
 
 int stub_get_devid(int8_t *devid)
 {
-    int8_t testid[DEV_ID_LEN_MAX] = "yuge_server001";
+    int8_t testid[DEV_ID_LEN_MAX] = "secureGW_server001";
 
     if (devid != NULL)
         strcpy(devid, testid);
@@ -61,9 +61,11 @@ int main(int argc, char *argv[])
     int8_t   tmp_pkey[PUB_KEY_LEN_MAX] = {0}; /* temporary key for comm with sk-centor */
 
     /* parse param */
+    log_info(MSG_LOG_DBG, INIT, "USAGE: %s [port]", argv[0]);    
+    
     if (argc < 2)
     {
-        log_info(MSG_LOG_DBG, INIT, "listen port not input, use %d as default.\n", SVR_LISTEN_PORT_NUM);
+        log_info(MSG_LOG_DBG, INIT, "listen port not input, use %d as default.", SVR_LISTEN_PORT_NUM);
         port = SVR_LISTEN_PORT_NUM;
     }
     else
@@ -109,7 +111,7 @@ int main(int argc, char *argv[])
     log_info(MSG_LOG_DBG, INIT, "gene_key_matrix OK");
 
     // stub: verify API
-    dbg_test_verify(proc_data->devid, proc_data->pub_matrix, PUB_KEY_MATRIX_LEN_MAX);
+    //dbg_test_verify(proc_data->devid, proc_data->pub_matrix, PUB_KEY_MATRIX_LEN_MAX);
 
     
     /* 4 start service monitor */

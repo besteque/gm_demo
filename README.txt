@@ -11,14 +11,15 @@
 
 3 演示时，只需要将iwall/svkd/target拷贝到演示机。 目录结构不能变，否则打开文件路径错误。
 
-
 4 北京发包，替换步骤
 	1) res\iwall
 	2) code\security\include\apkapi.h
-	3 libs\libgmapi.a  libgmurl.a (修改密钥中心地址，参见2)
+	3) 替换security\include中的apply_2_server.h/cJSON.h
+	4 libs\libgmapi.a  libgmurl.a (修改密钥中心地址，参见2)
 
-	
-客户端示例代码：report\tcp_client
+5 客户端示例代码：report\tcp_client
+
+6 use "netstat -ntlp" to see port info
 ----------------------------------------
 技术栈：
 makefile

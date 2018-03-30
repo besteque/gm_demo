@@ -101,7 +101,6 @@ uint32_t create_monitor_task(pthread_t *taskid, task_priv_data_t *taskval)
     // free task var data
     for (i = 0; i< MONITOR_THREAD_NUM_MAX; i++)
     {
-        log_info(MSG_LOG_DBG, SVR, "priv->client_info[i].task_id:%ld ?= taskval->task_id:%ld", priv->client_info[i].task_id, taskval->task_id);
         if (priv->client_info[i].task_id == task_id)
         {
             priv->client_num--;
@@ -126,11 +125,13 @@ uint32_t create_monitor_task(pthread_t *taskid, task_priv_data_t *taskval)
 */
 uint32_t init_monitor(int8_t *addr, uint32_t port) 
 {
+    int32_t ret;
     int32_t svr_fd = -1;
     struct sockaddr_in svr_addr;   
     uint32_t sin_size;  
     int8_t   buf[BUFSIZ] = {0};  
-    int32_t  flag = 1;       /* when flag!=0, re-use socket fd if exist */
+    int32_t  flag = 1;     
+    int32_t  sock_flags;
 
     memset(&svr_addr,0,sizeof(svr_addr));
     svr_addr.sin_family = AF_INET; 
@@ -141,8 +142,15 @@ uint32_t init_monitor(int8_t *addr, uint32_t port)
     {    
         log_info(MSG_LOG_DBG, SVR, "create socket failed.");  
         return ERROR;  
-    }  
+    }
+
+    /* set socket non-blocking */
+    /*
+    sock_flags =      fcntl(svr_fd, F_GETFL, 0);
+    ret = fcntl(svr_fd, F_SETFL, sock_flags | O_NONBLOCK);
+    */
     
+    /* when flag!=0, re-use socket fd if exist */
     setsockopt(svr_fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int32_t));
     
     if (bind(svr_fd,(struct sockaddr *)(&svr_addr),sizeof(struct sockaddr))==-1)
@@ -180,6 +188,7 @@ uint32_t start_monitor(uint32_t svr_fd)
         if((client_fd = accept(svr_fd, (struct sockaddr *)(&client_addr), &sin_size)) == -1)
         {
             log_info(MSG_LOG_DBG, SVR, "accept error");
+            //usleep(1000);/* set socket non-blocking */
             continue;
         }
         
@@ -232,6 +241,8 @@ uint32_t start_monitor(uint32_t svr_fd)
 
             // same client, reset dynamic data
             log_info(MSG_LOG_DBG, SVR, "client %s(%#x) re-connected.");
+            
+            // CAUTION:must substract 1 as index
             proc_priv->task_var[proc_priv->client_num-1]->total_rcv_data_len = 0;
         }
         
@@ -282,7 +293,7 @@ void* secure_comm_task(void *priv)
 {
     int32_t ret, ack_ret;  
     int32_t  len = 0;  
-    int8_t   buf[BUFSIZ]; 
+    int8_t   buf[BUFSIZ] = {0}; 
     int8_t   child_name[THREAD_NAME_LEN_MAX];
     //uint32_t index;
     int32_t  client_fd; 
@@ -341,7 +352,6 @@ void* secure_comm_task(void *priv)
     
     
             /* release resources */
-            // CAUTION:must substract 1 as index
             task_val->total_rcv_data_len = 0;
     
             if (ack_data)
@@ -350,9 +360,12 @@ void* secure_comm_task(void *priv)
                 ack_data = NULL;
             }
         }
+        
     
         if (ret == OK   )
             log_info(MSG_LOG_DBG, SVR, "wait for next package data");
+
+        memset(buf, 0, BUFSIZ);
     }
 
     if (client_fd >0)

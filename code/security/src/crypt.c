@@ -460,8 +460,8 @@ uint32_t sm2_encrypt_data(int8_t *devid, int8_t *orig_data,uint32_t orig_len, in
     ret = IW_SM2_EncryptData(pub_key, orig_data, strlen(orig_data)+1, ciph_data);
     log_info(MSG_LOG_DBG, MGT, "IW_SM2_EncryptData ret:%d", ret);
     *ciph_len = strlen(ciph_data);
-    log_info(MSG_LOG_DBG, MGT, "sm2_encrypt_data cipher_len:%d", *ciph_len);
-    log_info(MSG_LOG_DBG, MGT, "sm2_encrypt_data cipher:%s", ciph_data);
+    log_info(MSG_LOG_DBG, MGT, "sm2_encrypt_data cipher_len:%d, content as follow:", *ciph_len);
+    PRINT_HEX(ciph_data, *ciph_len);
     
     return ret;
 }
@@ -474,8 +474,18 @@ uint32_t sm4_encrypt_data(encrypt_data_t *algorithm, int8_t *orig_data,uint32_t 
     ret = IW_SM4_ENCRYPT(SM4_MODE_ECB, SM4_NOPADDING, NULL, algorithm->key, 
                     orig_data, orig_len, ciph_data, ciph_len);
     log_info(MSG_LOG_DBG, MGT, "IW_SM4_ENCRYPT ret:%d", ret);
-    log_info(MSG_LOG_DBG, MGT, "sm4_encrypt_data cipher_len:%d", *ciph_len);
-    log_info(MSG_LOG_DBG, MGT, "sm4_encrypt_data cipher:%s", ciph_data);
+    log_info(MSG_LOG_DBG, MGT, "sm4_encrypt_data cipher_len:%d, content as follow:", *ciph_len);
+    PRINT_HEX(ciph_data, *ciph_len);
+
+
+    //stub----------------------------------------------------------------------------
+    int8_t tmp_orig[CIPHER_DATA_LEN_MAX] = {0};
+    int32_t tmp_val;
+    ret = IW_SM4_DECRYPT(SM4_MODE_ECB, SM4_NOPADDING, NULL, algorithm->key, 
+                        ciph_data, *ciph_len, tmp_orig, &tmp_val);
+    log_info(MSG_LOG_DBG, MGT, "sm4_encrypt_data tmp_val:%d", tmp_val);
+    log_info(MSG_LOG_DBG, MGT, "sm4_encrypt_data tmp_orig:%s", tmp_orig);
+
 
     return ret;
 }
@@ -483,7 +493,7 @@ uint32_t sm4_encrypt_data(encrypt_data_t *algorithm, int8_t *orig_data,uint32_t 
 
 uint32_t encrypt_data(int8_t      *devid, int8_t *orig_data,uint32_t orig_len, int8_t *ciph_data,uint32_t *ciph_len)
 {
-    int32_t ret;
+    int32_t ret = INVALID_UINT32;
     dev_info_t devinfo = {0};
     encrypt_data_t *algo;
     
@@ -491,7 +501,8 @@ uint32_t encrypt_data(int8_t      *devid, int8_t *orig_data,uint32_t orig_len, i
 
     algo = &devinfo.crypt_type;
     
-    log_info(MSG_LOG_DBG, CRYPT, "encrypt_data algorithm:%d", algo->algorithm);
+    log_info(MSG_LOG_DBG, CRYPT, "encrypt_data algorithm:%s(%d)",
+                get_algorithm_str(algo->algorithm), algo->algorithm);
 
     switch (algo->algorithm)
     {
@@ -539,6 +550,11 @@ uint32_t sm2_decrypt_data(int8_t *ciph_data,uint32_t ciph_len, int8_t *orig_data
 uint32_t sm4_decrypt_data(encrypt_data_t *algorithm, int8_t *ciph_data,uint32_t ciph_len, int8_t *orig_data,uint32_t *orig_len)
 {
     int32_t ret;
+    
+    log_info(MSG_LOG_DBG, CRYPT, "sm4_decrypt_data algorithm->key:");
+    PRINT_HEX(algorithm->key, strlen(algorithm->key));
+    log_info(MSG_LOG_DBG, CRYPT, "ciph_data:");
+    PRINT_HEX(ciph_data, ciph_len);
 
     // stub:mode&padding
     ret = IW_SM4_DECRYPT(SM4_MODE_ECB, SM4_NOPADDING, NULL, algorithm->key, 
@@ -551,7 +567,8 @@ uint32_t decrypt_data(encrypt_data_t *algorithm, int8_t *ciph_data,uint32_t ciph
 {
     int32_t ret;
     
-    log_info(MSG_LOG_DBG, CRYPT, "decrypt_data algorithm:%d", algorithm->algorithm);
+    log_info(MSG_LOG_DBG, CRYPT, "decrypt_data algorithm:%s(%d)",
+                get_algorithm_str(algorithm->algorithm), algorithm->algorithm);
 
     switch (algorithm->algorithm)
     {

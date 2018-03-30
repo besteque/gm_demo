@@ -35,11 +35,13 @@
 #define TCP_CONNECT_POOL            5
 #define ETH_IADDR_STR_LEN           16   //ip address, eg. 1.2.3.4
 
+#define LOG_FILE_PATH               "/tmp/secureGW_logs/"
+#define LOG_FILE_NAME                "info.log"
 
 #define THREAD_NAME_LEN_MAX         64
 
 
-#define INVALID_UINT32            (unint32_t)-1
+#define INVALID_UINT32              -1
 
 #define MONITOR_THREAD_NUM_MAX         TCP_CONNECT_POOL /* max thread in proccess, imply socket connect number */
 
@@ -151,13 +153,33 @@ typedef struct tag_svr_priv_data
     }while(0)
 
 
+#define PRINT_HEX(d, l)\
+        do\
+        {\
+            int i;\
+            for(i=0;i<l;i++)\
+            {\
+                if((i+1) % 16) \
+                    printf("%02X ", (uint8_t)d[i]); \
+                else if (i == l-1)\
+                    printf("%02X\n", (uint8_t)d[i]); \
+                else\
+                    printf("%02X\n", (uint8_t)d[i]);\
+            }\
+	        if(i % 16) printf("\n");\
+        }\
+        while(0)
+
+
+
+
 // external variable
 extern proc_spec_data_t *proc_data;
 
 
-
+int8_t *get_algorithm_str(uint32_t algo);
 uint32_t get_proc_priv_data(proc_spec_data_t **priv);
-uint32_t get_task_serialno(void);
+//uint32_t get_task_serialno(void);
 
 void     getcurtime(uint8_t *dtime, uint32_t len);
 uint32_t rel_slogf(const uint8_t *fmt, ...);

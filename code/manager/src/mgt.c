@@ -44,9 +44,9 @@ int list_add_device(dev_info_t *info, struct list_head *head)
     }
 
 ADD_LIST:
-    get_proc_priv_data(&priv);
-    index = get_task_serialno();    
-    strncpy(priv->task_var[index]->devid, info->id, strlen(info->id));
+    //get_proc_priv_data(&priv);
+    //index = get_task_serialno();    
+    //strncpy(priv->task_var[index]->devid, info->id, strlen(info->id));
 
     /*****************************************************************************
     * WARNing: new node must apply heap memeroy! stack will recycle after return
@@ -118,6 +118,7 @@ uint32_t handle_login_req(task_priv_data_t *task_val, int8_t *msg, uint32_t len)
 
     log_info(MSG_LOG_DBG, MGT, "rcv msgid:%#x, devid:%s", head.type, log_data.dev_id);    
 
+    // persist client devid
     strncpy(task_val->devid, log_data.dev_id, strlen(log_data.dev_id));
 
     get_proc_priv_data(&priv);
@@ -160,8 +161,7 @@ uint32_t handle_signiture_req(task_priv_data_t *task_val, int8_t *msg, uint32_t 
 
     get_devinfo_by_devid(task_val->devid, &devinfo);
 
-    // need decrypt ????
-    //ret = IW_SM2_DecryptData(cipher, strlen(cipher), pdata, &pdataLen);
+    // need decrypt 
 
     // save data
     get_proc_priv_data(&priv);
@@ -216,8 +216,10 @@ uint32_t negotiate_crypt_type(task_priv_data_t *task_val, int8_t *msg, uint32_t 
     // save data
     ret = IW_SM2_OpenEnv(crypt_data.key, symmetric_key, &sym_key_len);
     log_info(MSG_LOG_DBG, MGT, "IW_SM2_OpenEnv ret:%d", ret);
-    log_info(MSG_LOG_DBG, MGT, "negotiate_crypt_type crypt_data.key:%s", crypt_data.key);
-    log_info(MSG_LOG_DBG, MGT, "negotiate_crypt_type key after:%s", symmetric_key);
+    log_info(MSG_LOG_DBG, MGT, "negotiate_crypt_type crypt_data.key:");
+    PRINT_HEX(crypt_data.key, strlen(crypt_data.key));
+    log_info(MSG_LOG_DBG, MGT, "after decryption, key:");
+    PRINT_HEX(symmetric_key, strlen(symmetric_key));
     
     memcpy(&devinfo.crypt_type, &crypt_data, sizeof(encrypt_data_t));
     memset(devinfo.crypt_type.key, 0, SECRET_KEY_LEN_MAX); // caution len different!
@@ -228,7 +230,8 @@ uint32_t negotiate_crypt_type(task_priv_data_t *task_val, int8_t *msg, uint32_t 
     update_devinfo_by_devid(task_val->devid, &devinfo);
     pthread_mutex_unlock(&priv->dev_mutex);
     
-    log_info(MSG_LOG_DBG, MGT, "dev %s affirmed crypt type:%#x", task_val->devid, crypt_data.algorithm);
+    log_info(MSG_LOG_DBG, MGT, "dev %s affirmed crypt type:%s(%d)", 
+            task_val->devid, get_algorithm_str(crypt_data.algorithm), crypt_data.algorithm);
 
     return OK;
 }
@@ -253,15 +256,11 @@ uint32_t decrypt_usr_data(int8_t *devid, int8_t *data, uint32_t len)
     
     get_devinfo_by_devid(devid, &devinfo);
     
-    //ret = IW_SM4_DECRYPT(SM4_MODE_ECB, SM4_NOPADDING, NULL, devinfo.crypt_type.key, data,
-    //                   len, plain_date, &plain_len);
-    
     log_info(MSG_LOG_DBG, MGT, "strlen(data):%d, len:%d", strlen(data), len);
     
     ret = decrypt_data(&devinfo.crypt_type, data, len, plain_date, &plain_len);
     if (ret != OK)
-    {        
-        //log_info(MSG_LOG_DBG, MGT, "IW_SM2_DecryptData failed, ret:%d", ret);
+    {
         log_info(MSG_LOG_DBG, MGT, "decrypt_data failed, ret:%d", ret);
         free((char*)plain_date);
         return ERROR;
@@ -271,8 +270,15 @@ uint32_t decrypt_usr_data(int8_t *devid, int8_t *data, uint32_t len)
     if (plain_len > 0)
     {
         log_info(MSG_LOG_DBG, MGT, "decrypt_usr_data as follow:");
-        dbg_print_char_in_buf(plain_date, plain_len);
-        log_info(MSG_LOG_DBG, MGT, "plain_date:%s\n", plain_date);
+        log_info(MSG_LOG_DBG, MGT, "-------------------------------");
+        log_info(MSG_LOG_DBG, MGT, "%s", plain_date);
+        log_info(MSG_LOG_DBG, MGT, "-------------------------------\n");
+        
+
+        /*******************************/
+        /* sent to APP for transaction */
+        /*******************************/
+
     }
 
     if (plain_date)
@@ -298,8 +304,7 @@ uint32_t rcv_usr_data(task_priv_data_t *task_val, int8_t *msg, uint32_t len)
 
     get_devinfo_by_devid(task_val->devid, &devinfo);
 
-    // need decrypt ????
-    //ret = IW_SM2_DecryptData(cipher, strlen(cipher), pdata, &pdataLen);
+    // need decrypt 
 
     usr_data = (int8_t*)malloc(PACKAGE_DATA_LEN_MAX);
     if (usr_data == NULL)
@@ -309,7 +314,10 @@ uint32_t rcv_usr_data(task_priv_data_t *task_val, int8_t *msg, uint32_t len)
     }
     
     bzero(usr_data, PACKAGE_DATA_LEN_MAX);
-    strcpy(usr_data, msg+sizeof(msg_head_t));
+    //strcpy(usr_data, msg+sizeof(msg_head_t));
+    log_info(MSG_LOG_DBG, MGT, "asert len-sizeof(msg_head_t):%d=head.data_len:%d", len-sizeof(msg_head_t), head.data_len);
+    memcpy(usr_data, msg+sizeof(msg_head_t), len-sizeof(msg_head_t));
+    
     ret = decrypt_usr_data(task_val->devid, usr_data, head.data_len);
     if (ret != OK)
     {
@@ -413,7 +421,7 @@ uint32_t handle_login_ack(task_priv_data_t *task_val, int8_t **data, uint32_t *l
     buf = (int8_t  *)malloc(data_len);
     if (buf == NULL)
     {
-        log_info(MSG_LOG_DBG, MGT, "malloc buf failed");
+        log_info(MSG_LOG_DBG, MGT, "handle_login_ack malloc buf failed");
         return ERROR;
     }
 
@@ -455,7 +463,7 @@ uint32_t handle_sign_ack(task_priv_data_t *task_val, int8_t **data, uint32_t *le
     buf = (int8_t  *)malloc(data_len);
     if (buf == NULL)
     {
-        log_info(MSG_LOG_DBG, MGT, "malloc buf failed");
+        log_info(MSG_LOG_DBG, MGT, "handle_sign_ack malloc buf failed");
         return ERROR;
     }
 
@@ -534,13 +542,13 @@ uint32_t affirm_crypt_type(task_priv_data_t *task_val, int8_t **data, uint32_t *
 
     crypt_data = (encrypt_data_t*)((msg_head_t*)buf +1);
     
-    // need encrypt whole data 'devinfo.crypt_type', then asign to 'crypt_data' ?
+    // need encrypt whole data 'devinfo.crypt_type', then asign to 'crypt_data' 
 
 
     get_proc_priv_data(&priv);
     
-    log_info(MSG_LOG_DBG, MGT, "affirm_crypt_type:devinfo.crypt_type.key:%s", devinfo.crypt_type.key);
-    log_info(MSG_LOG_DBG, MGT, "affirm_crypt_type:strlen(devinfo.crypt_type.key:%d", strlen(devinfo.crypt_type.key));
+    log_info(MSG_LOG_DBG, MGT, "affirm_crypt_type:strlen(crypt_type.key):%d, content as follow:", strlen(devinfo.crypt_type.key));
+    PRINT_HEX(devinfo.crypt_type.key, strlen(devinfo.crypt_type.key));
 
     ret = IW_SM2_MakeEnv(priv->pub_matrix, PUB_KEY_MATRIX_LEN_MAX, task_val->devid,
                                 devinfo.crypt_type.key, SYMMETRIC_KEY_LEN/*strlen(devinfo.crypt_type.key)*/, evn);
@@ -653,18 +661,17 @@ uint32_t prepare_interactive_data(task_priv_data_t *task_val, uint32_t msg_type,
     {
         case MSG_TYPE_LOGIN:
             ret = handle_login_ack(task_val, data, len);
-            log_info(MSG_LOG_DBG, MGT, "-----------------> step 1 end.");
+            log_info(MSG_LOG_DBG, MGT, "-----------------> step 1 end.\n");
             break;
-
         
         case MSG_TYPE_SIGNITURE:
             ret = handle_sign_ack(task_val, data, len);
-            log_info(MSG_LOG_DBG, MGT, "-----------------> step 2 end.");
+            log_info(MSG_LOG_DBG, MGT, "-----------------> step 2 end.\n");
             break;
             
         case MSG_TYPE_ENCRYPT_INFO:
             ret = affirm_crypt_type(task_val, data, len);
-            log_info(MSG_LOG_DBG, MGT, "-----------------> step 3 end.");
+            log_info(MSG_LOG_DBG, MGT, "-----------------> step 3 end.\n");
             break;
             
         case MSG_TYPE_USR_DATA:

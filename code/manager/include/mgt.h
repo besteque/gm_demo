@@ -21,7 +21,6 @@
 #include "common.h"
 
 
-//extern struct list_head      dev_list_head;
 
 
 int int_device_list(struct list_head *head);
