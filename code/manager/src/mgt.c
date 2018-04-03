@@ -180,7 +180,12 @@ uint32_t handle_signiture_req(task_priv_data_t *task_val, int8_t *msg, uint32_t 
     ret = IW_VerifyData(priv->pub_matrix, PUB_KEY_MATRIX_LEN_MAX, 
                     CLIENT_VERIFY_DATA_SYMBOL, strlen(CLIENT_VERIFY_DATA_SYMBOL), 
                     sign_data.data, task_val->devid);
-    log_info(MSG_LOG_DBG, MGT, "IW_VerifyData ret:%d", ret);
+    if (ret != OK)
+    {        
+        log_info(MSG_LOG_DBG, MGT, "IW_VerifyData ret:%d", ret);
+        return ERROR;
+    }
+    log_info(MSG_LOG_DBG, MGT, "server verify %s OK", task_val->devid);
 
     return OK;
 }
@@ -494,10 +499,10 @@ uint32_t handle_sign_ack(task_priv_data_t *task_val, int8_t **data, uint32_t *le
     log_info(MSG_LOG_DBG, MGT, "[handle_sign_ack]ack to clent:");
     log_info(MSG_LOG_DBG, MGT, "[handle_sign_ack]original data:%s", SERVER_VERIFY_DATA_SYMBOL);
     ret = IW_SignData(SERVER_VERIFY_DATA_SYMBOL, strlen(SERVER_VERIFY_DATA_SYMBOL), sign_val);
-    log_info(MSG_LOG_DBG, MGT, "[handle_sign_ack]sign_val data:%s", sign_val);
+    log_info(MSG_LOG_DBG, MGT, "[handle_sign_ack]IW_SignData:%s", sign_val);
     log_info(MSG_LOG_DBG, MGT, "IW_SignData ret:%d", ret);
     ret = IW_ServerSignData(sign_val, sign_final);
-    log_info(MSG_LOG_DBG, MGT, "[handle_sign_ack]sign_final data:%s", sign_final);
+    log_info(MSG_LOG_DBG, MGT, "[handle_sign_ack]IW_ServerSignData:%s", sign_final);
     log_info(MSG_LOG_DBG, MGT, "IW_ServerSignData ret:%d", ret);
     memcpy(sign_data->data, sign_final, strlen(sign_final));
 

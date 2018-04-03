@@ -55,16 +55,17 @@ uint32_t send_to_client(uint32_t fd, int8_t *data, uint32_t len)
     return OK;
 }
 
-uint8_t check_cilent_exist(proc_spec_data_t *proc_priv, uint32_t client_ip)
+uint8_t check_cilent_exist(proc_spec_data_t *proc_priv, uint32_t client_ip, uint32_t client_port)
 {
     uint32_t i;
 
     for (i = 0; i < proc_priv->client_num; i++)
     {
-        log_info(MSG_LOG_DBG, SVR, "proc_priv->client_info[i].ip:%#x, client_ip:%#x", 
-                    proc_priv->client_info[i].ip, client_ip);
+        log_info(MSG_LOG_DBG, SVR, "proc_priv->client_info[i].ip:%#x:%x, client_ip:%#x:%x", 
+                    proc_priv->client_info[i].ip, proc_priv->client_info[i].port, client_ip, client_port);
     
-        if (proc_priv->client_info[i].ip == client_ip)
+        if ((proc_priv->client_info[i].ip == client_ip)
+             && (proc_priv->client_info[i].port == client_port))
             return BOOL_TRUE;
     }
 
@@ -163,8 +164,6 @@ uint32_t init_monitor(int8_t *addr, uint32_t port)
 }
 
 
-int serial_msg = 0;
-
 uint32_t start_monitor(uint32_t svr_fd)
 {
     uint32_t sin_size = sizeof(struct sockaddr_in);  
@@ -201,13 +200,13 @@ uint32_t start_monitor(uint32_t svr_fd)
 
         // must use client_addr to distinguish socket connection
         client_ip = inet_addr(inet_ntoa(client_addr.sin_addr));
-        log_info(MSG_LOG_DBG, SVR, "client %s(%#x) been connected.", 
-                            inet_ntoa(client_addr.sin_addr), client_ip);
+        log_info(MSG_LOG_DBG, SVR, "client %s:%d(%#x) been connected.", 
+                            inet_ntoa(client_addr.sin_addr), client_addr.sin_port, client_ip);
         // port = client_addr.sin_port;
         
         
-        log_info(MSG_LOG_DBG, SVR, "check_cilent_exist proc_priv->client_num %d", proc_priv->client_num);
-        if ((!check_cilent_exist(proc_priv, client_ip)) && (proc_priv->client_num < MONITOR_THREAD_NUM_MAX))
+        log_info(MSG_LOG_DBG, DBG, "check_cilent_exist proc_priv->client_num %d", proc_priv->client_num);
+        if ((!check_cilent_exist(proc_priv, client_ip, client_addr.sin_port)) && (proc_priv->client_num < MONITOR_THREAD_NUM_MAX))
         {
             proc_priv->task_var[proc_priv->client_num] = (task_priv_data_t *)malloc(sizeof(task_priv_data_t));
             if (proc_priv->task_var[proc_priv->client_num] == NULL)
@@ -221,11 +220,13 @@ uint32_t start_monitor(uint32_t svr_fd)
             //proc_priv->client_info[proc_priv->client_num].task_id = *taskid;
             proc_priv->client_info[proc_priv->client_num].cli_sockfd = client_fd;
             proc_priv->client_info[proc_priv->client_num].ip = client_ip;
+            proc_priv->client_info[proc_priv->client_num].port = client_addr.sin_port;
 
             // dynamic data, some field will make-up later, such as taskid
             bzero(proc_priv->task_var[proc_priv->client_num], sizeof(task_priv_data_t));
             proc_priv->task_var[proc_priv->client_num]->cli_sockfd = client_fd;
             proc_priv->task_var[proc_priv->client_num]->client_ip = client_ip;
+            proc_priv->task_var[proc_priv->client_num]->client_port = client_addr.sin_port;
 
             // create task
             create_monitor_task(&th_id, proc_priv->task_var[proc_priv->client_num]);
@@ -242,8 +243,8 @@ uint32_t start_monitor(uint32_t svr_fd)
             }
 
             // same client, reset dynamic data
-            log_info(MSG_LOG_DBG, SVR, "client %s(%#x) re-connected.", 
-                            inet_ntoa(client_addr.sin_addr), client_ip);
+            log_info(MSG_LOG_DBG, SVR, "client %s:%d(%#x) re-connected.", 
+                            inet_ntoa(client_addr.sin_addr), client_addr.sin_port, client_ip);
             
             // CAUTION:must substract 1 as index
             proc_priv->task_var[proc_priv->client_num-1]->total_rcv_data_len = 0;
@@ -299,7 +300,7 @@ void* secure_comm_task(void *priv)
     void * tret;
     pthread_t task_id;
     int32_t  len = 0;  
-    int8_t   buf[BUFSIZ] = {0}; 
+    int8_t   buf[BUFSIZ] = {0};       //BUFSIZ=8096
     int8_t   child_name[THREAD_NAME_LEN_MAX];
     //uint32_t index;
     int32_t  client_fd; 
@@ -312,10 +313,11 @@ void* secure_comm_task(void *priv)
     get_proc_priv_data(&proc_val);
     log_info(MSG_LOG_DBG, SVR, "[child]task_data->cli_sockfd:%d", task_val->cli_sockfd);
     log_info(MSG_LOG_DBG, SVR, "[child]task_data->client_ip:%d", task_val->client_ip);
+    log_info(MSG_LOG_DBG, SVR, "[child]task_data->client_port:%d", task_val->client_port);
     
 
-    // set child name
-    snprintf(child_name, THREAD_NAME_LEN_MAX, "THREAD_%x", task_val->client_ip);
+    // set child name, affirm unique
+    snprintf(child_name, THREAD_NAME_LEN_MAX, "Th_%x%x", task_val->client_ip, task_val->client_port);
     prctl(PR_SET_NAME, child_name);
 
     pthread_detach(pthread_self());
@@ -328,9 +330,7 @@ void* secure_comm_task(void *priv)
     // set timer, when task_data.total_rcv_data_len when timeout
     
     while ((len = recv(client_fd, buf, BUFSIZ, 0)) > 0)
-    {    
-        serial_msg++;
-        printf("---------------------serial_msg:%d---------------\n", serial_msg);
+    {
         
         log_info(MSG_LOG_DBG, SVR, "recv data len:%ld", len);
     
