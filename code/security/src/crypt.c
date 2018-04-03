@@ -94,20 +94,6 @@ APPL_KEY:
     }    
     log_info(MSG_LOG_DBG, CRYPT, "get secret key from sk-center OK");
 
-    /* generate key matrix */
-    /*
-    log_info(MSG_LOG_DBG, CRYPT, "gene_key_matrix begin");
-    get_proc_priv_data(&priv);
-    ret = gene_key_matrix(priv->pub_matrix, priv->skey_matrix);
-    if (ret != OK)
-    {
-        log_info(MSG_LOG_DBG, CRYPT, "gene_key_matrix failed, code:%ld", ret);
-        return ERROR;
-    }    
-    log_info(MSG_LOG_DBG, CRYPT, "gene_key_matrix OK");
-
-    */
-
     return OK;
 }
 
@@ -123,10 +109,6 @@ uint32_t persist_secret_key(int8_t *dev_id, int8_t *pkey)
     int32_t ret;
     int8_t  secret_key[SECRET_KEY_LEN_MAX] = { 0 };   // device sk
     uint32_t key_len;
-    
-    // need open dev ? all disappointed
-    //ret = IW_OpenDevice(dev_id, IWALL_SVKD_REPO);
-    //log_info(MSG_LOG_DBG, CRYPT, "open sw-shield ret = %#x", ret);
     
     ret = IW_Sendrequest(dev_id, pkey, secret_key);
     if (ret != OK)
@@ -161,7 +143,17 @@ uint32_t persist_secret_key(int8_t *dev_id, int8_t *pkey)
     log_info(MSG_LOG_DBG, CRYPT, "apply secret key OK, value:%s", secret_key);
 
     ret = IW_WriteKeycard(secret_key, NULL);
+    //ret = IW_WriteKeycard(secret_key, service_key);
     log_info(MSG_LOG_DBG, CRYPT, "import secret key to sw-shield OK.");
+
+    //stub
+    /*int8_t service_key[256] = { 0 };
+    log_info(MSG_LOG_DBG, CRYPT, "service_key:%s", service_key);
+    uint8_t  isk[SECRET_KEY_LEN_MAX] = { 0 };   // device sk
+    bzero(isk, SECRET_KEY_LEN_MAX);
+    CPK_Get_ISK(isk);
+    log_info(MSG_LOG_DBG, CRYPT, "CPK_Get_ISK OK, value:%s", isk);
+    */
 
     return OK;
 }
@@ -650,7 +642,7 @@ void dbg_test_verify(char * devid, uint8_t *matrix, uint32_t klen)
     memcpy(pub_matrix, pkmbuf, block_size);
     
     memset(testData, 0, strlen(testData));
-    strcpy(testData, "chun hui dada, wanwu fusu. yangguang mingmei, wu gufu hao shiguang.");
+    strcpy(testData, "chun hui dadi, wanwu fusu. yangguang mingmei, wu gufu hao shiguang.");
 
     char pSignature[256] = { 0 };
     ret = IW_SignData(testData, strlen(testData), pSignature);

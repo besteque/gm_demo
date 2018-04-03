@@ -20,6 +20,8 @@
 5 客户端示例代码：report\tcp_client
 
 6 use "netstat -ntlp" to see port info
+
+7 执行方法：gm_demo# ./target/secureGW 80911   监听的端口可以通过参数指定，端口要提前加入白名单。
 ----------------------------------------
 技术栈：
 makefile

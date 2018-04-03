@@ -8,15 +8,20 @@
 #include <stdlib.h>
 #include <stdio.h>  
 #include <string.h>
-#include <sys/types.h>  
+#include <sys/types.h>
 #include <sys/socket.h>  
 #include <netinet/in.h>  
-#include <arpa/inet.h>  
+#include <arpa/inet.h>
+#include <netinet/tcp.h>
+#include <netdb.h>
+#include <signal.h>
+
 
 #include "pub.h"
 
 
 #define SERVER_IP_ADDR             "192.168.0.107"     //aliyun:"116.62.137.197"   pc:"192.168.0.107"
+int client_sockfd = 0;  
 
 
 int send_to_server(int setp, char *buf, int buf_len, int *data_len)
@@ -98,21 +103,63 @@ int rcv_from_server(int setp, char *buf, int buf_len, int *data_len)
 }
 
 // 根据域名查询ip地址
-int get_domain_iaddr(char *domain)
+int get_domain_iaddr(char *domain, char *ipaddr)
 {
-    return 0;
+    int i;
+    struct hostent *he;
+    struct in_addr **addr_list;
+         
+    if ( (he = gethostbyname( domain ) ) == NULL) 
+    {
+        // get the host info
+        herror("gethostbyname");
+        return -1;
+    }
+ 
+    addr_list = (struct in_addr **) he->h_addr_list;
+     
+    for(i = 0; addr_list[i] != NULL; i++) 
+    {
+        //Return the first one;
+        strcpy(ipaddr , inet_ntoa(*addr_list[i]) );
+        return 0;
+    }
+     
+    return -1;
+
+}
+
+
+void signal_hander_fun(int signum) 
+{
+    printf("process catch signal:%d\n", signum);
+        
+        /* Ctrl+C signum=2 */
+    if (signum == 2)
+    {
+        close(client_sockfd);
+        printf("process will be exit normally.\n");
+    }
+    _exit(0);
 }
 
 
 /* gcc -o tcpclient  pub.h tcp_client.c */  
 int main(int argc, char *argv[])
-{
+{  
     char server_addr[16] = {0};
-    int client_sockfd;  
     int i = 0, len, data_len;  
     struct sockaddr_in remote_addr; 
-    char buf[BUFSIZ];       //BUFSIZ=8096
+    char buf[BUFSIZ] = {0};       //BUFSIZ=8096
     struct timeval      timeout;
+
+    struct tcp_info info; 
+    int slen=sizeof(info);     
+
+    char ipaddr[16] = {0};
+    get_domain_iaddr("dadaoelectric.tpddns.cn", ipaddr);
+    printf("dadaoelectric.tpddns.cn -> %s\n", ipaddr);
+    
 
     if (argc < 2)
     {
@@ -129,7 +176,8 @@ int main(int argc, char *argv[])
         printf("server ip %s\n", argv[1]);
         strcpy(server_addr, argv[1]);
     }
-        
+    
+    signal(SIGINT, signal_hander_fun);
     
     memset(&remote_addr,0,sizeof(remote_addr));
     remote_addr.sin_family = AF_INET; //set ip protocol family
@@ -173,8 +221,21 @@ int main(int argc, char *argv[])
 
         if (i==4)
             break;
-    }  
+        memset(buf, BUFSIZ, 0);
+    }
+
+    // probe if server still alive
+    while (1)
+    {        
+        getsockopt(client_sockfd, IPPROTO_TCP, TCP_INFO, &info, (socklen_t *)&slen); 
+        if((info.tcpi_state != TCP_ESTABLISHED))
+        {
+            printf("server quit, bye.\n");
+            break;
+        }
     
+        sleep(1);
+    }
     close(client_sockfd);
     
     return 0;  

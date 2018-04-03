@@ -57,7 +57,7 @@ uint32_t send_to_client(uint32_t fd, int8_t *data, uint32_t len)
 
 uint8_t check_cilent_exist(proc_spec_data_t *proc_priv, uint32_t client_ip)
 {
-    uint32_t i;    
+    uint32_t i;
 
     for (i = 0; i < proc_priv->client_num; i++)
     {
@@ -74,7 +74,7 @@ uint8_t check_cilent_exist(proc_spec_data_t *proc_priv, uint32_t client_ip)
 uint32_t create_monitor_task(pthread_t *taskid, task_priv_data_t *taskval)
 {
     int32_t ret;
-    void * tret;
+    //void * tret;
     uint32_t index, i;
     pthread_t task_id;
     proc_spec_data_t *priv;
@@ -91,7 +91,7 @@ uint32_t create_monitor_task(pthread_t *taskid, task_priv_data_t *taskval)
     taskval->task_id = *taskid;
     log_info(MSG_LOG_DBG, SVR, "create_monitor_task *taskid:%ld", *taskid);
 
-
+#if 0
     /* if run here, task may exit */
     task_id = taskval->task_id;
     ret = pthread_join(task_id, &tret);
@@ -107,7 +107,7 @@ uint32_t create_monitor_task(pthread_t *taskid, task_priv_data_t *taskval)
             memset(&priv->client_info[i], 0, sizeof(client_info_t));        
         }
     }
-
+#endif
     // auto free, when task exit
     /*if (taskval != NULL)
     {
@@ -145,10 +145,10 @@ uint32_t init_monitor(int8_t *addr, uint32_t port)
     }
 
     /* set socket non-blocking */
-    /*
+    
     sock_flags =      fcntl(svr_fd, F_GETFL, 0);
     ret = fcntl(svr_fd, F_SETFL, sock_flags | O_NONBLOCK);
-    */
+    
     
     /* when flag!=0, re-use socket fd if exist */
     setsockopt(svr_fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int32_t));
@@ -187,8 +187,8 @@ uint32_t start_monitor(uint32_t svr_fd)
         // same client has unique fd, if not closed or timeout
         if((client_fd = accept(svr_fd, (struct sockaddr *)(&client_addr), &sin_size)) == -1)
         {
-            log_info(MSG_LOG_DBG, SVR, "accept error");
-            //usleep(1000);/* set socket non-blocking */
+            //log_info(MSG_LOG_DBG, SVR, "accept error");
+            usleep(1000);/* set socket non-blocking */
             continue;
         }
         
@@ -203,6 +203,8 @@ uint32_t start_monitor(uint32_t svr_fd)
         client_ip = inet_addr(inet_ntoa(client_addr.sin_addr));
         log_info(MSG_LOG_DBG, SVR, "client %s(%#x) been connected.", 
                             inet_ntoa(client_addr.sin_addr), client_ip);
+        // port = client_addr.sin_port;
+        
         
         log_info(MSG_LOG_DBG, SVR, "check_cilent_exist proc_priv->client_num %d", proc_priv->client_num);
         if ((!check_cilent_exist(proc_priv, client_ip)) && (proc_priv->client_num < MONITOR_THREAD_NUM_MAX))
@@ -240,7 +242,8 @@ uint32_t start_monitor(uint32_t svr_fd)
             }
 
             // same client, reset dynamic data
-            log_info(MSG_LOG_DBG, SVR, "client %s(%#x) re-connected.");
+            log_info(MSG_LOG_DBG, SVR, "client %s(%#x) re-connected.", 
+                            inet_ntoa(client_addr.sin_addr), client_ip);
             
             // CAUTION:must substract 1 as index
             proc_priv->task_var[proc_priv->client_num-1]->total_rcv_data_len = 0;
@@ -265,15 +268,15 @@ uint32_t close_monitor(proc_spec_data_t *proc_data)
     //free devlist
     clear_dev_node(&proc_data->dev_list_head);
     
-    //free task var
-    for (i=0;i<MONITOR_THREAD_NUM_MAX;i++)
+    //free task var --detached, auto free
+    /*for (i=0;i<MONITOR_THREAD_NUM_MAX;i++)
     {
         if (proc_data->task_var[i])
         {
             free((char*)proc_data->task_var[i]);
             proc_data->task_var[i] = NULL;
         }
-    }
+    }*/
 
     free((char*)proc_data);
 
@@ -291,7 +294,10 @@ uint32_t client_connect_timeout()
 
 void* secure_comm_task(void *priv)
 {
-    int32_t ret, ack_ret;  
+    int32_t ret, ack_ret;
+    uint32_t i;
+    void * tret;
+    pthread_t task_id;
     int32_t  len = 0;  
     int8_t   buf[BUFSIZ] = {0}; 
     int8_t   child_name[THREAD_NAME_LEN_MAX];
@@ -304,12 +310,15 @@ void* secure_comm_task(void *priv)
 
     client_fd = task_val->cli_sockfd;
     get_proc_priv_data(&proc_val);
-    log_info(MSG_LOG_DBG, SVR, "[child]task_data->cli_sockfd:%d", task_val->cli_sockfd);        
+    log_info(MSG_LOG_DBG, SVR, "[child]task_data->cli_sockfd:%d", task_val->cli_sockfd);
+    log_info(MSG_LOG_DBG, SVR, "[child]task_data->client_ip:%d", task_val->client_ip);
     
 
     // set child name
-    snprintf(child_name, THREAD_NAME_LEN_MAX, "THREAD_%d", proc_val->client_num);
+    snprintf(child_name, THREAD_NAME_LEN_MAX, "THREAD_%x", task_val->client_ip);
     prctl(PR_SET_NAME, child_name);
+
+    pthread_detach(pthread_self());
     
     proc_val->client_num++;
 
@@ -374,10 +383,25 @@ void* secure_comm_task(void *priv)
     // need timer, or may cause deadloop
 
 
+    /* if run here, task may exit */
+    task_id = task_val->task_id;
+    log_info(MSG_LOG_DBG, SVR, "task exit, id %ld", task_id);
+
+    // free task var data
+    for (i = 0; i< MONITOR_THREAD_NUM_MAX; i++)
+    {
+        if (proc_val->client_info[i].task_id == task_id)
+        {
+            proc_val->client_num--;
+            memset(&proc_val->client_info[i], 0, sizeof(client_info_t));        
+        }
+    }
+
+
     // release resource, and destroy task???
     if (priv)
     {
-        free(priv);
+        free((char*)priv);
         priv = NULL;
     }
     pthread_exit(NULL);

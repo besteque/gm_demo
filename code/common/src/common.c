@@ -8,8 +8,12 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#include <sys/time.h>
 #include <time.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <sys/time.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 
 #include "pub.h"
 #include "common.h"
@@ -424,6 +428,32 @@ int8_t *get_algorithm_str(uint32_t algo)
     }
         
     return "unknown";
+}
+
+uint32_t get_domain_iaddr(char *domain, char *ipaddr)
+{
+    int i;
+    struct hostent *he;
+    struct in_addr **addr_list;
+         
+    if ( (he = gethostbyname( domain ) ) == NULL) 
+    {
+        // get the host info
+        herror("gethostbyname");
+        return ERROR;
+    }
+ 
+    addr_list = (struct in_addr **) he->h_addr_list;
+     
+    for(i = 0; addr_list[i] != NULL; i++) 
+    {
+        //use the 1st one;
+        strcpy(ipaddr, inet_ntoa(*addr_list[i]));
+        return OK;
+    }
+     
+    return ERROR;
+
 }
 
 

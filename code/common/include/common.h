@@ -179,7 +179,6 @@ extern proc_spec_data_t *proc_data;
 
 int8_t *get_algorithm_str(uint32_t algo);
 uint32_t get_proc_priv_data(proc_spec_data_t **priv);
-//uint32_t get_task_serialno(void);
 
 void     getcurtime(uint8_t *dtime, uint32_t len);
 uint32_t rel_slogf(const uint8_t *fmt, ...);

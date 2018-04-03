@@ -22,7 +22,7 @@ proc_spec_data_t *proc_data = NULL;
 
 int stub_get_devid(int8_t *devid)
 {
-    int8_t testid[DEV_ID_LEN_MAX] = "secureGW_server001";
+    int8_t testid[DEV_ID_LEN_MAX] = "secureGW_server011";
 
     if (devid != NULL)
         strcpy(devid, testid);
@@ -30,6 +30,33 @@ int stub_get_devid(int8_t *devid)
     return OK;
 }
 
+/*
+void rel_thread_res(proc_spec_data_t *priv)
+{
+    int ret, i;
+    pthread_t task_id;
+    
+    //ret = pthread_join(task_id, &tret);
+
+    // free task var data
+    for (i = 0; i< MONITOR_THREAD_NUM_MAX; i++)
+    {
+        task_id = priv->client_info[i].task_id;
+
+        ret = pthread_kill(task_id,0);
+        log_info(MSG_LOG_DBG, SVR, "pthread_kill ret:%d", ret );
+    
+        if (ret == ESRCH )
+        {
+            log_info(MSG_LOG_DBG, SVR, "task exit, id %ld", task_id);
+            priv->client_num--;
+            memset(&priv->client_info[i], 0, sizeof(client_info_t));        
+        }
+    }
+
+    return;
+}
+*/
 
 
 int init_proc_data(proc_spec_data_t *priv)
